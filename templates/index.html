@@ -3,6 +3,7 @@
 	<title>IPL Analysis</title>
 	<script src='https://d3js.org/d3.v4.min.js'></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style type="text/css">
 		.line {
 		  fill: none;
@@ -18,15 +19,17 @@
 			<div id="right-bottom"></div>
 		</div>
 		<div id="left" >
-			<div id="heading" >
-				<span style="margin-left: 5%;float: left;font-size: 2em">IPL &nbspANALYSIS</span>
-				<span style="float: right; margin-right: 5%;margin-top: 2%;font-size: 1em">By Dilip & Ravali</span>
+			<div id="heading">
+				<span id="ipl-label" >IPL &nbspANALYSIS</span>
+				<span id="author-label" >By Dilip & Ravali</span>
 			</div>
-			<div id="menubar" style="width: 100%;float: left;height: 6%;background-color: transparent;">
-				<span style="margin-left: 2%;margin-top: 1.5%;float: left;font-size: 1.5em">Analysis by  </span>
-				<div style="width: 15%;height: 100%;background-color: red;float: left"> Team </div>
-				<div style="width: 15%;height: 100%;background-color: yellow;float: left"> Player </div>
-				<div style="width: 15%;height: 100%;background-color: green;float: left"> Venue </div>
+			<div id="menubar" >
+				<span id="menubar-label" >Analysis by  </span>
+				<div id="team-btn" class="menubar-btn"><div class="menubar-btn-adjust" ></div><span id="menubar-team-btn-span">Team</span></div>
+				<div id="player-btn" class="menubar-btn"><div class="menubar-btn-adjust" ></div><span id="menubar-player-btn-span">Player</span></div>
+				<div id="venue-btn" class="menubar-btn"><div class="menubar-btn-adjust" ></div><span id="menubar-venue-btn-span">Venue</span></div>
+				<input id="menubar-search-txt" type="text" placeholder="Search Team/Player/Venue" />
+				<span id="menubar-search-btn"><i class="fa fa-search"></i></span>
 			</div>
 		</div>
 	</div>
@@ -39,8 +42,97 @@
 	      console.log(data);
     });
 
+    var analysisby = "team-btn";
+    const headingColor = '#0052cc';
+    const textInHeadingColor = '#e67300';
+    const bodyBackgroundColor = "#b3d1ff";
+    const boxShadowColor = '#3385ff';
+    const btnMouseoverBGColor = "#4d94ff";
+
+    function changeAnalysisByButtonColor(btn){
+    	analysisby = btn;
+    	d3.selectAll(".menubar-btn")
+    		.style("background-color","transparent")
+    		.style("color",headingColor);
+    	//console.log(btn);
+    	d3.select("#"+btn).style("background-color",headingColor).style("color",textInHeadingColor);
+    };
+
+    d3.select("#menubar-search-btn")
+    	.style("font-size","1.5em")
+    	.style("color",headingColor);
+
+    d3.select("#menubar-search-txt")
+    	.style("width","25%")
+    	.style("height","70%")
+    	.style("margin-left","3%")
+    	.style("margin-top","1%")
+    	.style("background-color","transparent")
+    	.style("border-style","none none solid none")
+    	.style("border-color",headingColor)
+    	.style("color",headingColor)
+    	.style("font-size","1.25em")
+    	.on("focus",function(){
+    		d3.select(this).style("outline","none")
+    	});
+
+	d3.selectAll(".menubar-btn-adjust")
+		.style("width","100%")
+		.style("height","15%")
+		.style("background-color","transparent");
+
+	d3.selectAll(".menubar-btn")
+		.style("width","15%")
+		.style("height","70%")
+		.style("margin-top","0.5%")
+		.style("margin-left","2%")
+		.style("border-style","solid")
+		.style("border-color",headingColor)
+		.style("border-radius","25px")
+		.style("float","left")
+		.style("text-align","center")
+		.style("color",headingColor)
+		.style("font-size","1.25em")
+		.on("mouseover",function(){
+			d3.select(this).style("background-color",btnMouseoverBGColor);
+		})
+		.on("mouseout",function(){
+			d3.select(this).style("background-color","transparent");
+			d3.select('#'+analysisby).style("background-color",headingColor)
+		})
+		.on("click",function(){
+			changeAnalysisByButtonColor(d3.select(this).attr('id'));
+		});
+
+    changeAnalysisByButtonColor(analysisby);
+
+	d3.select("#menubar-label")
+		.style("margin-left","2%")
+		.style("margin-top","1.5%")
+		.style("float","left")
+		.style("font-size","1.5em")
+		.style("color",headingColor);
+
+    d3.select("#menubar")
+    	.style("width","100%")
+    	.style("height","6%")
+    	.style("float","left")
+    	.style("background-color","transparent");
+
+    d3.select("#ipl-label")
+    	.style("margin-left","5%")
+    	.style("float","left")
+    	.style("font-size","2em");
+
+    d3.select("#author-label")
+    	.style("float","right")
+    	.style("margin-right","5%")
+    	.style("margin-top","2%")
+    	.style("font-size","1em");
+
 	d3.select("body")
-		.style("background-color","#b3d1ff")
+		//.style("background-image","linear-gradient(to bottom right,#e066ff,#b3d1ff)");
+		.style("background-color",bodyBackgroundColor);
 
 	d3.select("#main")
 		.style("z-index","1")
@@ -70,8 +162,8 @@
 		.style("margin-bottom","2%")
 		.style("border-style","solid")
 		.style("border-radius","30px")
-		.style("border-color","#0052cc")
-		.style("box-shadow","3px 3px #3385ff");
+		.style("border-color",headingColor)
+		.style("box-shadow","3px 3px "+boxShadowColor);
 
 	d3.select("#right-bottom")
 		.style("width","97%")
@@ -79,15 +171,17 @@
 		.style("margin-bottom","2%")
 		.style("border-style","solid")
 		.style("border-radius","30px")
-		.style("border-color","#0052cc")
-		.style("box-shadow","3px 3px #3385ff");
+		.style("border-color",headingColor)
+		.style("box-shadow","3px 3px "+boxShadowColor);
 
 	d3.select("#heading")
 		.style("width","100%")
 		.style("height","5%")
 		.style("float","left")
-		.style("background-color","#0052cc")
-		.style("color","#e67300");
+		.style("background-color",headingColor)
+		//.style("background-image","linear-gradient(to right,#0052cc,#ff00ff)");
+		.style("color",textInHeadingColor);
+		//.style("background-image","linear-gradient(to right,#0052cc,transparent)");
 
 	d3.select("#references")
 		.style("width","99%")
