@@ -14,11 +14,11 @@
 </head>
 <body>
 	<div id="main">
-		<div id="right" >
-			<div id="right-top"></div>
-			<div id="right-bottom"></div>
-		</div>
 		<div id="left" >
+			<div id="left-top"></div>
+			<div id="left-bottom"></div>
+		</div>
+		<div id="right" >
 			<div id="heading">
 				<span id="ipl-label" >IPL &nbspANALYSIS</span>
 				<span id="author-label" >By Dilip & Ravali</span>
@@ -36,7 +36,9 @@
 	<div id="references">
 			<button style="width:150px;height:50px;background-color:#0066cc;color:white;border-radius: 25px" id="refButton"> CLOSE </button>
 	</div>
-<script src="{{url_for('static', filename='d3.geo.min.js')}}"></script>
-<script src="{{url_for('static', filename='index.js')}}"></script>
+	<script src="{{url_for('static', filename='js/d3.geo.min.js')}}"></script>
+	<script src="{{url_for('static', filename='js/style.js')}}"></script>
+	<script src="{{url_for('static', filename='js/index.js')}}"></script>
+	<script src="{{url_for('static', filename='js/team.js')}}"></script>
 </body>
 </html>
