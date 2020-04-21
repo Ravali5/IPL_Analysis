@@ -18,6 +18,119 @@
     	d3.select("#"+btn).style("background-color",headingColor).style("color",textInHeadingColor);
     };
 
+
+    function generateMap(){
+	    var proj = d3.geo.mercator();
+	    var path = d3.geo.path().projection(proj);
+ 		
+ 		console.log(d3.select("#right-top").attr("width"))
+	    var map = d3.select("#right-top").append("svg:svg")
+	        .attr("viewBox","30 -30 540 700")
+	        .call(initialize);
+
+	    var india = map.append("svg:g")
+	        .attr("id", "india");
+
+	    d3.json("/static/states.json", function (json) {
+	      var units=india.selectAll("path")
+	                      .data(json.features)
+	                      .enter().append("path")               
+	                      .attr("d", path)
+	                      .style("fill",function(d){ return d["color"];})
+	                      .style("stroke","#A9A9A9")
+	                      .style("stroke-width","0.6px")	               
+	                      /*.on("mouseover", function(d) {
+	                        d3.select(this)
+	                          .style("fill","#FF4500")
+	                         console.log(d["id"])
+	                      })*/;
+
+	    });
+
+	    function initialize() {
+	      proj.scale(6700);
+	      proj.translate([-1240, 720]);
+	    }
+    };
+
+
+    function drawPie(){
+    	var width = 550
+            height = 450
+            margin = 40
+
+  
+
+        // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+        var radius = Math.min(width, height) / 2 - margin
+
+        // append the svg object to the div called 'my_dataviz'
+        var svg = d3.select("#right-bottom")
+          .append("svg")
+          .attr("width", 300)
+          .attr("height", 300)
+          .append("g")
+          .attr("transform", "translate(180,150)");
+
+        // Create dummy data
+        //var data = {a: 9, b: 20, c:30, d:8, e:12}
+        //d3.csv("Votes.csv",function(error , data_pie) {
+        $.post("/getPieData", {'data': 'received'}, function(data_pie){
+	      console.log(data_pie);
+    
+
+        // set the color scale
+
+        // Compute the position of each group on the pie:
+        var pie = d3.pie()
+          .value(function(d) {console.log(d);return d.value; })
+        var data_ready = pie(d3.entries(data_pie['Likes ( In Millions )']))
+        console.log(data_pie['color'])
+
+        // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+        var arc=d3.arc()
+            .innerRadius(0)
+            .outerRadius(120)
+
+        svg
+          .selectAll('whatever')
+          .data(data_ready)
+          .enter()
+          .append('path')
+          .attr('d', arc)
+          .style('fill', function(d,i){ if (i<=7){ console.log(d);return data_pie['color'][i]; }})
+          .attr("stroke", "black")
+          .style("stroke-width", "0px")
+
+
+        svg
+          .selectAll('whatever')
+          .data(data_ready)
+          .enter()
+          .append('image')
+          .attr('d', d3.arc()
+            .innerRadius(0)
+            .outerRadius(120)
+          )
+          .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+                //we have to make sure to set these before calling arc.centroid
+                var c = arc.centroid(d),
+            x = c[0],
+            y = c[1],
+            // pythagorean theorem for hypotenuse
+            h = Math.sqrt(x*x + y*y);
+           return "translate(" + ((x/h * 120)+20) +  ',' + ((y/h * 120)) +  ")"; })
+          .attr("x","-40")
+          .attr("y","-40")
+          .attr('width', 40)
+          .attr('height', 40)
+          .attr("xlink:href", function(d,i){ return "/static/"+data_pie['Team'][i]+".png"});
+          //.text(function(d, i) { if (i<=7){ return data_pie['Team'][i]; }}); */
+       });
+    }
+
+
+
     d3.select("#menubar-search-btn")
     	.style("font-size","1.5em")
     	.style("color",headingColor);
@@ -161,3 +274,6 @@
 		.on("click",function(){
 			d3.select("#references").style("display","block");
 		});
+
+	generateMap();
+	drawPie();
