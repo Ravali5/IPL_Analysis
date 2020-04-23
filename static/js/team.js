@@ -63,7 +63,7 @@ function drawPie(){
     //var data = {a: 9, b: 20, c:30, d:8, e:12}
     //d3.csv("Votes.csv",function(error , data_pie) {
     $.post("/getPieData", {'data': 'received'}, function(data_pie){
-      console.log(data_pie);
+      //console.log(data_pie);
       // set the color scale
       // Compute the position of each group on the pie:
       var pie = d3.pie()
@@ -109,3 +109,458 @@ function drawPie(){
 
 generateMap();
 drawPie();
+
+var teamAnalysisBtn = "teams-menubar-btn-all";
+
+function changeBGColorsByTeam(team){
+  //console.log('selected team is '+team);
+  currentColors = bgColorsTeam[team];
+  //console.log(currentColors);
+  headingColor = currentColors['headingColor'];
+  textInHeadingColor = currentColors['textInHeadingColor'];
+  btnMouseoverBGColor = currentColors['btnMouseoverBGColor'];
+  d3.select("body").style("background-color",currentColors['bodyBackgroundColor']);
+  d3.select("#heading").style("background-color",currentColors['headingColor']).style("color",currentColors['textInHeadingColor']);
+  d3.select("#left-top").style("border-color",currentColors['headingColor']).style("box-shadow","3px 3px "+currentColors['boxShadowColor']);
+  d3.select("#left-bottom").style("border-color",currentColors['headingColor']).style("box-shadow","3px 3px "+currentColors['boxShadowColor']);
+  d3.select("#menubar-label").style("color",currentColors['headingColor']);
+  d3.select("#menubar-search-txt").style("border-color",currentColors['headingColor']).style("color",currentColors['headingColor']);
+  d3.select("#menubar-search-btn").style("color",currentColors['headingColor']);
+  d3.selectAll(".menubar-btn").style("border-color",currentColors['headingColor']);
+  d3.selectAll(".teams-menubar-btn").style("border-color",currentColors['headingColor']);
+  changeAnalysisByButtonColor(analysisby);
+  changeTeamAnalysisButtonColor(teamAnalysisBtn);
+};
+
+function changeTeamAnalysisButtonColor(btn){
+  d3.selectAll(".teams-menubar-btn")
+    .style("background-color","transparent")
+    .style("color",headingColor);
+  d3.select("#"+btn).style("background-color",headingColor).style("color",textInHeadingColor);
+};
+
+d3.select("#right")
+  .append("div")
+  .attr("id","team-right-div")
+  .style("width","100%")
+  .style("height","88%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-menubar")
+  .style("width","100%")
+  .style("height","6%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+const team_menubar_btn_width = "9%";
+
+// Button 1
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-all")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-all")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-all")
+  .append("span")
+  .text("All")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+
+// Button 2
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-srh")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-srh")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-srh")
+  .append("span")
+  .text("SRH")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 3
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-dc")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-dc")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-dc")
+  .append("span")
+  .text("DC")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 4
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-rr")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-rr")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-rr")
+  .append("span")
+  .text("RR")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 5
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-kkr")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-kkr")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-kkr")
+  .append("span")
+  .text("KKR")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 6
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-mi")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-mi")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-mi")
+  .append("span")
+  .text("MI")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 7
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-csk")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-csk")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-csk")
+  .append("span")
+  .text("CSK")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+// Button 8
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-rcb")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-rcb")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-rcb")
+  .append("span")
+  .text("RCB")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+  // Button 9
+d3.select("#teams-menubar")
+  .append("div")
+  .attr("id","teams-menubar-btn-kxip")
+  .attr("class","teams-menubar-btn")
+  .style("width",team_menubar_btn_width)
+  .style("height","90%")
+  .style("margin-top","0.5%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-width","2px")
+  .style("border-radius","10px")
+  .style("float","left")
+  .style("text-align","center")
+  .style("color",headingColor)
+  .on("mouseover",function(){
+    d3.select(this).style("background-color",btnMouseoverBGColor);
+  })
+  .on("mouseout",function(){
+    d3.select(this).style("background-color","transparent");
+    d3.select('#'+teamAnalysisBtn).style("background-color",headingColor)
+  })
+  .on("click",function(){
+    currentId = d3.select(this).attr('id');
+    teamAnalysisBtn = currentId;
+    selectedTeam = currentId.split("-");
+    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    //changeTeamAnalysisButtonColor(currentId);
+  });
+
+d3.select("#teams-menubar-btn-kxip")
+  .append("div")
+  .style("width","100%")
+  .style("height","15%")
+  .style("background-color","transparent")
+  .style("float","left");
+
+d3.select("#teams-menubar-btn-kxip")
+  .append("span")
+  .text("KXIP")
+  .style("margin-top","10%")
+  .style("font-size","1.25em");
+
+changeTeamAnalysisButtonColor(teamAnalysisBtn);

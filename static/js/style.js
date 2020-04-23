@@ -1,9 +1,75 @@
 var analysisby = "team-btn";
-const headingColor = '#0052cc';
-const textInHeadingColor = '#e67300';
-const bodyBackgroundColor = "#b3d1ff";
-const boxShadowColor = '#3385ff';
-const btnMouseoverBGColor = "#4d94ff";
+var headingColor = '#0052cc';
+var textInHeadingColor = '#e67300';
+var bodyBackgroundColor = "#b3d1ff";
+var boxShadowColor = '#3385ff';
+var btnMouseoverBGColor = "#4d94ff";
+
+const bgColorsTeam ={
+	"MI"  :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"SRH" :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffd1b3',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"RCB" :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"CSK" :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"DC"  :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"KKR" :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"KXIP":{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"RR"  :{
+		'headingColor':'#ff6600',
+		'textInHeadingColor':'#000000',
+		'bodyBackgroundColor':'#ffa366',
+		'boxShadowColor':'#ff8533',
+		'btnMouseoverBGColor':'#ff944d'
+	},
+	"ALL" :{
+		'headingColor':'#0052cc',
+		'textInHeadingColor':'#e67300',
+		'bodyBackgroundColor':'#b3d1ff',
+		'boxShadowColor':'#3385ff',
+		'btnMouseoverBGColor':'#4d94ff'
+	}
+};
 
 function changeAnalysisByButtonColor(btn){
 	analysisby = btn;
