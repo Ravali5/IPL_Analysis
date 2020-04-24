@@ -11,6 +11,24 @@ function generateMap(){
         .attr("id", "india");
 
     d3.json("/static/json/states.json", function (json) {
+
+
+      var div = d3.select("body").append("div") 
+                    .attr("class", "tooltip")       
+                    .style("opacity", 0)
+                    .style("position", "absolute")     
+                    .style("text-align", "center")    
+                    .attr("width", 60)          
+                    .style("height", 20)         
+                    .style("padding", 4)       
+                    .style("font", 12)    
+                    .style("background", "#b3d1ff") 
+                    .style("color","#0052cc")
+                    .style("border-style","solid")
+                    .style("border-radius","30px")
+                    .style("border-color","#0052cc")
+                    .style("box-shadow","3px 3px #3385ff"); 
+
       var units=india.selectAll("path")
                       .data(json.features)
                       .enter().append("path")               
@@ -18,11 +36,26 @@ function generateMap(){
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
                       .style("stroke-width","0.6px")	               
-                      /*.on("mouseover", function(d) {
+                      .on("mouseover", function(d) {
                         d3.select(this)
-                          .style("fill","#FF4500")
-                         console.log(d["id"])
-                      })*/;
+                          .style("opacity",".6")
+                        /*Tooltip
+                            .html("The exact value of<br>this cell is: " + d.value)
+                          div.transition()    
+                              .duration(200)    
+                              .style("opacity", .9);  */ 
+
+                              div.style("opacity", .9);
+                              div.html(d["id"]+ "<br/>") 
+                              .style("left", (d3.event.pageX) + "px")   
+                              .style("top", (d3.event.pageY - 28) + "px"); ;
+
+                      })
+                      .on("mouseout", function(d) {
+                        d3.select(this)
+                          .style("opacity","1")
+                           div.style("opacity", 0); 
+                      });
 
     });
 
@@ -51,7 +84,7 @@ function drawPie(){
       "KXIP":[-65,30],
       "RR"  :[5,-70]
     };
-    // append the svg object to the div called 'my_dataviz'
+
     var svg = d3.select("#left-bottom")
       .append("svg")
       .attr("width", 300)
@@ -59,22 +92,39 @@ function drawPie(){
       .append("g")
       .attr("transform", "translate(130,130)");
 
-    // Create dummy data
-    //var data = {a: 9, b: 20, c:30, d:8, e:12}
-    //d3.csv("Votes.csv",function(error , data_pie) {
+
     $.post("/getPieData", {'data': 'received'}, function(data_pie){
-      //console.log(data_pie);
-      // set the color scale
-      // Compute the position of each group on the pie:
+
       var pie = d3.pie()
         .value(function(d) {return d.value; })
       var data_ready = pie(d3.entries(data_pie['Likes ( In Millions )']))
       //console.log(data_pie['color'])
 
+      var sum = data_pie['Likes ( In Millions )'].reduce(function(a, b){
+        return a + b;
+        }, 0);
+
       // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
       var arc=d3.arc()
           .innerRadius(0)
           .outerRadius(radius)
+
+      var div = d3.select("body").append("div") 
+                    .attr("class", "tooltip")       
+                    .style("opacity", 0)
+                    .style("position", "absolute")     
+                    .style("text-align", "center")    
+                    .attr("width", 60)          
+                    .style("height", 20)         
+                    .style("padding", 4)       
+                    .style("font", 12)    
+                    .style("background", "#b3d1ff") 
+                    .style("color","#0052cc")
+                    .style("border-style","solid")
+                    .style("border-radius","30px")
+                    .style("border-color","#0052cc")
+                    .style("box-shadow","3px 3px #3385ff"); 
+
 
       svg
         .selectAll('whatever')
@@ -85,6 +135,20 @@ function drawPie(){
         .style('fill', function(d,i){ if (i<=7){ return data_pie['color'][i]; }})
         .attr("stroke", "black")
         .style("stroke-width", "0px")
+        .on("mouseover", function(d,i) {
+                        d3.select(this)
+                          .style("opacity",".5")
+
+                          div .style("opacity", .9);
+                          div.html((((data_pie['Likes ( In Millions )'][i]/sum)*100).toFixed(1))+"%"+ "<br/>") 
+                             .style("left", (d3.event.pageX) + "px")   
+                             .style("top", (d3.event.pageY - 28) + "px"); ;
+                      })
+                      .on("mouseout", function(d) {
+                        d3.select(this)
+                          .style("opacity","1")
+                          div.style("opacity", 0); 
+                      });
 
 
       svg
