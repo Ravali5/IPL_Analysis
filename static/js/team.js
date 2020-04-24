@@ -12,6 +12,8 @@ function generateMap(){
 
     d3.json("/static/json/states.json", function (json) {
 
+    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#B7191A", "#EA1A85"];
+    var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KKIP", "RR"];
 
       var div = d3.select("body").append("div") 
                     .attr("class", "tooltip")       
@@ -27,7 +29,6 @@ function generateMap(){
                     .style("border-style","solid")
                     .style("border-radius","30px")
                     .style("border-color","#0052cc")
-                    .style("box-shadow","3px 3px #3385ff"); 
 
       var units=india.selectAll("path")
                       .data(json.features)
@@ -56,6 +57,31 @@ function generateMap(){
                           .style("opacity","1")
                            div.style("opacity", 0); 
                       });
+
+
+      for(var j = 1;j <= 8;j++){
+            india.append('rect')
+                .attr("x",450)
+                .attr("y",300+(j*27))
+                .attr("width",13)
+                .attr("height",13)
+                .style("fill",function(d){ return colors[j-1]});
+
+           india.append('text')
+                .attr("x",480)
+                .attr("y",310+(j*27))
+                .attr("width",13)
+                .attr("height",13)
+                .attr("font-size","16px")
+                .text(teams[j-1]);
+          }
+
+          india.append('text')
+                .attr("x",100)
+                .attr("y",0)
+                .attr("width",30)
+                .attr("height",30)
+                .text("Pie chart -Dilip fill the text");
 
     });
 
@@ -87,7 +113,7 @@ function drawPie(){
 
     var svg = d3.select("#left-bottom")
       .append("svg")
-      .attr("width", 300)
+      .attr("width", 400)
       .attr("height", 300)
       .append("g")
       .attr("transform", "translate(130,130)");
@@ -123,7 +149,6 @@ function drawPie(){
                     .style("border-style","solid")
                     .style("border-radius","30px")
                     .style("border-color","#0052cc")
-                    .style("box-shadow","3px 3px #3385ff"); 
 
 
       svg
@@ -151,7 +176,7 @@ function drawPie(){
                       });
 
 
-      svg
+     svg
         .selectAll('whatever')
         .data(data_ready)
         .enter()
@@ -165,9 +190,36 @@ function drawPie(){
         })
         .attr("x","-40")
         .attr("y","-40")
-        .attr('width', 35)
-        .attr('height', 35)
+        .attr('width', 25)
+        .attr('height', 25)
         .attr("xlink:href", function(d,i){ return "/static/images/"+data_pie['Team'][i]+".png"});
+
+        for(var j = 1;j <= 8;j++){
+            svg.append('rect')
+                .attr("x",180)
+                .attr("y",-80+(j*20))
+                .attr("width",10)
+                .attr("height",10)
+                .style("fill",data_pie['color'][j-1]);
+          }
+
+          for(var j = 1;j <= 8;j++){
+            svg.append('text')
+                .attr("x",205)
+                .attr("y",-71+(j*20))
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","12px")
+                .text(data_pie['Team'][j-1]);
+          }
+
+          svg.append('text')
+                .attr("x",-70)
+                .attr("y",140)
+                .attr("width",30)
+                .attr("height",30)
+                .text("Pie chart -Dilip fill the text");
+
    });
 };
 
