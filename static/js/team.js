@@ -244,6 +244,11 @@ function changeBGColorsByTeam(team){
   d3.select("#menubar-search-btn").style("color",currentColors['headingColor']);
   d3.selectAll(".menubar-btn").style("border-color",currentColors['headingColor']);
   d3.selectAll(".teams-menubar-btn").style("border-color",currentColors['headingColor']);
+  d3.select("#teams-div-1").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
+  d3.select("#teams-div-2").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
+  d3.select("#teams-div-3").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
+  d3.select("#teams-div-4").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
+  d3.select("#teams-div-5").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
   changeAnalysisByButtonColor(analysisby);
   changeTeamAnalysisButtonColor(teamAnalysisBtn);
 };
@@ -680,3 +685,72 @@ d3.select("#teams-menubar-btn-kxip")
   .style("font-size","1.25em");
 
 changeTeamAnalysisButtonColor(teamAnalysisBtn);
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-div-1")
+  .style("width","65%")
+  .style("height","46%")
+  .style("margin-top","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-radius","30px")
+  .style("box-shadow","3px 3px "+boxShadowColor)
+  .style("float","left");
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-div-2")
+  .style("width","32%")
+  .style("height","46%")
+  .style("margin-top","1%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-radius","30px")
+  .style("box-shadow","3px 3px "+boxShadowColor)
+  .style("float","left");
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-div-3")
+  .style("width","31%")
+  .style("height","43%")
+  .style("margin-top","1%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-radius","30px")
+  .style("box-shadow","3px 3px "+boxShadowColor)
+  .style("float","left");
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-div-4")
+  .style("width","31%")
+  .style("height","43%")
+  .style("margin-top","1%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-radius","30px")
+  .style("box-shadow","3px 3px "+boxShadowColor)
+  .style("float","left");
+
+d3.select("#team-right-div")
+  .append("div")
+  .attr("id","teams-div-5")
+  .style("width","32%")
+  .style("height","43%")
+  .style("margin-top","1%")
+  .style("margin-left","1%")
+  .style("background-color","transparent")
+  .style("border-style","solid")
+  .style("border-color",headingColor)
+  .style("border-radius","30px")
+  .style("box-shadow","3px 3px "+boxShadowColor)
+  .style("float","left");
