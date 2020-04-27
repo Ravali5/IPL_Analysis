@@ -101,14 +101,14 @@ function drawPie(){
     //var radius = Math.min(width, height) / 2 - margin
     var radius = 110;
     var logoXY = {
-      "MI"  :[105,45],
+      "MI"  :[115,55], //[105,45],
       "SRH" :[-55,-20],
-      "RCB" :[-35,80],
-      "CSK" :[37,98],
-      "DC"  :[-30,-60],
-      "KKR" :[75,-50],
-      "KXIP":[-65,30],
-      "RR"  :[5,-70]
+      "RCB" :[-35,94],//[-35,80],
+      "CSK" :[40,120],//[37,98],
+      "DC"  :[-20,-55],//[-30,-60],
+      "KKR" :[83,-50],//[75,-50],
+      "KXIP":[-65,35],//[-65,30],
+      "RR"  :[12,-68]//[5,-70]
     };
 
     var svg = d3.select("#left-bottom")
@@ -134,6 +134,10 @@ function drawPie(){
       var arc=d3.arc()
           .innerRadius(0)
           .outerRadius(radius)
+
+       var en_arc=d3.arc()
+          .innerRadius(0)
+          .outerRadius(radius*1.15)
 
       var div = d3.select("body").append("div") 
                     .attr("class", "tooltip")       
@@ -162,16 +166,22 @@ function drawPie(){
         .style("stroke-width", "0px")
         .on("mouseover", function(d,i) {
                         d3.select(this)
-                          .style("opacity",".5")
+                           .attr("stroke","white")          
+			               .attr("stroke-width","10px")
+                           .transition()
+                           .duration(50)
+                           .attr("d", en_arc);
 
                           div .style("opacity", .9);
                           div.html((((data_pie['Likes ( In Millions )'][i]/sum)*100).toFixed(1))+"%"+ "<br/>") 
                              .style("left", (d3.event.pageX) + "px")   
-                             .style("top", (d3.event.pageY - 28) + "px"); ;
+                             .style("top", (d3.event.pageY - 28) + "px"); 
+                        
                       })
                       .on("mouseout", function(d) {
                         d3.select(this)
                           .style("opacity","1")
+                          .attr("d",arc)
                           div.style("opacity", 0); 
                       });
 
