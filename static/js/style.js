@@ -21,11 +21,11 @@ const bgColorsTeam ={
 		'btnMouseoverBGColor':'#ff944d'
 	},
 	"RCB" :{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#ff3300',
+		'textInHeadingColor':'#e68a00',
+		'bodyBackgroundColor':'#ffc2b3',
+		'boxShadowColor':'#ff8566',
+		'btnMouseoverBGColor':'#ff9980'
 	},
 	"CSK" :{
 		'headingColor':'#ff6600',

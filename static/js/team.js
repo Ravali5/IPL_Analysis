@@ -93,10 +93,6 @@ function generateMap(){
 
 
 function drawPie(){
-	 //var width = 550
-     //   height = 450
-     //   margin = 40
-
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     //var radius = Math.min(width, height) / 2 - margin
     var radius = 110;
@@ -168,8 +164,8 @@ function drawPie(){
                         d3.select(this)
                            .attr("stroke","white")          
 			               .attr("stroke-width","10px")
-                           .transition()
-                           .duration(50)
+                           //.transition()
+                           //.duration(50)
                            .attr("d", en_arc);
 
                           div .style("opacity", .9);
@@ -233,9 +229,6 @@ function drawPie(){
    });
 };
 
-generateMap();
-drawPie();
-
 var teamAnalysisBtn = "teams-menubar-btn-all";
 
 function changeBGColorsByTeam(team){
@@ -261,6 +254,7 @@ function changeBGColorsByTeam(team){
   d3.select("#teams-div-5").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
   changeAnalysisByButtonColor(analysisby);
   changeTeamAnalysisButtonColor(teamAnalysisBtn);
+  teamChange();
 };
 
 function changeTeamAnalysisButtonColor(btn){
@@ -764,3 +758,28 @@ d3.select("#team-right-div")
   .style("border-radius","30px")
   .style("box-shadow","3px 3px "+boxShadowColor)
   .style("float","left");
+
+function drawTeamWinPie(){
+
+};
+
+function teamChange(){
+  var teamData = {};
+  selectedTeam = teamAnalysisBtn.split("-");
+  if(teamAnalysisBtn != 'teams-menubar-btn-all'){
+    $.post("/getTeamData", {'team': selectedTeam[3].toUpperCase()}, function(data){
+        console.log(data);
+        teamData = data;
+        drawTeamWinPie(teamData);
+    });
+  }else{ 
+    generateMap();
+    drawPie();
+    d3.select('#teams-div-1')
+        .append('img')
+        .attr("width","100")
+        .attr("height","100")
+        .attr("src", "/static/images/iplcup.png");
+  }
+};
+teamChange();

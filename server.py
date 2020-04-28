@@ -3,7 +3,9 @@ from flask import render_template
 import pandas as pd
 
 app = Flask(__name__)
-votes=pd.read_csv("./data/Votes.csv")
+votes = pd.read_csv("./data/Votes.csv")
+teams = pd.read_csv("./data/Team.csv")
+matches = pd.read_csv("./data/Match.csv")
 
 @app.route("/getPieData",methods = ['POST', 'GET'])
 def getPieData():
@@ -20,6 +22,21 @@ def init():
 def test():
 	return "test message"
 
+@app.route("/getTeamData",methods = ['POST', 'GET'])
+def getTeamData():
+	selectedTeam = request.form.get('team')
+	teamData = {}
+	if selectedTeam != 'ALL' :
+		team_id = teams.loc[teams['Team_Short_Code']==selectedTeam,'Team_Id'].iloc[0]
+		#print(selectedTeam+" - "+str(team_id))
+		teamMatches = matches.query('Team_Name_Id == '+str(team_id)+' or Opponent_Team_Id == '+str(team_id))
+		teamData['totalMatches'] = len(teamMatches.index)
+		teamWins = teamMatches.query('Match_Winner_Id == '+str(team_id))
+		teamLosses = teamMatches.query('Match_Winner_Id != '+str(team_id))
+		teamData['wins'] = len(teamWins.index)
+		teamData['losses'] = len(teamLosses.index)
+	#print(teamData)
+	return teamData
 
 if __name__ == "__main__":
     app.run()
