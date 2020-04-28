@@ -802,7 +802,7 @@ function drawTeamWinPie(tdata){
         .enter()
         .append('path')
         .attr('d', arc)
-        .style('fill', function(d,i){ if(i==0){ return "red"; }else{return "green";}})
+        .style('fill', function(d,i){ if(i==0){ return textInHeadingColor; }else{return headingColor;}})
         .attr("stroke", "white")
         .style("stroke-width", "2px")
         .on("mouseover", function(d,i) {
