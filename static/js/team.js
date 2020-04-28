@@ -759,7 +759,79 @@ d3.select("#team-right-div")
   .style("box-shadow","3px 3px "+boxShadowColor)
   .style("float","left");
 
-function drawTeamWinPie(){
+function drawTeamWinPie(tdata){
+  console.log(tdata[0])
+  d3.select("#left-bottom").selectAll("*").remove();
+  var svg = d3.select("#left-bottom")
+      .append("svg")
+      .attr("width", 400)
+      .attr("height", 300)
+      .append("g")
+      .attr("transform", "translate(130,130)");
+
+
+
+  var pie = d3.pie()
+        .value(function(d) {if(d.key != 'totalMatches'){console.log(d);return d.value;} })
+     var tdata_pie = pie(d3.entries(tdata))
+
+  var arc=d3.arc()
+          .innerRadius(0)
+          .outerRadius(110)
+  var en_arc=d3.arc()
+          .innerRadius(0)
+          .outerRadius(110*1.07)
+
+  var div = d3.select("body").append("div") 
+                    .attr("class", "tooltip")       
+                    .style("opacity", 0)
+                    .style("position", "absolute")     
+                    .style("text-align", "center")    
+                    .attr("width", 60)          
+                    .style("height", 20)         
+                    .style("padding", 4)       
+                    .style("font", 12)    
+                    .style("background", btnMouseoverBGColor) 
+                    .style("color",textInHeadingColor)
+                    .style("border-style","solid")
+                    .style("border-radius","30px")
+                    .style("border-color",headingColor)
+
+  svg.selectAll('whatever')
+        .data(tdata_pie)
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .style('fill', function(d,i){ if(i==0){ return "red"; }else{return "green";}})
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+        .on("mouseover", function(d,i) {
+                        d3.select(this)
+                           .attr("d", en_arc);
+                           var percent= (d.value * 100)/tdata["totalMatches"]
+
+                         div .style("opacity", .9);
+                         div.html( percent.toFixed(1)+"%"+"<br/>") 
+                            .style("left", (d3.event.pageX) + "px")   
+                            .style("top", (d3.event.pageY - 28) + "px"); 
+                        
+        })
+        .on("mouseout", function(d) {
+                        d3.select(this)
+                          .style("opacity","1")
+                          .attr("d",arc)
+                          div.style("opacity", 0); 
+        });
+
+  svg.append('text')
+                .attr("x",-70)
+                .attr("y",140)
+                .attr("width",30)
+                .attr("height",30)
+                .style("color",textInHeadingColor)
+                .text(selectedTeam[3].toUpperCase()+" Win and Lose Percentage");
+
+
 
 };
 
@@ -772,7 +844,9 @@ function teamChange(){
         teamData = data;
         drawTeamWinPie(teamData);
     });
-  }else{ 
+  }else{
+    d3.select("#left-bottom").selectAll("*").remove();
+    d3.select("#left-top").selectAll("*").remove(); 
     generateMap();
     drawPie();
     d3.select('#teams-div-1')
@@ -782,4 +856,4 @@ function teamChange(){
         .attr("src", "/static/images/iplcup.png");
   }
 };
-teamChange();
+teamChange();btnMouseoverBGColor
