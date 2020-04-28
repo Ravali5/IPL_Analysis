@@ -6,6 +6,7 @@ app = Flask(__name__)
 votes = pd.read_csv("./data/Votes.csv")
 teams = pd.read_csv("./data/Team.csv")
 matches = pd.read_csv("./data/Match.csv")
+seasons = pd.read_csv("./data/Season.csv")
 
 @app.route("/getPieData",methods = ['POST', 'GET'])
 def getPieData():
@@ -35,7 +36,14 @@ def getTeamData():
 		teamLosses = teamMatches.query('Match_Winner_Id != '+str(team_id))
 		teamData['wins'] = len(teamWins.index)
 		teamData['losses'] = len(teamLosses.index)
-	#print(teamData)
+		#print(teamData)
+	else:
+		teamData['wins'] = {}
+		for team in seasons['Winner']:
+			if team in teamData['wins']:
+				teamData['wins'][team] += 1
+			else:
+				teamData['wins'][team] = 1
 	return teamData
 
 if __name__ == "__main__":

@@ -870,25 +870,85 @@ function drawTeamWinPie(tdata){
 
 };
 
+function putDiv1Data(teamData){
+  selectedTeam = teamAnalysisBtn.split("-");
+  selectedTeam = selectedTeam[3].toUpperCase();
+  if(selectedTeam=='ALL')
+    selectedTeam = 'iplcup';
+  d3.select('#teams-div-1').selectAll("*").remove();
+  d3.select('#teams-div-1')
+        .append('img')
+        .attr("width","150")
+        .attr("height","150")
+        .attr("src", "/static/images/"+selectedTeam+".png")
+        .style("margin-left","1%")
+        .style("margin-top","1%")
+        .style("float","left");
+
+  var svg = d3.select("#teams-div-1")
+        .append("svg")
+        .attr("width","70%")
+        .attr("height","90%")
+        .style("background-color","transparent");
+
+  var teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
+
+  var x_scale = d3.scaleBand().domain(teams).range([50,400]);
+  var y_scale = d3.scaleLinear().domain([0,5]).range([340,100]);
+
+  var xAxis = d3.axisBottom().scale(x_scale);
+  var yAxis = d3.axisLeft().scale(y_scale);
+
+
+  //https://stackoverflow.com/questions/21404052/overwriting-of-labels-in-d3-bar-chart
+  var x_axis = svg.append('g')
+              .attr('transform','translate('+[0,260]+')')
+              .call(xAxis);
+  var y_axis = svg.append('g')
+            .attr('transform','translate('+[50,-80]+')')
+            .call(yAxis);
+  svg.selectAll(".bar")
+        .data(teams)
+        .enter()
+        .append("rect")
+        .style("fill",headingColor)
+        .attr("x",function(d){ return x_scale(d)+10;})
+        .attr("width",30)
+        .attr("y",function(d){ if(teamData['wins'][d] != undefined){return y_scale(teamData['wins'][d])-80;} else{return y_scale(0)-80;} })
+        //.attr("height",50);
+        .attr("height", function(d){ if(teamData['wins'][d] != undefined){return 340-y_scale(teamData['wins'][d]);} else{return 340-y_scale(0);} } );
+
+
+        /*.attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+          .x(function(d) { return x_scale(d)+27 })
+          .y(function(d) { if(teamData['wins'][d] != undefined){return y_scale(teamData['wins'][d])-80;} else{return y_scale(0)-80;} })
+        );*/
+
+};
+
 function teamChange(){
   var teamData = {};
   selectedTeam = teamAnalysisBtn.split("-");
-  if(teamAnalysisBtn != 'teams-menubar-btn-all'){
+  //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
     $.post("/getTeamData", {'team': selectedTeam[3].toUpperCase()}, function(data){
         console.log(data);
         teamData = data;
-        drawTeamWinPie(teamData);
+        if(selectedTeam[3].toUpperCase()=='ALL'){
+          drawPie();
+        }else{
+          drawTeamWinPie(teamData); 
+        }
+        putDiv1Data(teamData);
     });
-  }else{
+  //}else{
     d3.select("#left-bottom").selectAll("*").remove();
-    d3.select("#left-top").selectAll("*").remove(); 
+    d3.select("#left-top").selectAll("*").remove();
+    d3.select('#teams-div-1').selectAll("*").remove();
+    //console.log(teamData);
     generateMap();
-    drawPie();
-    d3.select('#teams-div-1')
-        .append('img')
-        .attr("width","100")
-        .attr("height","100")
-        .attr("src", "/static/images/iplcup.png");
-  }
+  //}
 };
 teamChange();btnMouseoverBGColor
