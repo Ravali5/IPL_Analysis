@@ -831,6 +831,41 @@ function drawTeamWinPie(tdata){
                 .style("color",textInHeadingColor)
                 .text(selectedTeam[3].toUpperCase()+" Win and Lose Percentage");
 
+  svg.append('rect')
+                .attr("x",130)
+                .attr("y",-20)
+                .attr("width",10)
+                .attr("height",10)
+                .style("fill",headingColor);
+  svg.append('rect')
+                .attr("x",130)
+                .attr("y",10)
+                .attr("width",10)
+                .attr("height",10)
+                .style("fill",textInHeadingColor);
+
+  svg.append('text')
+                .attr("x",155)
+                .attr("y",-11)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Matches Won : "+tdata["wins"] );
+  svg.append('text')
+                .attr("x",155)
+                .attr("y",21)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Matches Lost : "+tdata["losses"]);
+
+  svg.append('text')
+                .attr("x",145)
+                .attr("y",-41)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Total Matches : "+tdata["totalMatches"]);
 
 
 };
