@@ -8,6 +8,8 @@ teams = pd.read_csv("./data/Team.csv")
 matches = pd.read_csv("./data/Match.csv")
 seasons = pd.read_csv("./data/Season.csv")
 
+teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
+
 @app.route("/getPieData",methods = ['POST', 'GET'])
 def getPieData():
 	votes_data={}
@@ -36,14 +38,25 @@ def getTeamData():
 		teamLosses = teamMatches.query('Match_Winner_Id != '+str(team_id))
 		teamData['wins'] = len(teamWins.index)
 		teamData['losses'] = len(teamLosses.index)
+		teamData['opponentData'] = {}
+		for team in teamNames:
+			opponent_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
+			opponent_matches = teamMatches.query('Team_Name_Id == '+str(opponent_id)+' or Opponent_Team_Id == '+str(opponent_id))
+			opponent_data = {}
+			opponent_data['totalMatches'] = len(opponent_matches.index)
+			wins_again_opponent = opponent_matches.query('Match_Winner_Id == '+str(team_id))
+			losses_again_opponent = opponent_matches.query('Match_Winner_Id != '+str(team_id))
+			opponent_data['wins'] = len(wins_again_opponent.index)
+			opponent_data['losses'] = len(losses_again_opponent.index)
+			teamData['opponentData'][team] = opponent_data
 		#print(teamData)
 	else:
-		teamData['wins'] = {}
+		teamData['cupWins'] = {}
 		for team in seasons['Winner']:
-			if team in teamData['wins']:
-				teamData['wins'][team] += 1
+			if team in teamData['cupWins']:
+				teamData['cupWins'][team] += 1
 			else:
-				teamData['wins'][team] = 1
+				teamData['cupWins'][team] = 1
 	return teamData
 
 if __name__ == "__main__":
