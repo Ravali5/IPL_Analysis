@@ -850,7 +850,9 @@ function drawTeamWinPie(tdata){
                 .attr("width",30)
                 .attr("height",30)
                 .style("color",textInHeadingColor)
-                .text(selectedTeam+" Win and Lose Percentage");
+                .attr("font-size","14px")
+                .attr("font-weight" ,"bold")
+                .text(selectedTeam+" WIN AND LOSE PERCENTAGE");
 
   svg.append('rect')
                 .attr("x",130)
