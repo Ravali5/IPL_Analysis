@@ -1,3 +1,6 @@
+var teamAnalysisBtn = "teams-menubar-btn-all";
+var selectedTeam = "ALL";
+
 function generateMap(){
     var proj = d3.geo.mercator();
     var path = d3.geo.path().projection(proj);
@@ -229,8 +232,6 @@ function drawPie(){
    });
 };
 
-var teamAnalysisBtn = "teams-menubar-btn-all";
-
 function changeBGColorsByTeam(team){
   //console.log('selected team is '+team);
   currentColors = bgColorsTeam[team];
@@ -310,7 +311,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -356,7 +358,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -401,7 +404,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -446,7 +450,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -491,7 +496,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -536,7 +542,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -581,7 +588,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -626,7 +634,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -671,7 +680,8 @@ d3.select("#teams-menubar")
     currentId = d3.select(this).attr('id');
     teamAnalysisBtn = currentId;
     selectedTeam = currentId.split("-");
-    changeBGColorsByTeam(selectedTeam[3].toUpperCase());
+    selectedTeam = selectedTeam[3].toUpperCase();
+    changeBGColorsByTeam(selectedTeam);
     //changeTeamAnalysisButtonColor(currentId);
   });
 
@@ -829,7 +839,7 @@ function drawTeamWinPie(tdata){
                 .attr("width",30)
                 .attr("height",30)
                 .style("color",textInHeadingColor)
-                .text(selectedTeam[3].toUpperCase()+" Win and Lose Percentage");
+                .text(selectedTeam+" Win and Lose Percentage");
 
   svg.append('rect')
                 .attr("x",130)
@@ -871,8 +881,8 @@ function drawTeamWinPie(tdata){
 };
 
 function putDiv1Data(teamData){
-  selectedTeam = teamAnalysisBtn.split("-");
-  selectedTeam = selectedTeam[3].toUpperCase();
+  //selectedTeam = teamAnalysisBtn.split("-");
+  //selectedTeam = selectedTeam[3].toUpperCase();
   imagefile = selectedTeam;
   if(selectedTeam=='ALL')
     imagefile = 'iplcup';
@@ -948,12 +958,17 @@ function putDiv1Data(teamData){
 
 function teamChange(){
   var teamData = {};
-  selectedTeam = teamAnalysisBtn.split("-");
+  //selectedTeam = teamAnalysisBtn.split("-");
+  d3.select("#left-bottom").selectAll("*").remove();
+  d3.select("#left-top").selectAll("*").remove();
+  d3.select('#teams-div-1').selectAll("*").remove();
+  //console.log(teamData);
+  generateMap();
   //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
-    $.post("/getTeamData", {'team': selectedTeam[3].toUpperCase()}, function(data){
+    $.post("/getTeamData", {'team': selectedTeam}, function(data){
         console.log(data);
         teamData = data;
-        if(selectedTeam[3].toUpperCase()=='ALL'){
+        if(selectedTeam=='ALL'){
           drawPie();
         }else{
           drawTeamWinPie(teamData); 
@@ -961,11 +976,6 @@ function teamChange(){
         putDiv1Data(teamData);
     });
   //}else{
-    d3.select("#left-bottom").selectAll("*").remove();
-    d3.select("#left-top").selectAll("*").remove();
-    d3.select('#teams-div-1').selectAll("*").remove();
-    //console.log(teamData);
-    generateMap();
   //}
 };
-teamChange();btnMouseoverBGColor
+teamChange();
