@@ -39,26 +39,37 @@ function generateMap(){
                       .attr("d", path)
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
-                      .style("stroke-width","0.6px")	               
+                      .style("stroke-width","0.6px")
+                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.3;}}else{return 1;}})	               
                       .on("mouseover", function(d) {
+                        console.log(selectedTeam)
                         d3.select(this)
-                          .style("opacity",".6")
+                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.3;}}else{return 1;}}) 
                         /*Tooltip
                             .html("The exact value of<br>this cell is: " + d.value)
                           div.transition()    
                               .duration(200)    
                               .style("opacity", .9);  */ 
-
-                              div.style("opacity", .9);
-                              div.html(d["id"]+ "<br/>") 
-                              .style("left", (d3.event.pageX) + "px")   
-                              .style("top", (d3.event.pageY - 28) + "px"); ;
+                              if(selectedTeam == "ALL"){
+                                  div.style("opacity", .9);
+                                  div.html(d["id"]+ "<br/>") 
+                                  .style("left", (d3.event.pageX) + "px")   
+                                  .style("top", (d3.event.pageY - 28) + "px");
+                            }
+                            else if(selectedTeam == d["supportTeam"]){
+                                div.style("opacity", .9);
+                                div.html(d["id"]+ "<br/>") 
+                                  .style("left", (d3.event.pageX) + "px")   
+                                  .style("top", (d3.event.pageY - 28) + "px");
+                            }
 
                       })
                       .on("mouseout", function(d) {
-                        d3.select(this)
-                          .style("opacity","1")
-                           div.style("opacity", 0); 
+                        if(selectedTeam == "ALL"){
+                            d3.select(this)
+                              .style("opacity","1")
+                          }
+                          div.style("opacity", 0); 
                       });
 
 
