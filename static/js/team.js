@@ -929,15 +929,18 @@ function putDiv1Data(teamData){
     y_vals = teamData['opponentData'];
   }
   console.log(y_vals);
-  var x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
-  var y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
+  //var x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+  //var y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
+
+  let y_scale = d3.scaleBand().domain(x_domain).range([340,100]);
+  let x_scale = d3.scaleLinear().domain(y_domain).range([50,400]);
 
   var xAxis = d3.axisBottom().scale(x_scale);
   var yAxis = d3.axisLeft().scale(y_scale);
 
-  var x_axis = svg.append('g')
-              .attr('transform','translate('+[0,260]+')')
-              .call(xAxis);
+  //var x_axis = svg.append('g')
+  //            .attr('transform','translate('+[0,260]+')')
+  //            .call(xAxis);
   var y_axis = svg.append('g')
             .attr('transform','translate('+[50,-80]+')')
             .call(yAxis);
@@ -946,9 +949,40 @@ function putDiv1Data(teamData){
         .enter()
         .append("rect")
         .style("fill",headingColor)
-        .attr("x",function(d){ return x_scale(d)+10;})
-        .attr("width",30)
-        .attr("y",function(d){ 
+        //.attr("x",function(d){ return x_scale(d)+10;})
+        .attr("x",50)
+        .attr("width",function(d){
+          if(selectedTeam == 'ALL')
+            return y_vals[d]*70;
+          return y_vals[d]['wins']*25;
+        })
+        .attr("y",function(d){ return y_scale(d)-78;})
+        .attr("height",25);
+  svg.selectAll(".label")
+        .data(teams)
+        .enter()
+        .append("text")
+        .style("text-anchor", "start")
+        .attr("class","label")
+        .attr("x",function(d){
+          if(y_vals[d] != undefined){
+            if(selectedTeam == 'ALL')
+              return (y_vals[d]*70)+55;
+            return (y_vals[d]['wins']*25)+25;
+          }else
+            return 55;
+          
+        })
+        .attr("y",function(d){return y_scale(d)-63})
+        .text(function(d){ 
+          if(y_vals[d] != undefined){
+            if(selectedTeam == 'ALL')
+              return y_vals[d];
+            return y_vals[d]['wins'];
+          }else
+            return 0;
+        });
+        /*.attr("y",function(d){ 
           if(y_vals[d] != undefined){
             if(selectedTeam == 'ALL')
               return y_scale(y_vals[d])-80;
@@ -965,7 +999,7 @@ function putDiv1Data(teamData){
          }else{
           return 340-y_scale(0);
          } 
-        });
+        });*/
 
 };
 
