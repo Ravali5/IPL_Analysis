@@ -7,6 +7,7 @@ votes = pd.read_csv("./data/Votes.csv")
 teams = pd.read_csv("./data/Team.csv")
 matches = pd.read_csv("./data/Match.csv")
 seasons = pd.read_csv("./data/Season.csv")
+ballbyball = pd.read_csv("./data/Ball_by_Ball.csv")
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 
@@ -57,6 +58,27 @@ def getTeamData():
 				teamData['cupWins'][team] += 1
 			else:
 				teamData['cupWins'][team] = 1
+		fours = {}
+		sixes = {}
+		wickets = {}
+		extras = {}
+		for team in teamNames:
+			team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
+			teambatting = ballbyball.query("Team_Batting_Id == "+str(team_id))
+			teamfours = teambatting.query("Batsman_Scored == '4'")
+			teamsixes = teambatting.query("Batsman_Scored == '6'")
+			teambowling = ballbyball.query("Team_Bowling_Id == "+str(team_id))
+			teamwickets = teambowling.query("Dissimal_Type != ' ' ")
+			teamextras = teambowling.query("Extra_Runs != ' ' ")
+			teamextras['Extra_Runs'] = teamextras['Extra_Runs'].apply(pd.to_numeric)
+			fours[team] = len(teamfours.index)
+			sixes[team] = len(teamsixes.index)
+			wickets[team] = len(teamwickets.index)
+			extras[team] = sum(teamextras['Extra_Runs'])
+		teamData['fours'] = fours
+		teamData['sixes'] = sixes
+		teamData['wickets'] = wickets
+		teamData['extras'] = extras
 	return teamData
 
 if __name__ == "__main__":
