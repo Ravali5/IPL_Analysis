@@ -893,11 +893,58 @@ function drawTeamWinPie(tdata){
 
 var div2select = 'sixes';
 
+function putDiv4Data(teamData){
+  let svg = d3.select("#teams-div-4")
+              .append("svg")
+              .attr("width","100%")
+              .attr("height","100%")
+              .style("background-color","transparent");
+
+  let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
+  let years = [2013,2014,2015,2016,2017,2018,2019];
+
+  let x_domain = years;
+  let y_domain = [350,850];
+
+  let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+  let y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
+
+  let xAxis = d3.axisBottom().scale(x_scale);
+  let yAxis = d3.axisLeft().scale(y_scale);
+
+  let x_axis = svg.append('g')
+              .attr('transform','translate('+[0,260]+')')
+              .call(xAxis);
+  let y_axis = svg.append('g')
+            .attr('transform','translate('+[50,-80]+')')
+            .call(yAxis);
+
+  function plotLineDiv4(lineData,t){
+    svg.append("path")
+        .datum(years)
+        .attr("fill", "none")
+        .attr("stroke", teamColors[t])
+        .attr("stroke-width", 2.5)
+        .attr("d", d3.line()
+          .x(function(d) { return x_scale(d)+27; })
+          .y(function(d) { return y_scale(lineData[d]/1000000)-80; })
+        );
+  };
+  //let lineData = teamData['auction']['CSK'];
+  for(var team in teams){
+    console.log(teams[team]);
+    plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
+  }
+  
+};
+
 function putDiv2Data(teamData){
 
   div2select = 'sixes';
 
   let options = ['sixes','fours','wickets','extras'];
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
 
   let div2top = d3.select("#teams-div-2")
                   .append("div")
@@ -957,7 +1004,7 @@ function putDiv2Data(teamData){
         .data(teams)
         .enter()
         .append("rect")
-        .style("fill",headingColor)
+        .style("fill",function(d){ return teamColors[d]})
         .attr("x",function(d){ return x_scale(d)+10;})
         .attr("width",25)
         .attr("y",function(d){ return y_scale(barData[d])-80;})
@@ -991,6 +1038,7 @@ function putDiv1Data(teamData){
         .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
 
   let x_domain = teams;
   let y_domain = [0,5];
@@ -1023,7 +1071,7 @@ function putDiv1Data(teamData){
         .data(teams)
         .enter()
         .append("rect")
-        .style("fill",headingColor)
+        .style("fill",function(d){ return teamColors[d];})
         //.attr("x",function(d){ return x_scale(d)+10;})
         .attr("x",50)
         .attr("width",function(d){
@@ -1085,6 +1133,7 @@ function teamChange(){
   d3.select("#left-top").selectAll("*").remove();
   d3.select('#teams-div-1').selectAll("*").remove();
   d3.select('#teams-div-2').selectAll("*").remove();
+  d3.select('#teams-div-4').selectAll("*").remove();
   //console.log(teamData);
   generateMap();
   //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
@@ -1098,6 +1147,7 @@ function teamChange(){
         }
         putDiv1Data(teamData);
         putDiv2Data(teamData);
+        putDiv4Data(teamData);
     });
   //}else{
   //}

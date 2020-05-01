@@ -8,6 +8,7 @@ teams = pd.read_csv("./data/Team.csv")
 matches = pd.read_csv("./data/Match.csv")
 seasons = pd.read_csv("./data/Season.csv")
 ballbyball = pd.read_csv("./data/Ball_by_Ball.csv")
+auction = pd.read_csv("./data/Auction.csv")
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 
@@ -62,6 +63,7 @@ def getTeamData():
 		sixes = {}
 		wickets = {}
 		extras = {}
+		auctionData = {}
 		for team in teamNames:
 			team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
 			teambatting = ballbyball.query("Team_Batting_Id == "+str(team_id))
@@ -75,10 +77,16 @@ def getTeamData():
 			sixes[team] = len(teamsixes.index)
 			wickets[team] = len(teamwickets.index)
 			extras[team] = sum(teamextras['Extra_Runs'])
+			teamauction = auction.query("TEAM == '"+team+"'")
+			auctiondetails = {}
+			for i, row in teamauction.iterrows():
+				auctiondetails[row['Year']] = row['TOTAL_FUNDS'] - row['FUNDS_REMAINING']
+			auctionData[team] = auctiondetails
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
 		teamData['wickets'] = wickets
 		teamData['extras'] = extras
+		teamData['auction'] = auctionData
 	return teamData
 
 if __name__ == "__main__":
