@@ -15,8 +15,8 @@ function generateMap(){
 
     d3.json("/static/json/states.json", function (json) {
 
-    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#DCDCDC", "#EA1A85"];
-    var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
+    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#B7191A", "#EA1A85"];
+    var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KKIP", "RR"];
 
       var div = d3.select("body").append("div") 
                     .attr("class", "tooltip")       
@@ -901,7 +901,7 @@ function putDiv4Data(teamData){
               .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
-  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
   let years = [2013,2014,2015,2016,2017,2018,2019];
 
   let x_domain = years;
@@ -944,7 +944,7 @@ function putDiv2Data(teamData){
   div2select = 'sixes';
 
   let options = ['sixes','fours','wickets','extras'];
-  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
 
   let div2top = d3.select("#teams-div-2")
                   .append("div")
@@ -1008,24 +1008,7 @@ function putDiv2Data(teamData){
         .attr("x",function(d){ return x_scale(d)+10;})
         .attr("width",25)
         .attr("y",function(d){ return y_scale(barData[d])-80;})
-        .attr("height",function(d){ return 340-y_scale(barData[d]); })
-        .on("mouseover", function(d) {
-          console.log(d);
-          svg
-          .append("text")
-          .attr("id","val")
-          .style("text-anchor", "start")
-          .attr("class","label")
-          .style("fill","black")
-          .attr("font-size","14px")
-          .attr("font-weight","bold")
-          .attr("x",x_scale(d)+10)
-          .attr("y",y_scale(barData[d])-86)
-          .text(barData[d])
-        })
-        .on("mouseout",function(d){
-          svg.selectAll('#val').remove();
-        });
+        .attr("height",function(d){ return 340-y_scale(barData[d]); });
   };
 
   div2optionchange();
@@ -1055,12 +1038,11 @@ function putDiv1Data(teamData){
         .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
-  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#B7191A'};
 
   let x_domain = teams;
   let y_domain = [0,5];
   let y_vals = teamData['cupWins'];
-  let wins_years = teamData['teamWinYear'];
   console.log(y_vals);
   console.log(selectedTeam);
   if(selectedTeam != 'ALL'){
@@ -1091,32 +1073,14 @@ function putDiv1Data(teamData){
         .append("rect")
         .style("fill",function(d){ return teamColors[d];})
         //.attr("x",function(d){ return x_scale(d)+10;})
-        .attr("x",52)
+        .attr("x",50)
         .attr("width",function(d){
           if(selectedTeam == 'ALL')
             return y_vals[d]*70;
           return y_vals[d]['wins']*25;
         })
         .attr("y",function(d){ return y_scale(d)-78;})
-        .attr("height",25)
-        .on("mouseover", function(d) {
-          console.log(d);
-          svg
-          .append("text")
-          .attr("id","textYear")
-          .style("text-anchor", "start")
-          .attr("class","label")
-          .style("fill","white")
-          .attr("font-size","14px")
-          .attr("font-weight","bold")
-          .attr("x",70)
-          .attr("y",y_scale(d)-60)
-          .text(wins_years[d])
-        })
-        .on("mouseout",function(d){
-          svg.selectAll('#textYear').remove();
-        });
-
+        .attr("height",25);
   svg.selectAll(".label")
         .data(teams)
         .enter()

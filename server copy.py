@@ -54,7 +54,6 @@ def getTeamData():
 		#print(teamData)
 	else:
 		teamData['cupWins'] = {}
-		teamWinYear={}
 		for team in seasons['Winner']:
 			if team in teamData['cupWins']:
 				teamData['cupWins'][team] += 1
@@ -83,17 +82,11 @@ def getTeamData():
 			for i, row in teamauction.iterrows():
 				auctiondetails[row['Year']] = row['TOTAL_FUNDS'] - row['FUNDS_REMAINING']
 			auctionData[team] = auctiondetails
-		for team in teamNames:
-			season_team = seasons.loc[seasons['Winner']==team,'Season_Year']
-			#season_team=seasons.query("Winner == '"+str(team)+"'").iloc[0]
-			print(season_team.values)
-			teamWinYear[team]=season_team.values.tolist()
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
 		teamData['wickets'] = wickets
 		teamData['extras'] = extras
 		teamData['auction'] = auctionData
-		teamData['teamWinYear'] = teamWinYear
 	return teamData
 
 if __name__ == "__main__":
