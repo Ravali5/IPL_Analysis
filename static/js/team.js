@@ -40,11 +40,11 @@ function generateMap(){
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
                       .style("stroke-width","0.6px")
-                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.3;}}else{return 1;}})	               
+                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})	               
                       .on("mouseover", function(d) {
                         console.log(selectedTeam)
                         d3.select(this)
-                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.3;}}else{return 1;}}) 
+                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.4;}}else{return 1;}}) 
                         /*Tooltip
                             .html("The exact value of<br>this cell is: " + d.value)
                           div.transition()    
@@ -920,6 +920,23 @@ function putDiv4Data(teamData){
             .attr('transform','translate('+[50,-80]+')')
             .call(yAxis);
 
+  svg.append('text')
+                .attr("x",x_scale(2015)+27)
+                .attr("y",y_scale(450))
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Year of Auction");
+
+ svg.append('text')
+                .attr("x",x_scale(2013)-280)
+                .attr("y",y_scale(1027))
+                .attr("transform", "rotate(-90)")
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Auction Amount ( In Millions )");
+
   function plotLineDiv4(lineData,t){
     svg.append("path")
         .datum(years)
@@ -930,6 +947,15 @@ function putDiv4Data(teamData){
           .x(function(d) { return x_scale(d)+27; })
           .y(function(d) { return y_scale(lineData[d]/1000000)-80; })
         );
+
+    svg.selectAll(".dot")
+        .data(years)
+        .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot") // Assign a class for styling
+        .attr("fill", teamColors[t])
+        .attr("cx", function(d) { console.log("blah"+d);return x_scale(d)+27; })
+        .attr("cy", function(d) { return y_scale(lineData[d]/1000000)-80; })
+        .attr("r", 3);
   };
   //let lineData = teamData['auction']['CSK'];
   for(var team in teams){
@@ -999,6 +1025,23 @@ function putDiv2Data(teamData){
     let y_axis = svg.append('g')
               .attr('transform','translate('+[50,-80]+')')
               .call(yAxis);
+
+    svg.append('text')
+                .attr("x",x_scale('SRH')+170)
+                .attr("y",y_scale(barData['SRH'])+20)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Team");
+
+    svg.append('text')
+                .attr("x",x_scale('SRH')-250)
+                .attr("y",y_scale(barData['SRH'])-250)
+                .attr("transform", "rotate(-90)")
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Number of "+selectedOption);
 
     svg.selectAll(".bar")
         .data(teams)

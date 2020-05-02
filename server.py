@@ -31,6 +31,10 @@ def test():
 def getTeamData():
 	selectedTeam = request.form.get('team')
 	teamData = {}
+	twmw=0
+	twml=0
+	tlmw=0
+	tlml=0
 	if selectedTeam != 'ALL' :
 		team_id = teams.loc[teams['Team_Short_Code']==selectedTeam,'Team_Id'].iloc[0]
 		#print(selectedTeam+" - "+str(team_id))
@@ -65,6 +69,8 @@ def getTeamData():
 		wickets = {}
 		extras = {}
 		auctionData = {}
+		TossData={}
+		TossPerTeam={}
 		for team in teamNames:
 			team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
 			teambatting = ballbyball.query("Team_Batting_Id == "+str(team_id))
@@ -85,15 +91,38 @@ def getTeamData():
 			auctionData[team] = auctiondetails
 		for team in teamNames:
 			season_team = seasons.loc[seasons['Winner']==team,'Season_Year']
-			#season_team=seasons.query("Winner == '"+str(team)+"'").iloc[0]
-			print(season_team.values)
 			teamWinYear[team]=season_team.values.tolist()
+		for i, row in matches.iterrows():
+			if "TWMW" not in TossPerTeam:
+				TossPerTeam['TWMW']= 0
+			if "TWML" not in TossPerTeam:
+				TossPerTeam['TWML'] = 0 
+			if "TLML" not in TossPerTeam:
+				TossPerTeam['TLML'] = 0 
+			if "TLMW" not in TossPerTeam:
+				TossPerTeam['TLMW'] = 0  
+			#if row['Team_Name_Id']==row['Toss_Winner_Id']:
+				#if row['Toss_Winner_Id']==row['Match_Winner_Id']:
+					#TossPerTeam['TWMW']['Team_Name_Id'] += 1 
+					#twmw=twmw+1
+				#else:
+					#print("Hi2")
+					#TossPerTeam['Team_Name_Id']['TWML'] += 1 
+			#else:
+				#if row['Toss_Winner_Id']==row['Match_Winner_Id']:
+					#TossPerTeam['TLML']['Team_Name_Id'] += 1 
+				#if row['Team_Name_Id']==row['Match_Winner_Id']:
+					#TossPerTeam['TLMW']['Team_Name_Id'] += 1
+			sc=teams.loc[teams['Team_Id']==row['Team_Name_Id'],'Team_Short_Code'].iloc[0] 
+			TossData[sc]=TossPerTeam
+
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
 		teamData['wickets'] = wickets
 		teamData['extras'] = extras
 		teamData['auction'] = auctionData
 		teamData['teamWinYear'] = teamWinYear
+		#teamData['TossData'] = TossData
 	return teamData
 
 if __name__ == "__main__":
