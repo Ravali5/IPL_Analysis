@@ -1027,16 +1027,16 @@ function putDiv2Data(teamData){
               .call(yAxis);
 
     svg.append('text')
-                .attr("x",x_scale('SRH')+170)
-                .attr("y",y_scale(barData['SRH'])+20)
+                .attr("x",220)
+                .attr("y",285)
                 .attr("width",10)
                 .attr("height",10)
                 .attr("font-size","14px")
                 .text("Team");
 
     svg.append('text')
-                .attr("x",x_scale('SRH')-250)
-                .attr("y",y_scale(barData['SRH'])-250)
+                .attr("x",-200)
+                .attr("y",16)
                 .attr("transform", "rotate(-90)")
                 .attr("width",10)
                 .attr("height",10)
@@ -1143,21 +1143,24 @@ function putDiv1Data(teamData){
         .attr("y",function(d){ return y_scale(d)-78;})
         .attr("height",25)
         .on("mouseover", function(d) {
-          console.log(d);
-          svg
-          .append("text")
-          .attr("id","textYear")
-          .style("text-anchor", "start")
-          .attr("class","label")
-          .style("fill","white")
-          .attr("font-size","14px")
-          .attr("font-weight","bold")
-          .attr("x",70)
-          .attr("y",y_scale(d)-60)
-          .text(wins_years[d])
+          //console.log(d);
+          if(selectedTeam=='ALL'){
+                svg.append("text")
+                    .attr("id","textYear")
+                    .style("text-anchor", "start")
+                    .attr("class","label")
+                    .style("fill","white")
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .attr("x",70)
+                    .attr("y",y_scale(d)-60)
+                    .text(wins_years[d])
+              }
         })
         .on("mouseout",function(d){
-          svg.selectAll('#textYear').remove();
+          if(selectedTeam=='ALL'){
+              svg.selectAll('#textYear').remove();
+           }
         });
 
   svg.selectAll(".label")
