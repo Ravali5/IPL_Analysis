@@ -1,5 +1,7 @@
 function performAnalysis(){
 	d3.select("#team-right-div").remove();
+	d3.select("#venue-right-div").remove();
+	d3.select("#player-right-div").remove();
 	d3.select("#left-top").selectAll("*").remove();
 	d3.select("#left-bottom").selectAll("*").remove();
 	currentColors = bgColorsTeam["ALL"];
