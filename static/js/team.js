@@ -953,7 +953,7 @@ function putDiv4Data(teamData){
         .enter().append("circle") // Uses the enter().append() method
         .attr("class", "dot") // Assign a class for styling
         .attr("fill", teamColors[t])
-        .attr("cx", function(d) { console.log("blah"+d);return x_scale(d)+27; })
+        .attr("cx", function(d) { return x_scale(d)+27; })
         .attr("cy", function(d) { return y_scale(lineData[d]/1000000)-80; })
         .attr("r", 3);
   };
@@ -964,6 +964,107 @@ function putDiv4Data(teamData){
   }
   
 };
+
+function putDiv3Data(teamData){
+
+
+    let svg = d3.select("#teams-div-3")
+              .append("svg")
+              .attr("width","100%")
+              .attr("height","100%")
+              .style("background-color","transparent");
+
+    let tossData = teamData['tossData']
+    let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
+
+    let x_domain = teams;
+    let y_domain = [0,100];
+
+    let x_scale = d3.scaleBand().domain(x_domain).range([50,530]);
+    let y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
+
+    let xAxis = d3.axisBottom().scale(x_scale);
+    let yAxis = d3.axisLeft().scale(y_scale);
+
+    let x_axis = svg.append('g')
+                .attr('transform','translate('+[0,260]+')')
+                .call(xAxis);
+    let y_axis = svg.append('g')
+              .attr('transform','translate('+[50,-80]+')')
+              .call(yAxis);
+
+ // svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
+
+  /*var slice = svg.selectAll(".slice")
+      .data(tossData)
+      .enter().append("g")
+      .attr("class", "g")
+     // .attr("transform",function(d) { return "translate(" + x0(d.categorie) + ",0)"; });
+
+  slice.selectAll("rect")
+      .data(tossData)
+      .enter().append("rect")
+      .attr("width", 20)
+      .attr("x", function(d) { console.log(d);return 100; })
+     // .style("fill", function(d) { return color(d.rate) })
+      .attr("y", function(d) { return 100; })
+      .attr("height", function(d) { return 100; });
+     /* .on("mouseover", function(d) {
+          d3.select(this).style("fill", d3.rgb(color(d.rate)).darker(2));
+      })
+      .on("mouseout", function(d) {
+          d3.select(this).style("fill", color(d.rate));
+      });*/
+
+  /*slice.selectAll("rect")
+      .transition()
+      .delay(function (d) {return Math.random()*1000;})
+      .duration(1000)
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); }); */
+
+
+    svg.selectAll(".bar")
+        .data(teams)
+        .enter()
+        .append("rect")
+        .style("fill",function(d){ return "blue";})
+        .attr("x",function(d){ return x_scale(d)+28;})
+        .attr("width",18)
+        .attr("y",function(d){ return y_scale(tossData[d]['tossLoseMatchLose'])-80;})
+        .attr("height",function(d){ return 40-y_scale(tossData[d]['tossLoseMatchLose']); });
+
+    svg.selectAll(".bar")
+        .data(teams)
+        .enter()
+        .append("rect")
+        .style("fill",function(d){ return "red";})
+        .attr("x",function(d){ return x_scale(d)+28;})
+        .attr("width",18)
+        .attr("y",function(d){ return y_scale(tossData[d]['tossLoseMatchWin'])-80;})
+        .attr("height",function(d){ return 340-y_scale(tossData[d]['tossLoseMatchWin']); });
+
+    svg.selectAll(".bar")
+        .data(teams)
+        .enter()
+        .append("rect")
+        .style("fill",function(d){ return "red";})
+        .attr("x",function(d){ return x_scale(d)+10;})
+        .attr("width",18)
+        .attr("y",function(d){ return y_scale(tossData[d]['tossWinMatchWin'])-80;})
+        .attr("height",function(d){ return 340-y_scale(tossData[d]['tossWinMatchWin']); });
+
+    svg.selectAll(".bar")
+        .data(teams)
+        .enter()
+        .append("rect")
+        .style("fill",function(d){ return "blue";})
+        .attr("x",function(d){ return x_scale(d)+10;})
+        .attr("width",18)
+        .attr("y",function(d){ return y_scale(tossData[d]['tossWinMatchWin'])-80; })
+        .attr("height",function(d){ return 340-y_scale(tossData[d]['tossWinMatchWin'])-y_scale(tossData[d]['tossWinMatchLose']); });
+
+}
 
 function putDiv2Data(teamData){
 
@@ -1229,6 +1330,7 @@ function teamChange(){
         }
         putDiv1Data(teamData);
         putDiv2Data(teamData);
+        putDiv3Data(teamData);
         putDiv4Data(teamData);
     });
   //}else{
