@@ -1,3 +1,6 @@
+function teamAnalysisDisplay(){
+d3.select("#left-top").style("height","58%");
+d3.select("#left-bottom").style("height","38%");
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
 
@@ -1337,3 +1340,4 @@ function teamChange(){
   //}
 };
 teamChange();
+};

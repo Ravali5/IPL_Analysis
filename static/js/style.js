@@ -71,14 +71,14 @@ const bgColorsTeam ={
 	}
 };
 
-function changeAnalysisByButtonColor(btn){
-	analysisby = btn;
+/*function changeAnalysisByButtonColor(btn){
+	//analysisby = btn;
 	d3.selectAll(".menubar-btn")
 		.style("background-color","transparent")
 		.style("color",headingColor);
 	//console.log(btn);
 	d3.select("#"+btn).style("background-color",headingColor).style("color",textInHeadingColor);
-};
+};*/
 
 d3.select("#menubar-search-btn")
 	.style("font-size","1.5em")
@@ -126,7 +126,7 @@ d3.selectAll(".menubar-btn")
 		changeAnalysisByButtonColor(d3.select(this).attr('id'));
 	});
 
-changeAnalysisByButtonColor(analysisby);
+//changeAnalysisByButtonColor(analysisby);
 
 d3.select("#menubar-label")
 	.style("margin-left","2%")
