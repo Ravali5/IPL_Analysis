@@ -1,6 +1,10 @@
 function teamAnalysisDisplay(){
 d3.select("#left-top").style("height","58%");
 d3.select("#left-bottom").style("height","38%");
+currentColors = bgColorsTeam["ALL"];
+headingColor = currentColors['headingColor'];
+textInHeadingColor = currentColors['textInHeadingColor'];
+btnMouseoverBGColor = currentColors['btnMouseoverBGColor'];
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
 
@@ -247,6 +251,7 @@ function drawPie(){
    });
 };
 
+
 function changeBGColorsByTeam(team){
   //console.log('selected team is '+team);
   currentColors = bgColorsTeam[team];
@@ -271,6 +276,13 @@ function changeBGColorsByTeam(team){
   //changeAnalysisByButtonColor(analysisby);
   changeTeamAnalysisButtonColor(teamAnalysisBtn);
   teamChange();
+
+  d3.selectAll(".menubar-btn")
+    .style("background-color","transparent")
+    .style("color",headingColor);
+  //console.log(btn);
+  d3.select("#"+analysisby).style("background-color",headingColor).style("color",textInHeadingColor);  
+
 };
 
 function changeTeamAnalysisButtonColor(btn){
@@ -964,8 +976,8 @@ function putDiv4Data(teamData){
   };
   //let lineData = teamData['auction']['CSK'];
   for(var team in teams){
-    console.log(teams[team]);
-    plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
+    //console.log(teams[team]);
+    //plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
   }
   
 };
@@ -1064,7 +1076,7 @@ function putDiv2Data(teamData){
         .attr("y",function(d){ return y_scale(barData[d])-80;})
         .attr("height",function(d){ return 340-y_scale(barData[d]); })
         .on("mouseover", function(d) {
-          console.log(d);
+          //console.log(d);
           svg
           .append("text")
           .attr("id","val")
@@ -1115,15 +1127,15 @@ function putDiv1Data(teamData){
   let y_domain = [0,5];
   let y_vals = teamData['cupWins'];
   let wins_years = teamData['teamWinYear'];
-  console.log(y_vals);
-  console.log(selectedTeam);
+  //console.log(y_vals);
+  //console.log(selectedTeam);
   if(selectedTeam != 'ALL'){
     let index = x_domain.indexOf(selectedTeam);
     x_domain.splice(index,1);
     y_domain = [0,10];
     y_vals = teamData['opponentData'];
   }
-  console.log(y_vals);
+  //console.log(y_vals);
   //var x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
   //var y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
 
@@ -1232,7 +1244,7 @@ function teamChange(){
   generateMap();
   //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
     $.post("/getTeamData", {'team': selectedTeam}, function(data){
-        console.log(data);
+        //console.log(data);
         teamData = data;
         if(selectedTeam=='ALL'){
           drawPie();
