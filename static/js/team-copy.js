@@ -1,10 +1,6 @@
-function teamAnalysisDisplay(){
-d3.select("#left-top").style("height","58%");
-d3.select("#left-bottom").style("height","38%");
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
 
-//Generate Map function
 function generateMap(){
     var proj = d3.geo.mercator();
     var path = d3.geo.path().projection(proj);
@@ -109,7 +105,7 @@ function generateMap(){
     }
 };
 
-//Draw pie function
+
 function drawPie(){
     // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
     //var radius = Math.min(width, height) / 2 - margin
@@ -268,7 +264,7 @@ function changeBGColorsByTeam(team){
   d3.select("#teams-div-3").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
   d3.select("#teams-div-4").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
   d3.select("#teams-div-5").style("border-color",headingColor).style("box-shadow","3px 3px"+currentColors['boxShadowColor']);
-  //changeAnalysisByButtonColor(analysisby);
+  changeAnalysisByButtonColor(analysisby);
   changeTeamAnalysisButtonColor(teamAnalysisBtn);
   teamChange();
 };
@@ -713,7 +709,6 @@ d3.select("#teams-menubar-btn-kxip")
   .style("margin-top","10%")
   .style("font-size","1.25em");
 
-//function call 
 changeTeamAnalysisButtonColor(teamAnalysisBtn);
 
 d3.select("#team-right-div")
@@ -973,6 +968,7 @@ function putDiv4Data(teamData){
 function putDiv3Data(teamData){
 
 
+if(selectedTeam == 'ALL'){
    /* let svg = d3.select("#teams-div-3")
               .append("svg")
               .attr("width","100%")
@@ -996,8 +992,10 @@ function putDiv3Data(teamData){
                 .call(xAxis);
     let y_axis = svg.append('g')
               .attr('transform','translate('+[50,-80]+')')
-              .call(yAxis);*/
-//commented *************************************
+              .call(yAxis);
+
+  //commnted portion *****************************************
+
  // svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
 
   /*var slice = svg.selectAll(".slice")
@@ -1027,7 +1025,9 @@ function putDiv3Data(teamData){
       .duration(1000)
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); }); */
-//comented ****************
+
+  //Till here ***********************************************
+
 
   /*  svg.selectAll(".bar")
         .data(teams)
@@ -1068,6 +1068,103 @@ function putDiv3Data(teamData){
         .attr("width",18)
         .attr("y",function(d){ return y_scale(tossData[d]['tossWinMatchWin'])-80; })
         .attr("height",function(d){ return 340-y_scale(tossData[d]['tossWinMatchWin'])-y_scale(tossData[d]['tossWinMatchLose']); });*/
+  }
+  console.log("In Div 3 "+ selectedTeam)
+  if(selectedTeam != 'ALL'){
+    let svg = d3.select("#teams-div-3")
+              .append("svg")
+              .attr("width","100%")
+              .attr("height","100%")
+              .style("background-color","transparent");
+
+  $.post("/getPcData", {'data': 'received'}, function(data_pc){
+    // Color scale: give me a specie name, I return a color
+  var color = d3.scaleOrdinal()
+    .domain(["setosa", "versicolor", "virginica" ])
+    .range([ "#440154ff", "#21908dff", "#fde725ff"])
+
+  // Here I set the list of dimension manually to control the order of axis:
+  dimensions = ["Team_name", "Toss_Winner", "Match_Winner"]
+
+  // For each dimension, I build a linear scale. I store all in a y object
+  var y = {}
+  for (i in dimensions) {
+    name = dimensions[i]
+    y[name] = d3.scaleLinear()
+      .domain( [0,10] ) // --> Same axis range for each group
+      // --> different axis range for each group --> .domain( [d3.extent(data, function(d) { return +d[name]; })] )
+      .range([200, 100])
+  }
+
+  // Build the X scale -> it find the best position for each Y axis
+  x = d3.scalePoint()
+    .range([50, 200])
+    .domain(dimensions);
+
+  // Highlight the specie that is hovered
+  var highlight = function(d){
+
+   // selected_specie = d.Species
+
+    // first every group turns grey
+    d3.selectAll(".line")
+      .transition().duration(200)
+      .style("stroke", "lightgrey")
+      .style("opacity", "0.2")
+    // Second the hovered specie takes its color
+    /*d3.selectAll("." + selected_specie)
+      .transition().duration(200)
+      .style("stroke", color(selected_specie))
+      .style("opacity", "1")*/
+  }
+
+  // Unhighlight
+  var doNotHighlight = function(d){
+    d3.selectAll(".line")
+      .transition().duration(200).delay(1000)
+     // .style("stroke", function(d){ return( color(d.Species))} )
+      .style("opacity", "1")
+  }
+
+  // The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
+  function path(d) {
+    console.log("In path")
+      return d3.line()(dimensions.map(function(p) {console.log(p); return [x(p), y[p](d[p])]; }));
+  }
+
+  // Draw the lines
+  svg
+    .selectAll("myPath")
+    .data(data_pc)
+    .enter()
+    .append("path")
+    // .attr("class", function (d) { return "line " } ) // 2 class for each line: 'line' and the group name
+      .attr("d",  path)
+      .style("fill", "none" )
+      .style("stroke", function(d){ return "red";} )
+      .style("opacity", 0.5)
+     // .on("mouseover", highlight)
+     // .on("mouseleave", doNotHighlight )
+
+  // Draw the axis:
+  svg.selectAll("myAxis")
+    // For each dimension of the dataset I add a 'g' element:
+    .data(dimensions).enter()
+    .append("g")
+    .attr("class", "axis")
+    // I translate this element to its right position on the x axis
+    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+    // And I build the axis with the call function
+    .each(function(d) { d3.select(this).call(d3.axisLeft().ticks(5).scale(y[d])); })
+    // Add axis title
+    .append("text")
+      .style("text-anchor", "middle")
+      .attr("y", -9)
+      .text(function(d) { return d; })
+      .style("fill", "black")
+
+    })
+  }
 
 }
 
@@ -1102,14 +1199,18 @@ function putDiv2Data(teamData){
         .style("background-color","transparent");
 
   function div2optionchange(){
+  if(selectedTeam == 'ALL'){
     console.log("changed to "+options[div2dropdown.property("selectedIndex")]);
     svg.selectAll("*").remove();
-    if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
     let selectedOption = options[div2dropdown.property("selectedIndex")];
 
     let barData = teamData[selectedOption];
+
+    console.log(teamData)
+
+    console.log("clicked srh  "+barData+ selectedOption +"hi")
 
     let max = 0;
     for(var t in barData){
@@ -1176,8 +1277,9 @@ function putDiv2Data(teamData){
         .on("mouseout",function(d){
           svg.selectAll('#val').remove();
         });
-  }
-};
+      }
+  };
+
   div2optionchange();
 
 };
@@ -1328,6 +1430,7 @@ function teamChange(){
   generateMap();
   //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
     $.post("/getTeamData", {'team': selectedTeam}, function(data){
+        console.log("Main data");
         console.log(data);
         teamData = data;
         if(selectedTeam=='ALL'){
@@ -1344,4 +1447,3 @@ function teamChange(){
   //}
 };
 teamChange();
-};
