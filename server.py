@@ -10,9 +10,34 @@ seasons = pd.read_csv("./data/Season.csv")
 ballbyball = pd.read_csv("./data/Ball_by_Ball.csv")
 auction = pd.read_csv("./data/Auction.csv")
 venues = pd.read_csv("./data/Venue.csv")
+bestbatavg = pd.read_csv("./data/best-batting-average.csv")
+bestbatstr = pd.read_csv("./data/best-batting-strike-rate.csv")
+bestbowlavg = pd.read_csv("./data/best-bowling-average.csv")
+bestbowleco = pd.read_csv("./data/best-bowling-economy.csv")
+bat = pd.concat([bestbatavg,bestbatstr])
+bat = bat.drop_duplicates(subset='Players')
+bowl = pd.concat([bestbowlavg,bestbowleco])
+bowl = bowl.drop_duplicates(subset='Players')
+batbowl = pd.merge(bat,bowl,how="inner",on=["Players"])
+bat = bat.loc[~bat['Players'].isin(batbowl['Players'].array)]
+bowl= bowl.loc[~bowl['Players'].isin(batbowl['Players'].array)]
+tempbat = bat
+bat = pd.merge(bat,bowl,how="left",on="Players")
+bowl= pd.merge(bowl,tempbat,how="left",on="Players")
+bat['skill'] = 'bat'
+bowl['skill']= 'bowl'
+batbowl['skill'] = 'batbowl'
+
+players = pd.concat([bat,bowl,batbowl])
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 
+@app.route("/getPlayerData",methods = ['POST','GET'])
+def getPlayerData():
+	selectedPlayer = request.form.get('player')
+	playerData = {}
+	playerData['players'] = [x for x in players['Players']]
+	return playerData
 
 @app.route("/getPieData",methods = ['POST', 'GET'])
 def getPieData():
