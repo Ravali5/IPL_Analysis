@@ -30,7 +30,7 @@ def getVenueData():
 		team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
 		venueList = venues.query("HomeGround_Team_Id == '" + str(team_id)+"'")
 		tmp = venueList['Venue_Name']
-		print(venueList)
+		#print(venueList)
 		homeGrdWin = matches.query('Team_Name_Id == ' +str(team_id)+' and Match_Winner_Id == '+str(team_id)+" and Host_Country == 'India' "+"and Venue_Name in @tmp" )
 		nonHomeGrdWin = matches.query('Opponent_Team_Id == ' +str(team_id)+' and Match_Winner_Id == '+str(team_id)+" and Host_Country == 'India'")
 		teamHGWins={}
@@ -51,6 +51,7 @@ def getVenueData():
 
 	venueData['homeWins'] = homeWins
 	venueData['tossDec'] = tossDec
+	venueData['venueNames'] = venues['Venue_Name'].tolist()
 	return venueData
 
 @app.route("/")

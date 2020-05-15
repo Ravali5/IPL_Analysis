@@ -67,6 +67,21 @@ d3.select("#venue-right-div")
   	.style("margin-right","1%")
   	.style("color",currentColors['headingColor']);
 
+
+    function populateDropDown(vnames){
+        let left_top_dropdown = d3.select("#left-top")
+                                .append("select")
+                                .attr("size","2")
+                                .style("margin-top","3%")
+                                .style("margin-left","20%")
+                                .style("width","75%")
+                                .style("height","92.5%")
+
+          let div2dropdownOptions = left_top_dropdown.selectAll("option").data(vnames);
+          div2dropdownOptions.enter().append("option").text(function(d){return d});
+
+      }
+
     function putDiv1Data(vdata){
         
         console.log(vdata);
@@ -142,6 +157,7 @@ d3.select("#venue-right-div")
       $.post("/getVenueData", {'data': 'received'}, function(data){
 
         venueData = data
+        populateDropDown(venueData['venueNames'])
         putDiv1Data(venueData);
 
       });
