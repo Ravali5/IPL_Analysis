@@ -67,6 +67,7 @@ d3.select("#venue-right-div")
   	.style("margin-right","1%")
   	.style("color",currentColors['headingColor']);
 
+    var selectedVenue;
 
     function populateDropDown(vnames){
         let left_top_dropdown = d3.select("#left-top")
@@ -76,13 +77,55 @@ d3.select("#venue-right-div")
                                 .style("margin-left","20%")
                                 .style("width","75%")
                                 .style("height","92.5%")
+                                .on("change",venueChanged)
+
+                                
 
           let div2dropdownOptions = left_top_dropdown.selectAll("option").data(vnames);
           div2dropdownOptions.enter().append("option").text(function(d){return d});
+          
 
-      }
+    function venueChanged(){
+      selectedVenue = vnames[left_top_dropdown.property("selectedIndex")]
+      plotPieChart(selectedVenue)
 
-    function putDiv1Data(vdata){
+
+    };
+    venueChanged();
+  };
+    function plotPieChart(selectedVenue){
+      
+      d3.select("#venue-div-1").selectAll("*").remove();
+      let svg = d3.select("#venue-div-1")
+                  .append("svg")
+                  .attr("width", 400)
+                  .attr("height", 300)
+                  .append("g")
+                  .attr("transform", "translate(180,170)");
+
+                  console.log(venueData['tossDec'][selectedVenue])
+      var pie = d3.pie()
+        .value(function(d) {return d.value; })
+      var data_ready = pie(d3.entries(venueData['tossDec'][selectedVenue]))
+
+      var arc=d3.arc()
+                .innerRadius(0)
+                .outerRadius(110)
+      var en_arc=d3.arc()
+                  .innerRadius(0)
+                  .outerRadius(110*1.07)
+
+      svg.selectAll('whatever')
+        .data(data_ready)
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .style('fill', function(d,i){ if(i==0){ return "red"; }else{return "green";}})
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+    }
+
+    function putDiv2Data(vdata){
         
         console.log(vdata);
         let svg = d3.select("#venue-div-2")
@@ -153,15 +196,122 @@ d3.select("#venue-right-div")
         
     };
 
+    function leftBottomData(){
+    var proj = d3.geo.mercator();
+    var path = d3.geo.path().projection(proj);
+    
+    //console.log(d3.select("#left-top").attr("width"))
+    var map = d3.select("#left-bottom").append("svg:svg")
+        .attr("viewBox","30 -30 540 700")
+        .call(initialize);
+
+    var india = map.append("svg:g")
+        .attr("id", "india");
+
+    d3.json("/static/json/states.json", function (json) {
+
+    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#DCDCDC", "#EA1A85"];
+    var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
+
+    
+
+      var div = d3.select("body").append("div") 
+                    .attr("class", "tooltip")       
+                    .style("opacity", 0)
+                    .style("position", "absolute")     
+                    .style("text-align", "center")    
+                    .attr("width", 60)          
+                    .style("height", 20)         
+                    .style("padding", 4)       
+                    .style("font", 12)    
+                    .style("background", "#b3d1ff") 
+                    .style("color","#0052cc")
+                    .style("border-style","solid")
+                    .style("border-radius","30px")
+                    .style("border-color","#0052cc")
+
+      var units=india.selectAll("path")
+                      .data(json.features)
+                      .enter().append("path")               
+                      .attr("d", path)
+                      .style("fill",function(d){ return d["color"];})
+                      .style("stroke","#A9A9A9")
+                      .style("stroke-width","0.6px")
+                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})                
+                      .on("mouseover", function(d) {
+                        console.log(selectedTeam)
+                        d3.select(this)
+                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.4;}}else{return 1;}}) 
+                        /*Tooltip
+                            .html("The exact value of<br>this cell is: " + d.value)
+                          div.transition()    
+                              .duration(200)    
+                              .style("opacity", .9);  */ 
+                              if(selectedTeam == "ALL"){
+                                  div.style("opacity", .9);
+                                  div.html(d["id"]+ "<br/>") 
+                                  .style("left", (d3.event.pageX) + "px")   
+                                  .style("top", (d3.event.pageY - 28) + "px");
+                            }
+                            else if(selectedTeam == d["supportTeam"]){
+                                div.style("opacity", .9);
+                                div.html(d["id"]+ "<br/>") 
+                                  .style("left", (d3.event.pageX) + "px")   
+                                  .style("top", (d3.event.pageY - 28) + "px");
+                            }
+
+                      })
+                      .on("mouseout", function(d) {
+                        if(selectedTeam == "ALL"){
+                            d3.select(this)
+                              .style("opacity","1")
+                          }
+                          div.style("opacity", 0); 
+                      });
+
+
+                for(var j = 1;j <= 8;j++){
+                      india.append('rect')
+                          .attr("x",450)
+                          .attr("y",300+(j*27))
+                          .attr("width",13)
+                          .attr("height",13)
+                          .style("fill",function(d){ return colors[j-1]});
+
+                     india.append('text')
+                          .attr("x",480)
+                          .attr("y",310+(j*27))
+                          .attr("width",13)
+                          .attr("height",13)
+                          .attr("font-size","16px")
+                          .text(teams[j-1]);
+                    }
+
+                    india.append('text')
+                          .attr("x",100)
+                          .attr("y",0)
+                          .attr("width",30)
+                          .attr("height",30)
+                          .text("Pie chart -Dilip fill the text");
+
+      });
+
+        function initialize() {
+          proj.scale(6700);
+          proj.translate([-1240, 720]);
+        }
+    };
+
     function displayVenuePlots(){
       $.post("/getVenueData", {'data': 'received'}, function(data){
 
         venueData = data
         populateDropDown(venueData['venueNames'])
-        putDiv1Data(venueData);
+        putDiv2Data(venueData)
 
       });
     };
 
     displayVenuePlots();
+    leftBottomData();
 };
