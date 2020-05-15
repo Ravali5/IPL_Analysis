@@ -79,14 +79,16 @@ d3.select("#venue-right-div")
                                 .style("height","92.5%")
                                 .on("change",venueChanged)
 
-                                
+                                console.log(vnames)
 
-          let div2dropdownOptions = left_top_dropdown.selectAll("option").data(vnames);
+          let div2dropdownOptions = left_top_dropdown.selectAll("option").data(Object.keys(vnames));
           div2dropdownOptions.enter().append("option").text(function(d){return d});
           
 
     function venueChanged(){
-      selectedVenue = vnames[left_top_dropdown.property("selectedIndex")]
+      venueNames = Object.keys(vnames)
+      //console.log(left_top_dropdown.property("selectedIndex"))
+      selectedVenue = venueNames[left_top_dropdown.property("selectedIndex")]
       plotPieChart(selectedVenue)
 
 
@@ -103,7 +105,7 @@ d3.select("#venue-right-div")
                   .append("g")
                   .attr("transform", "translate(180,170)");
 
-                  console.log(venueData['tossDec'][selectedVenue])
+                  //console.log(venueData['tossDec'][selectedVenue])
       var pie = d3.pie()
         .value(function(d) {return d.value; })
       var data_ready = pie(d3.entries(venueData['tossDec'][selectedVenue]))
@@ -212,8 +214,8 @@ d3.select("#venue-right-div")
 
     var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#DCDCDC", "#EA1A85"];
     var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
-
     
+
 
       var div = d3.select("body").append("div") 
                     .attr("class", "tooltip")       
@@ -237,7 +239,7 @@ d3.select("#venue-right-div")
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
                       .style("stroke-width","0.6px")
-                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})                
+                      .style("opacity",function(d){if(d["id"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})                
                       .on("mouseover", function(d) {
                         console.log(selectedTeam)
                         d3.select(this)

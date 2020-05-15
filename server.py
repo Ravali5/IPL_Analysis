@@ -63,6 +63,7 @@ def getVenueData():
 		teamHGWins['nonHomeGrdWin'] = len(nonHomeGrdWin.index)
 		homeWins[team] = teamHGWins
 
+
 	indianStadiums = matches.query("Host_Country == 'India'")
 	stadiumList = indianStadiums['Venue_Name'].unique().tolist()
 
@@ -74,9 +75,16 @@ def getVenueData():
 		tossDecision['bat'] = len(bat.index)
 		tossDec[stadium] = tossDecision
 
+	venuesList = venues['Venue_Name'].tolist()
+	venueNames={}
+	for venue in venuesList:
+		tmpVenues = venues.query("Venue_Name == '" +str(venue)+"'")
+		venueNames[venue] = tmpVenues['State'].iloc[0]
+
+
 	venueData['homeWins'] = homeWins
 	venueData['tossDec'] = tossDec
-	venueData['venueNames'] = venues['Venue_Name'].tolist()
+	venueData['venueNames'] = venueNames
 	return venueData
 
 @app.route("/")

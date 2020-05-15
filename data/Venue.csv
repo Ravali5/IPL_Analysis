@@ -1,25 +1,25 @@
-Venue_Name,City_Name,HomeGround_Team_Id
-M Chinnaswamy Stadium,Banglore,2
-"Punjab Cricket Association Stadium, Mohali",Chandigarh,4
-Feroz Shah Kotla,Delhi,6
-Wankhede Stadium,Mumbai,7
-Eden Gardens,Kolkata,1
-Sawai Mansingh Stadium,Jaipur,5
-"Rajiv Gandhi International Stadium, Uppal",Hyderabad,11
-"MA Chidambaram Stadium, Chepauk",Chennai,3
-Dr DY Patil Sports Academy,Mumbai,7
-Brabourne Stadium,Mumbai,7
-"Sardar Patel Stadium, Motera",Ahmedabad,5
-Barabati Stadium,Cuttack,"Not Home Ground"
-"Vidarbha Cricket Association Stadium, Jamtha",Nagpur,11
-Himachal Pradesh Cricket Association Stadium,Dharamsala,4
-Nehru Stadium,Kochi,"Not Home Ground"
-Holkar Cricket Stadium,Indore,"Not Home Ground"
-Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,Visakhapatnam,11
-Subrata Roy Sahara Stadium,Pune,"Not Home Ground"
-Shaheed Veer Narayan Singh International Stadium,Raipur,6
-JSCA International Stadium Complex,Ranchi,3
-Maharashtra Cricket Association Stadium,Pune,"Not Home Ground"
-"Punjab Cricket Association IS Bindra Stadium, Mohali",Chandigarh,4
-Saurashtra Cricket Association Stadium,Rajkot,"Not Home Ground"
-Green Park,Kanpur,"Not Home Ground"
+Venue_Name,City_Name,HomeGround_Team_Id,State
+M Chinnaswamy Stadium,Banglore,2,Karnataka
+"Punjab Cricket Association Stadium, Mohali",Chandigarh,4,Punjab
+Feroz Shah Kotla,Delhi,6,Delhi
+Wankhede Stadium,Mumbai,7,Maharashtra
+Eden Gardens,Kolkata,1,West Bengal
+Sawai Mansingh Stadium,Jaipur,5,Rajasthan
+"Rajiv Gandhi International Stadium, Uppal",Hyderabad,11,Andhra Pradesh
+"MA Chidambaram Stadium, Chepauk",Chennai,3,Tamil Nadu
+Dr DY Patil Sports Academy,Mumbai,7,Maharashtra
+Brabourne Stadium,Mumbai,7,Maharashtra
+"Sardar Patel Stadium, Motera",Ahmedabad,5,Gujarat
+Barabati Stadium,Cuttack,"Not Home Ground",Orissa
+"Vidarbha Cricket Association Stadium, Jamtha",Nagpur,11,Maharashtra
+Himachal Pradesh Cricket Association Stadium,Dharamsala,4,Himachal Pradesh
+Nehru Stadium,Kochi,"Not Home Ground",Kerala
+Holkar Cricket Stadium,Indore,"Not Home Ground",Madhya Pradesh
+Dr. Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium,Visakhapatnam,11,Andhra Pradesh
+Subrata Roy Sahara Stadium,Pune,"Not Home Ground",Maharashtra
+Shaheed Veer Narayan Singh International Stadium,Raipur,6,Chhattisgarh
+JSCA International Stadium Complex,Ranchi,3,Jharkhand
+Maharashtra Cricket Association Stadium,Pune,"Not Home Ground",Maharashtra
+"Punjab Cricket Association IS Bindra Stadium, Mohali",Chandigarh,4,Punjab
+Saurashtra Cricket Association Stadium,Rajkot,"Not Home Ground",Gujarat
+Green Park,Kanpur,"Not Home Ground",Uttar Pradesh
