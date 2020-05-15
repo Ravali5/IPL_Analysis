@@ -9,8 +9,10 @@ matches = pd.read_csv("./data/Match.csv")
 seasons = pd.read_csv("./data/Season.csv")
 ballbyball = pd.read_csv("./data/Ball_by_Ball.csv")
 auction = pd.read_csv("./data/Auction.csv")
+venues = pd.read_csv("./data/Venue.csv")
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
+
 
 @app.route("/getPieData",methods = ['POST', 'GET'])
 def getPieData():
@@ -18,6 +20,38 @@ def getPieData():
 	for col in votes.columns:
 		votes_data[col]=[x for x in votes[col]]
 	return votes_data
+
+@app.route("/getVenueData",methods = ['POST', 'GET'])
+def getVenueData():
+	venueData={}
+	homeWins={}
+	tossDec ={}
+	for team in teamNames:
+		team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
+		venueList = venues.query("HomeGround_Team_Id == '" + str(team_id)+"'")
+		tmp = venueList['Venue_Name']
+		print(venueList)
+		homeGrdWin = matches.query('Team_Name_Id == ' +str(team_id)+' and Match_Winner_Id == '+str(team_id)+" and Host_Country == 'India' "+"and Venue_Name in @tmp" )
+		nonHomeGrdWin = matches.query('Opponent_Team_Id == ' +str(team_id)+' and Match_Winner_Id == '+str(team_id)+" and Host_Country == 'India'")
+		teamHGWins={}
+		teamHGWins['homeGrdWin'] = len(homeGrdWin.index)
+		teamHGWins['nonHomeGrdWin'] = len(nonHomeGrdWin.index)
+		homeWins[team] = teamHGWins
+
+	indianStadiums = matches.query("Host_Country == 'India'")
+	stadiumList = indianStadiums['Venue_Name'].unique().tolist()
+
+	for stadium in stadiumList:
+		tossDecision = {}
+		field = matches.query("Venue_Name == '"+str(stadium)+"' and Toss_Decision == 'field'")
+		bat = matches.query("Venue_Name == '"+str(stadium)+"' and Toss_Decision == 'bat'")
+		tossDecision['field'] = len(field.index)
+		tossDecision['bat'] = len(bat.index)
+		tossDec[stadium] = tossDecision
+
+	venueData['homeWins'] = homeWins
+	venueData['tossDec'] = tossDec
+	return venueData
 
 @app.route("/")
 def init():

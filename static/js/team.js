@@ -1020,11 +1020,12 @@ function putDiv2Data(teamData){
   function div2optionchange(){
     console.log("changed to "+options[div2dropdown.property("selectedIndex")]);
     svg.selectAll("*").remove();
-    if(selectedTeam == 'ALL'){
+   // if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
     let selectedOption = options[div2dropdown.property("selectedIndex")];
 
+    console.log(teamData)
     let barData = teamData[selectedOption];
 
     let max = 0;
@@ -1092,7 +1093,7 @@ function putDiv2Data(teamData){
         .on("mouseout",function(d){
           svg.selectAll('#val').remove();
         });
-  }
+  //}
 };
   div2optionchange();
 
