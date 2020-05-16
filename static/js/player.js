@@ -130,13 +130,50 @@ function playerAnalysisDisplay(){
 		let svg = d3.select("#player-div-2")
 						.append("svg")
 		                .attr("width", "90%")
-		                .attr("height", "80%")
+		                .attr("height", "100%")
 		                .append("g")
-		                .attr("transform", "translate(180,170)");
+		                .attr("transform", "translate(0,0)");
 		let dimensions = d3.keys(pcData[0]).filter(function(d) { return d; });
-		//dimensions.splice(dimensions.indexOf("Players"),1);
-		//dimensions.splice(dimensions.indexOf("skill",1);
-		console.log(dimensions);
+		dimensions.splice(dimensions.indexOf("Players"),1);
+		dimensions.splice(dimensions.indexOf("skill"),1);
+		dimensions.splice(dimensions.indexOf("Bat_Position"),1);
+		dimensions.splice(dimensions.indexOf("Bowl_Position"),1);
+		dimensions.splice(dimensions.indexOf("Bowl_Bowling_Figures"),1);
+		//dimensions.splice(dimensions.indexOf("skill"),1);
+		//console.log(dimensions);
+		dimensions.sort();
+		let y = {};
+		for(i in dimensions){
+			y[dimensions[i]] = d3.scaleLinear().domain(d3.extent(pcData, function(d){return +d[dimensions[i]]; })).range([450,100]);
+		}
+
+		let x = d3.scalePoint().range([0,900]).padding(1).domain(dimensions);
+
+		function path(d){
+			return d3.line()(dimensions.map(function(p){ return [x(p), y[p](d[p])]; }));
+		}
+
+		svg.selectAll("myAxis")
+		    .data(dimensions).enter()
+		    .append("g")
+		    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+		    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+		    .append("text")
+		      .style("text-anchor", "start")
+		      .attr("y", 90)
+		      .attr("transform", "rotate(45)")
+		      .text(function(d) {console.log(d); return d; })
+		      .style("fill", "black");
+
+		svg.selectAll("myPath")
+		    .data(pcData)
+		    .enter().append("path")
+		    .attr("d",  path)
+		    .style("fill", "none")
+		    .style("stroke", currentColors['headingColor'])
+		    .style("opacity","0.5");
+
+
 	};
 	function playerClear(){
 		playersList.selectedIndex = -1;
