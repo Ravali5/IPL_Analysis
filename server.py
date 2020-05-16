@@ -14,6 +14,7 @@ bestbatavg = pd.read_csv("./data/best-batting-average.csv")
 bestbatstr = pd.read_csv("./data/best-batting-strike-rate.csv")
 bestbowlavg = pd.read_csv("./data/best-bowling-average.csv")
 bestbowleco = pd.read_csv("./data/best-bowling-economy.csv")
+mostdotball = pd.read_csv("./data/most-dot-balls.csv")
 bat = pd.concat([bestbatavg,bestbatstr])
 bat = bat.drop_duplicates(subset='Players')
 bowl = pd.concat([bestbowlavg,bestbowleco])
@@ -27,6 +28,10 @@ bowl= pd.merge(bowl,tempbat,how="left",on="Players")
 bat['skill'] = 'bat'
 bowl['skill']= 'bowl'
 batbowl['skill'] = 'batbowl'
+mostruns = pd.read_csv("./data/most-runs.csv")
+mostwick = pd.read_csv("./data/most-wickets.csv")
+highscore= pd.read_csv("./data/highest-scores.csv")
+#print(mostruns.iloc[0]['Runs'])
 
 players = pd.concat([bat,bowl,batbowl])
 
@@ -36,7 +41,14 @@ teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 def getPlayerData():
 	selectedPlayer = request.form.get('player')
 	playerData = {}
-	playerData['players'] = [x for x in players['Players']]
+	if selectedPlayer == 'all':
+		playerData['players'] = [x for x in players['Players']];
+		playerData['alltime_mostruns'] = {'val':mostruns.iloc[0]['Runs'],'name':mostruns.iloc[0]['Players']};
+		playerData['alltime_mostwickets'] = {'val':mostwick.iloc[0]['Wickets'],'name':mostwick.iloc[0]['Players']};
+		playerData['alltime_beststrikerate'] = {'val':bestbatstr.iloc[0]['Bat_Strike_Rate'],'name':bestbatstr.iloc[0]['Players']};
+		playerData['alltime_highscore'] = {'val':highscore.iloc[0]['Highest Score'],'name':highscore.iloc[0]['Players']};
+		playerData['alltime_bowleconomy'] = {'val':bestbowleco.iloc[0]['Bowl_Economy'],'name':bestbowleco.iloc[0]['Players']};
+		playerData['alltime_mostdotball'] = {'val':mostdotball.iloc[0]['Dot Balls'],'name':mostdotball.iloc[0]['Players']};
 	return playerData
 
 @app.route("/getPieData",methods = ['POST', 'GET'])

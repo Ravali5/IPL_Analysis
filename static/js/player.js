@@ -1,4 +1,5 @@
 function playerAnalysisDisplay(){
+	let playerData = {};
 	d3.select("#left-top").style("height","39%");
 	d3.select("#left-bottom").style("height","58%");
 	d3.select("#right")
@@ -10,7 +11,7 @@ function playerAnalysisDisplay(){
 	  .style("float","left");
 	d3.select("#player-right-div")
 		.append("div")
-		.attr("id","venue-div-1")
+		.attr("id","player-div-1")
 	  	.style("width","99%")
 	  	.style("height","30%")
 	  	.style("background-color","transparent")
@@ -25,7 +26,7 @@ function playerAnalysisDisplay(){
 	  	.style("color",currentColors['headingColor']);
 	d3.select("#player-right-div")
 		.append("div")
-		.attr("id","venue-div-2")
+		.attr("id","player-div-2")
 	  	.style("width","99%")
 	  	.style("height","65%")
 	  	.style("background-color","transparent")
@@ -69,6 +70,9 @@ function playerAnalysisDisplay(){
 		.style("font-size","1em")
 		.on("focus",function(){
 			d3.select(this).style("outline","none")
+		})
+		.on("click",function(){
+			playerClear();
 		});
 	d3.select("#left-top-div-span")
 		.append("span")
@@ -86,13 +90,60 @@ function playerAnalysisDisplay(){
 					.style("border","none")
 					.on("focus",function(){
 						d3.select(this).style("outline","none")
+					})
+					.on("change",function(){
+						playerChange();
 					});
-
+	function appendImage(imgName){
+		let divName = imgName;
+		divName = divName.replace(/ /g,"-");
+		d3.select("#player-div-1")
+			.append("div")
+			.attr("id",divName)
+			.style("width","16%")
+			.style("height","100%")
+			.style("background-color","transparent")
+			.style("margin-right","0%")
+			.style("float","left")
+			.style("text-align","center")
+			.style("color","black");
+		d3.select('#'+divName)
+	        .append('img')
+	        .attr("width","95%")
+	        .attr("height","150")
+	        .attr("src", "/static/images/players/"+imgName+".png")
+	        .style("margin-left","2.5%")
+	        .style("margin-right","2.5%")
+	        .style("margin-top","1%")
+	        .style("float","left");
+	    d3.select("#"+divName)
+	    	.append("span")
+	    	.style("font-size","1.25em")
+	    	.text(imgName);
+	};
+	function playerClear(){
+		playersList.selectedIndex = -1;
+		d3.select("#left-top-div-span").style("font-size","1.5em").text(" -- Select player -- ");
+		d3.select("#player-div-1").selectAll("*").remove();
+		appendImage(playerData['alltime_mostruns']['name']);
+		appendImage(playerData['alltime_highscore']['name']);
+		appendImage(playerData['alltime_beststrikerate']['name']);
+		appendImage(playerData['alltime_mostwickets']['name']);
+		appendImage(playerData['alltime_bowleconomy']['name']);
+		appendImage(playerData['alltime_mostdotball']['name']);
+	};
+	function playerChange(){
+		d3.select("#player-div-1").selectAll("*").remove();
+		d3.select("#left-top-div-span").style("font-size","1.5em").text(playersList.property('value'));
+		//console.log(playersList.property('value'));
+	};
 	function loadPlayerData(){
-		$.post("/getPlayerData", {'player': 'player'}, function(data){
+		$.post("/getPlayerData", {'player': 'all'}, function(data){
 			console.log(data);
+			playerData = data;
 			let playersListOptions = playersList.selectAll("option").data(data['players'].sort());
-			playersListOptions.enter().append("option").text(function(d){console.log(d); return d;});
+			playersListOptions.enter().append("option").text(function(d){return d;});
+			playerClear();
 		});
 	};
 
