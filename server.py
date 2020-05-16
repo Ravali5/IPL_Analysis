@@ -1,8 +1,10 @@
 from flask import Flask, request
 from flask import render_template
 import pandas as pd
+import json
 
 app = Flask(__name__)
+
 votes = pd.read_csv("./data/Votes.csv")
 teams = pd.read_csv("./data/Team.csv")
 matches = pd.read_csv("./data/Match.csv")
@@ -34,6 +36,9 @@ highscore= pd.read_csv("./data/highest-scores.csv")
 #print(mostruns.iloc[0]['Runs'])
 
 players = pd.concat([bat,bowl,batbowl])
+playersjson = players.to_dict(orient='records')
+playersjson = json.dumps(playersjson)
+
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 
@@ -49,6 +54,8 @@ def getPlayerData():
 		playerData['alltime_highscore'] = {'val':highscore.iloc[0]['Highest Score'],'name':highscore.iloc[0]['Players']};
 		playerData['alltime_bowleconomy'] = {'val':bestbowleco.iloc[0]['Bowl_Economy'],'name':bestbowleco.iloc[0]['Players']};
 		playerData['alltime_mostdotball'] = {'val':mostdotball.iloc[0]['Dot Balls'],'name':mostdotball.iloc[0]['Players']};
+		playerData['json'] = playersjson[1:len(playersjson)-1]
+		playerData['json'] = playerData['json']+','
 	return playerData
 
 @app.route("/getPieData",methods = ['POST', 'GET'])
