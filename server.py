@@ -86,6 +86,30 @@ def getVenueData():
 			teamVenueWL['teamVenueLosses'] = len(teamVenueLosses.index)
 			WL[team]=teamVenueWL
 
+	if selectedVenue is not None:
+		venueRecords = matches.query("Venue_Name == '"+str(selectedVenue)+"'")
+		matchRecords = venueRecords['Match_Id'].unique().tolist()
+		#print(matchRecords)
+		ballRecords	 = ballbyball.query("Match_Id in @matchRecords and Batsman_Scored  != 'Do_nothing' and Batsman_Scored != ''")
+		scoreRecords = ballRecords['Batsman_Scored'].tolist()
+		#print(scoreRecords)
+		result = 0
+		for s in scoreRecords:
+			if(not s.isdigit()):
+				pass
+			else:
+				result = result+int(s)
+		#desired_array = [int(numeric_string) for numeric_string in scoreRecords]
+		#desired_array = list(map(int, scoreRecords))
+		#print(test_list)
+		scoreSum = result#sum(desired_array)
+		#print(scoreSum)
+		matchesCount = len(matchRecords)
+		battingFriendly = scoreSum / (2*matchesCount)
+		#print(battingFriendly)
+		battingF = {}
+		battingF['battingFriendly'] = battingFriendly
+		venueData['battingFriendly'] = battingF
 
 	indianStadiums = matches.query("Host_Country == 'India'")
 	stadiumList = indianStadiums['Venue_Name'].unique().tolist()

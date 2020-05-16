@@ -90,6 +90,7 @@ d3.select("#venue-right-div")
                                 })
                                 .on("click",function(){
                                       d3.select("#venue-div-1").selectAll("*").remove();
+                                      d3.select("#india").selectAll("path").style("opacity","1")
                                 });
 
         let left_top_dropdown = d3.select("#left-top")
@@ -107,7 +108,7 @@ d3.select("#venue-right-div")
                                 })
                                 .on("change",venueChanged)
 
-                                console.log(vnames)
+                                //console.log(vnames)
 
           let div2dropdownOptions = left_top_dropdown.selectAll("option").data(Object.keys(vnames));
           div2dropdownOptions.enter().append("option").text(function(d){return d});
@@ -119,9 +120,11 @@ d3.select("#venue-right-div")
       selectedVenue = venueNames[left_top_dropdown.property("selectedIndex")]
       if(selectedVenue){
           var state = vnames[selectedVenue]
-          d3.select("#india").selectAll("path").style("opacity",function(d){if(d["id"]!=state) return "0.5"})
+          d3.select("#india").selectAll("path").style("fill",function(d){if(d["id"]!=state) {return currentColors['bodyBackgroundColor'];}else{return currentColors['headingColor'];}})
+          d3.select("#venue-div-2").selectAll("*").remove();
           $.post("/getVenueData", {'venue': selectedVenue}, function(data){
-            console.log(data);
+                putDiv2Data(data['WL'])
+                putDiv3Data(data['battingFriendly'])
           })
         }
       plotPieChart(selectedVenue)
@@ -164,7 +167,7 @@ d3.select("#venue-right-div")
 
     function putDiv2Data(vdata){
         
-        console.log(vdata);
+        //console.log(vdata);
         let svg = d3.select("#venue-div-2")
         .append("svg")
         .attr("width","100%")
@@ -174,8 +177,8 @@ d3.select("#venue-right-div")
         let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
         let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
 
-        HGData = vdata['homeWins']
-         var map=d3.map(vdata['homeWins'])
+        HGData = vdata
+         var map=d3.map(vdata)
         let x_domain = map.keys();
         let y_domain = [0,80];
 
@@ -195,8 +198,14 @@ d3.select("#venue-right-div")
         //var groups = d3.map(vdata, function(d){console.log(d);})
         //var map=d3.map(vdata['homeWins'])
         //console.log(map.values())
+        if(selectedVenue){
+          var stackedData = d3.stack()
+                       .keys(["teamVenueLosses","teamVenueWins"])(map.values())
+        }
+        else{
         var stackedData = d3.stack()
                             .keys(["homeGrdWin","nonHomeGrdWin"])(map.values())
+        }
        // print(stackedData)
 
         svg.append("g")
@@ -207,7 +216,7 @@ d3.select("#venue-right-div")
             .attr("fill", function(d,i) { if(i == 0) {return "red";} if(i==1){return "green";}; })
             .selectAll("rect")
       // enter a second time = loop subgroup per subgroup to add all rectangles
-            .data(function(d) { console.log(d);return d; })
+            .data(function(d) { return d; })
             .enter().append("rect")
            .attr("x",function(d,i){ return 10+x_scale(x_domain[i]);})
             .attr("y", function(d) { return y_scale(d[1]) -80 ; })
@@ -272,9 +281,9 @@ d3.select("#venue-right-div")
                       .data(json.features)
                       .enter().append("path")               
                       .attr("d", path)
-                      .style("fill",function(d){ return d["color"];})
-                      .style("stroke","#A9A9A9")
-                      .style("stroke-width","0.6px")
+                      .style("fill",function(d){ return currentColors['bodyBackgroundColor'];})
+                      .style("stroke",currentColors['headingColor'])
+                      .style("stroke-width","1.5px")
                       .style("opacity",1)               
                       /*.on("mouseover", function(d) {
                         console.log(selectedTeam)
@@ -308,23 +317,6 @@ d3.select("#venue-right-div")
                       });*/
 
 
-                for(var j = 1;j <= 8;j++){
-                      india.append('rect')
-                          .attr("x",450)
-                          .attr("y",300+(j*27))
-                          .attr("width",13)
-                          .attr("height",13)
-                          .style("fill",function(d){ return colors[j-1]});
-
-                     india.append('text')
-                          .attr("x",480)
-                          .attr("y",310+(j*27))
-                          .attr("width",13)
-                          .attr("height",13)
-                          .attr("font-size","16px")
-                          .text(teams[j-1]);
-                    }
-
                     india.append('text')
                           .attr("x",100)
                           .attr("y",0)
@@ -340,12 +332,68 @@ d3.select("#venue-right-div")
         }
     };
 
+    function putDiv3Data(avg){
+     d3.select("#venue-div-3").selectAll("*").remove();
+      console.log(avg['battingFriendly'])
+      //avg['battingFriendly']/250
+      var value = avg['battingFriendly']/250
+    var text = Math.round(value * 100) + '%'
+    var data = [value, 1 - value]
+    
+    // Settings
+    var width = 300
+    var height = 200
+    var anglesRange = 0.5 * Math.PI
+    var radis = 100
+    var thickness = 60
+    // Utility 
+//     var colors = d3.scale.category10();
+    var colors = ["#5EBBF8", "#F5F5F5"]
+    
+    var pies = d3.pie()
+      .value( d => d)
+      .sort(null)
+      .startAngle( anglesRange * -1)
+      .endAngle( anglesRange)
+    
+    var arc = d3.arc()
+      .outerRadius(radis)
+      .innerRadius(radis - thickness)
+    
+    var translation = (x, y) => `translate(${x}, ${y})`
+    
+    // Feel free to change or delete any of the code you see in this editor!
+    var svg = d3.select("#venue-div-3").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("class", "half-donut")
+      .append("g")
+      .attr("transform", translation(width / 2, height))
+    
+    
+    svg.selectAll("path")
+      .data(pies(data))
+      .enter()
+      .append("path")
+      .attr("fill", (d, i) => colors[i])
+      .attr("d", arc)
+    
+    svg.append("text")
+      .text( d => text)
+      .attr("dy", "-3rem")
+      .attr("class", "label")
+      .attr("text-anchor", "middle")
+
+    };
+
     function displayVenuePlots(){
       $.post("/getVenueData", {'venue': selectedVenue}, function(data){
 
         venueData = data
+        console.log(venueData)
         populateDropDown(venueData['venueNames'])
-        putDiv2Data(venueData)
+        putDiv2Data(venueData['homeWins'])
+        
 
       });
     };
