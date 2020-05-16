@@ -90,7 +90,13 @@ d3.select("#venue-right-div")
                                 })
                                 .on("click",function(){
                                       d3.select("#venue-div-1").selectAll("*").remove();
-                                      d3.select("#india").selectAll("path").style("opacity","1")
+                                      d3.select("#venue-div-2").selectAll("*").remove();
+                                      d3.select("#venue-div-3").selectAll("*").remove();
+                                      console.log(venueData['homeWins'])
+                                      selectedVenue = null
+                                      putDiv2Data(venueData['homeWins'])
+
+                                      d3.select("#india").selectAll("path").style("fill",function(d){ return currentColors['bodyBackgroundColor'];})
                                 });
 
         let left_top_dropdown = d3.select("#left-top")
@@ -198,6 +204,7 @@ d3.select("#venue-right-div")
         //var groups = d3.map(vdata, function(d){console.log(d);})
         //var map=d3.map(vdata['homeWins'])
         //console.log(map.values())
+        console.log("selectedVenue"+selectedVenue)
         if(selectedVenue){
           var stackedData = d3.stack()
                        .keys(["teamVenueLosses","teamVenueWins"])(map.values())
@@ -336,9 +343,9 @@ d3.select("#venue-right-div")
      d3.select("#venue-div-3").selectAll("*").remove();
       console.log(avg['battingFriendly'])
       //avg['battingFriendly']/250
-      var value = avg['battingFriendly']/250
-    var text = Math.round(value * 100) + '%'
-    var data = [value, 1 - value]
+    var value = avg['battingFriendly']
+    var text = value
+    var data = [value-82.5,250-value]
     
     // Settings
     var width = 300
@@ -348,7 +355,7 @@ d3.select("#venue-right-div")
     var thickness = 60
     // Utility 
 //     var colors = d3.scale.category10();
-    var colors = ["#5EBBF8", "#F5F5F5"]
+    var colors = ["#5EBBF8", "#F5F5F5","red"]
     
     var pies = d3.pie()
       .value( d => d)
