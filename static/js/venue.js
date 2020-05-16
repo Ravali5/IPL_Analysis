@@ -70,13 +70,41 @@ d3.select("#venue-right-div")
     var selectedVenue;
 
     function populateDropDown(vnames){
+
+                 d3.select("#left-top")
+                                .append("button")
+                                .attr("id","playerClearBtn")
+                                .style("width","25%")
+                                .style("height","8%")
+                                .style("border-radius","10px")
+                                .style("border-width","2px")
+                                .style("margin-right","3%")
+                                .style("margin-top","1.5%")
+                                .style("border-color",currentColors['headingColor'])
+                                .style("background-color","transparent")
+                                .style("float","right")
+                                .text("Clear")
+                                .style("font-size","0.8em")
+                                .on("focus",function(){
+                                  d3.select(this).style("outline","none")
+                                })
+                                .on("click",function(){
+                                      d3.select("#venue-div-1").selectAll("*").remove();
+                                });
+
         let left_top_dropdown = d3.select("#left-top")
                                 .append("select")
                                 .attr("size","2")
                                 .style("margin-top","3%")
-                                .style("margin-left","20%")
-                                .style("width","75%")
-                                .style("height","92.5%")
+                                .style("margin-left","7%")
+                                .style("width","90%")
+                                .style("height","82.5%")
+                                .style("background-color","transparent")
+                                .style("font-size","0.8em")
+                                .style("border","none")
+                                .on("focus",function(){
+                                  d3.select(this).style("outline","none")
+                                })
                                 .on("change",venueChanged)
 
                                 console.log(vnames)
@@ -89,6 +117,13 @@ d3.select("#venue-right-div")
       venueNames = Object.keys(vnames)
       //console.log(left_top_dropdown.property("selectedIndex"))
       selectedVenue = venueNames[left_top_dropdown.property("selectedIndex")]
+      if(selectedVenue){
+          var state = vnames[selectedVenue]
+          d3.select("#india").selectAll("path").style("opacity",function(d){if(d["id"]!=state) return "0.5"})
+          $.post("/getVenueData", {'venue': selectedVenue}, function(data){
+            console.log(data);
+          })
+        }
       plotPieChart(selectedVenue)
 
 
@@ -232,15 +267,16 @@ d3.select("#venue-right-div")
                     .style("border-radius","30px")
                     .style("border-color","#0052cc")
 
-      var units=india.selectAll("path")
+      let units=india.selectAll("path")
+                      .attr("id","ind_path")
                       .data(json.features)
                       .enter().append("path")               
                       .attr("d", path)
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
                       .style("stroke-width","0.6px")
-                      .style("opacity",function(d){if(d["id"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})                
-                      .on("mouseover", function(d) {
+                      .style("opacity",1)               
+                      /*.on("mouseover", function(d) {
                         console.log(selectedTeam)
                         d3.select(this)
                           .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.4;}}else{return 1;}}) 
@@ -249,7 +285,7 @@ d3.select("#venue-right-div")
                           div.transition()    
                               .duration(200)    
                               .style("opacity", .9);  */ 
-                              if(selectedTeam == "ALL"){
+                           /*   if(selectedTeam == "ALL"){
                                   div.style("opacity", .9);
                                   div.html(d["id"]+ "<br/>") 
                                   .style("left", (d3.event.pageX) + "px")   
@@ -269,7 +305,7 @@ d3.select("#venue-right-div")
                               .style("opacity","1")
                           }
                           div.style("opacity", 0); 
-                      });
+                      });*/
 
 
                 for(var j = 1;j <= 8;j++){
@@ -305,7 +341,7 @@ d3.select("#venue-right-div")
     };
 
     function displayVenuePlots(){
-      $.post("/getVenueData", {'data': 'received'}, function(data){
+      $.post("/getVenueData", {'venue': selectedVenue}, function(data){
 
         venueData = data
         populateDropDown(venueData['venueNames'])

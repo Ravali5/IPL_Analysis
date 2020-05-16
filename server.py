@@ -48,9 +48,12 @@ def getPieData():
 
 @app.route("/getVenueData",methods = ['POST', 'GET'])
 def getVenueData():
+	selectedVenue = request.form.get('venue')
+	#print(selectedVenue)
 	venueData={}
 	homeWins={}
 	tossDec ={}
+	WL = {}
 	for team in teamNames:
 		team_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
 		venueList = venues.query("HomeGround_Team_Id == '" + str(team_id)+"'")
@@ -62,6 +65,14 @@ def getVenueData():
 		teamHGWins['homeGrdWin'] = len(homeGrdWin.index)
 		teamHGWins['nonHomeGrdWin'] = len(nonHomeGrdWin.index)
 		homeWins[team] = teamHGWins
+		if selectedVenue is not None:
+			teamVenueWL = {}
+			teamVenueWins = matches.query("Match_Winner_Id == "+str(team_id)+" and Venue_Name == '"+selectedVenue+"'")
+			Losses = matches.query('Team_Name_Id == '+str(team_id)+' or Opponent_Team_Id == '+str(team_id))
+			teamVenueLosses = Losses.query("Match_Winner_Id != "+str(team_id)+" and Venue_Name == '"+selectedVenue+"'")
+			teamVenueWL['teamVenueWins'] = len(teamVenueWins.index)
+			teamVenueWL['teamVenueLosses'] = len(teamVenueLosses.index)
+			WL[team]=teamVenueWL
 
 
 	indianStadiums = matches.query("Host_Country == 'India'")
@@ -85,6 +96,7 @@ def getVenueData():
 	venueData['homeWins'] = homeWins
 	venueData['tossDec'] = tossDec
 	venueData['venueNames'] = venueNames
+	venueData['WL'] = WL
 	return venueData
 
 @app.route("/")
