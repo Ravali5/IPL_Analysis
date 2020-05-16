@@ -129,7 +129,7 @@ function playerAnalysisDisplay(){
 	function plotPC(){
 		let svg = d3.select("#player-div-2")
 						.append("svg")
-		                .attr("width", "90%")
+		                .attr("width", "100%")
 		                .attr("height", "100%")
 		                .append("g")
 		                .attr("transform", "translate(0,0)");
@@ -142,12 +142,13 @@ function playerAnalysisDisplay(){
 		//dimensions.splice(dimensions.indexOf("skill"),1);
 		//console.log(dimensions);
 		dimensions.sort();
+		console.log(dimensions);
 		let y = {};
 		for(i in dimensions){
-			y[dimensions[i]] = d3.scaleLinear().domain(d3.extent(pcData, function(d){return +d[dimensions[i]]; })).range([450,100]);
+			y[dimensions[i]] = d3.scaleLinear().domain(d3.extent(pcData, function(d){return +d[dimensions[i]]; })).range([400,100]);
 		}
 
-		let x = d3.scalePoint().range([0,900]).padding(1).domain(dimensions);
+		let x = d3.scalePoint().range([50,950]).padding(1).domain(dimensions);
 
 		function path(d){
 			return d3.line()(dimensions.map(function(p){ return [x(p), y[p](d[p])]; }));
@@ -159,10 +160,12 @@ function playerAnalysisDisplay(){
 		    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
 		    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
 		    .append("text")
-		      .style("text-anchor", "start")
+		      //.style("text-anchor", "start")
 		      .attr("y", 90)
-		      .attr("transform", "rotate(45)")
-		      .text(function(d) {console.log(d); return d; })
+		      //.attr("transform", "rotate(-45)")
+		      .text(function(d) {
+		      	return 'Test'; 
+		      })
 		      .style("fill", "black");
 
 		svg.selectAll("myPath")
