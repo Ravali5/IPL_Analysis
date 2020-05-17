@@ -1,6 +1,8 @@
 function playerAnalysisDisplay(){
 	let playerData = {};
 	let pcData = [];
+	let plines;
+	let playerSelectFlag = false;
 	d3.select("#left-top").style("height","39%");
 	d3.select("#left-bottom").style("height","58%");
 	d3.select("#right")
@@ -160,28 +162,59 @@ function playerAnalysisDisplay(){
 		    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
 		    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
 		    .append("text")
-		      //.style("text-anchor", "start")
+		      .style("text-anchor", "middle")
 		      .attr("y", 90)
-		      //.attr("transform", "rotate(-45)")
+		      .attr("transform", "rotate(-45)")
 		      .text(function(d) {
-		      	return 'Test'; 
+		      	return d; 
 		      })
 		      .style("fill", "black");
 
-		svg.selectAll("myPath")
-		    .data(pcData)
-		    .enter().append("path")
-		    .attr("d",  path)
-		    .style("fill", "none")
-		    .style("stroke", currentColors['headingColor'])
-		    .style("opacity","0.5");
+		plines = svg.selectAll("myPath")
+					    .data(pcData)
+					    .enter().append("path")
+					    .attr("d",  path)
+					    .attr("id",function(d){ return "line"+d['Players'];})
+					    .attr("pName",function(d){ return d['Players'];})
+					    .style("fill", "none")
+					    .style("stroke", currentColors['headingColor'])
+					    .style("opacity","0.5")
+					    .on("mouseover",function(){
+					    	//console.log(d3.select(this).attr("pName"));
+					    	svg.append("text")
+					    		.attr("id","pNameLabel")
+					    		.attr("x",700)
+					    		.attr("y",50)
+					    		.text(d3.select(this).attr("pName"));
+					    	d3.select(this).style("stroke","red").style("stroke-width","4px").style("opacity","1");
+					    })
+					    .on("mouseout",function(){
+					    	d3.select("#pNameLabel").remove();
+					    	if(playerSelectFlag)
+					    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
+					    	else
+						    	d3.select(this).style("stroke",currentColors['headingColor']).style("stroke-width","1px").style("opacity","0.5");
+					    })
+					    .on("click",function(d){
+					    	//console.log(d['Players']);
+					    	//playersList.selectedIndex = document.getElementById("option"+d['Players']).index;
+					    	//playersList.value = d['Players'];
+					    	//playerChange();
+					    });
 
+		svg.on("wheel",function(){console.log('scrolls')});
 
 	};
 	function playerClear(){
 		playersList.selectedIndex = -1;
+		playerSelectFlag = false;
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(" -- Select player -- ");
 		d3.select("#player-div-1").selectAll("*").remove();
+		if(plines != null){
+			plines.style("stroke",currentColors['headingColor']);
+			plines.style("opacity","0.5");
+			plines.style("stroke-width","1px");
+		}
 		appendImage('Most Runs',playerData['alltime_mostruns']['name'],playerData['alltime_mostruns']['val']);
 		appendImage('Highest Score',playerData['alltime_highscore']['name'],playerData['alltime_highscore']['val']);
 		appendImage('Best Strike Rate',playerData['alltime_beststrikerate']['name'],playerData['alltime_beststrikerate']['val']);
@@ -190,9 +223,47 @@ function playerAnalysisDisplay(){
 		appendImage('Most Dot Balls',playerData['alltime_mostdotball']['name'],playerData['alltime_mostdotball']['val']);
 	};
 	function playerChange(){
+		playerSelectFlag = true;
 		d3.select("#player-div-1").selectAll("*").remove();
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(playersList.property('value'));
 		//console.log(playersList.property('value'));
+		let selectedPlayer = playersList.property('value');
+		console.log(selectedPlayer);
+		plines.style("stroke",currentColors['textInHeadingColor']);
+		plines.style("opacity","0.1");
+		let selectedElement = document.getElementById("line"+selectedPlayer);
+		selectedElement.style.stroke = currentColors['headingColor'];
+		selectedElement.style.opacity= 1;
+		selectedElement.style.strokeWidth = "3px";
+
+		let imgName = "/static/images/players/"+selectedPlayer+".png";
+
+		$.ajax({
+		    url:imgName,
+		    type:'HEAD',
+		    error: function()
+		    {
+		    	imgName = "/static/images/players/nopic.png";
+		    	putPlayerDiv1();
+		    },
+		    success: function()
+		    {
+		        putPlayerDiv1();
+		    }
+		});
+
+		function putPlayerDiv1(){
+			d3.select('#player-div-1')
+			        .append('img')
+			        .attr("width","15%")
+			        .attr("height","140")
+			        .attr("src", imgName)
+			        .style("margin-left","2.5%")
+			        .style("margin-right","2.5%")
+			        .style("margin-top","1%")
+			        .style("float","left");
+		};
+		
 	};
 	function loadPlayerData(){
 		$.post("/getPlayerData", {'player': 'all'}, function(data){
@@ -222,7 +293,7 @@ function playerAnalysisDisplay(){
 			console.log(pcData);
 			playerData = data;
 			let playersListOptions = playersList.selectAll("option").data(data['players'].sort());
-			playersListOptions.enter().append("option").text(function(d){return d;});
+			playersListOptions.enter().append("option").attr("id",function(d){ return "option"+d;}).text(function(d){return d;});
 			playerClear();
 			plotPC();
 		});
