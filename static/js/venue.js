@@ -186,20 +186,11 @@ d3.select("#venue-right-div")
         HGData = vdata
          var map=d3.map(vdata)
         let x_domain = map.keys();
-        let y_domain = [0,80];
+        //let y_domain = [0,80];
 
         let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
-        let y_scale = d3.scaleLinear().domain(y_domain).range([280,100]);
+        let y_scale = d3.scaleLinear().range([280,100]);
 
-        let xAxis = d3.axisBottom().scale(x_scale);
-        let yAxis = d3.axisLeft().scale(y_scale);
-
-        let x_axis = svg.append('g')
-                    .attr('transform','translate('+[0,200]+')')
-                    .call(xAxis);
-        let y_axis = svg.append('g')
-                  .attr('transform','translate('+[50,-80]+')')
-                  .call(yAxis);
 
         //var groups = d3.map(vdata, function(d){console.log(d);})
         //var map=d3.map(vdata['homeWins'])
@@ -214,13 +205,26 @@ d3.select("#venue-right-div")
                             .keys(["homeGrdWin","nonHomeGrdWin"])(map.values())
         }
        // print(stackedData)
+       var max = d3.max(stackedData[stackedData.length-1], function(d) { return d[1]; });
+       // print(stackedData)
+         y_scale.domain([0,max]);
+
+         let xAxis = d3.axisBottom().scale(x_scale);
+        let yAxis = d3.axisLeft().scale(y_scale);
+
+        let x_axis = svg.append('g')
+                    .attr('transform','translate('+[0,200]+')')
+                    .call(xAxis);
+        let y_axis = svg.append('g')
+                  .attr('transform','translate('+[50,-80]+')')
+                  .call(yAxis);
 
         svg.append("g")
             .selectAll("g")
             // Enter in the stack data = loop key per key = group per group
             .data(stackedData)
             .enter().append("g")
-            .attr("fill", function(d,i) { if(i == 0) {return "red";} if(i==1){return "green";}; })
+            .attr("fill", function(d,i) { if(i == 0) {return currentColors['headingColor'];} if(i==1){return currentColors['textInHeadingColor'];}; })
             .selectAll("rect")
       // enter a second time = loop subgroup per subgroup to add all rectangles
             .data(function(d) { return d; })
@@ -229,24 +233,66 @@ d3.select("#venue-right-div")
             .attr("y", function(d) { return y_scale(d[1]) -80 ; })
             .attr("height", function(d) { return y_scale(d[0]) - y_scale(d[1]); })
             .attr("width",25)
-       /* svg.append('text')
-                    .attr("x",220)
-                    .attr("y",285)
+
+
+       svg.append('text')
+                    .attr("x",400)
+                    .attr("y",225)
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","14px")
+                    .attr("font-weight","bold")
                     .text("Team");
 
-        svg.append('text')
-                    .attr("x",-200)
-                    .attr("y",16)
+        if(selectedVenue){
+          svg.append('text')
+                    .attr("x",-130)
+                    .attr("y",18)
                     .attr("transform", "rotate(-90)")
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","14px")
-                    .text("Number of "+selectedOption);*/
+                    .attr("font-weight","bold")
+                    .text("Number of Wins/losses");
+        }
+        else{
+        svg.append('text')
+                    .attr("x",-130)
+                    .attr("y",18)
+                    .attr("transform", "rotate(-90)")
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .text("Number of Wins");
+                  }
 
-        
+        if(selectedVenue){
+          svg.append('text')
+                    .attr("x",70)
+                    .attr("y",15)
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .text("Number of Wins/losses in "+selectedVenue);
+        }
+        else{
+        svg.append('text')
+                    .attr("x",70)
+                    .attr("y",15)
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","12px")
+                    .attr("font-weight","bold")
+                    .text("Wins of each team in their HomeGround and other stadiums");
+                  }
+
+         svg.append("circle").attr("cx",405).attr("cy",50).attr("r", 4).style("fill", currentColors['headingColor'])
+         svg.append("circle").attr("cx",405).attr("cy",80).attr("r", 4).style("fill", currentColors['textInHeadingColor'])
+         svg.append("text").attr("x", 415).attr("y", 50).text("No. of Wins in HomeGround").style("font-size", "13px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 415).attr("y", 80).text("No. of Wins Not in HomeGround").style("font-size", "13px").attr("alignment-baseline","middle")
+                                        
     };
 
     function leftBottomData(){

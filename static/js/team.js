@@ -1016,11 +1016,37 @@ let svg123 = d3.select("#teams-div-3")
         .data(Object.keys(data123))
         .enter()
         .append("circle")
-          .attr("fill", function(d){ return "#3399ff"})
+         .style("fill", function(d) {
+          if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "red"}
+          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "green"}
+              else  { return currentColors['headingColor'] }})
           .attr("stroke", "none")
           .attr("cx", function(d,i) { console.log(x_scale(data123[d]['Bat_avg'])+20); return x_scale(data123[d]['Bat_avg'])+20 })
           .attr("cy", function(d,i) { console.log(x_scale(data123[d]['Bowl_avg'])-80); return y_scale(data123[d]['Bowl_avg'])-80 })
           .attr("r", 5);
+          
+
+      svg123.selectAll("myText").data(Object.keys(data123))
+        .enter().append('text')
+                .attr("x",function(d) {
+                      if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                        return 370;
+                      } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  60;}
+                      if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 330;}
+                })
+                .attr("y",function(d) {
+                      if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                        return 250;
+                      } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
+                      if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
+                })
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text(function(d) {
+          if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
+          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {console.log(d);return d;}
+             });
  //console.log(svg);
   /*svg.selectAll("myCircle")
       .data(data)
