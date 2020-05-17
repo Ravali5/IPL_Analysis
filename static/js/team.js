@@ -799,6 +799,11 @@ d3.select("#team-right-div")
 
 function drawTeamWinPie(tdata){
  //console.log(tdata[0])
+  tdata1 = {}
+  tdata1['losses'] = tdata['losses']
+  tdata1['totalMatches'] = tdata['totalMatches']
+  tdata1['opponentData'] = tdata['opponentData']
+  tdata1['wins'] = tdata['wins']
   d3.select("#left-bottom").selectAll("*").remove();
   var svg = d3.select("#left-bottom")
       .append("svg")
@@ -811,8 +816,8 @@ function drawTeamWinPie(tdata){
 
   var pie = d3.pie()
         .value(function(d) {if(d.key != 'totalMatches'){return d.value;} })
-     var tdata_pie = pie(d3.entries(tdata))
-
+     var tdata_pie = pie(d3.entries(tdata1))
+     //console.log(tdata1);
   var arc=d3.arc()
           .innerRadius(0)
           .outerRadius(110)
@@ -840,7 +845,7 @@ function drawTeamWinPie(tdata){
         .enter()
         .append('path')
         .attr('d', arc)
-        .style('fill', function(d,i){ if(i==0){ return textInHeadingColor; }else{return headingColor;}})
+        .style('fill', function(d,i){console.log(i); if(i==0){ return textInHeadingColor; }else{return headingColor;}})
         .attr("stroke", "white")
         .style("stroke-width", "2px")
         .on("mouseover", function(d,i) {
@@ -1011,7 +1016,7 @@ let svg123 = d3.select("#teams-div-3")
  // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
  // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
  var map=d3.map(data123);
- console.log(map.values()[0]['Bat_avg']);
+ //console.log(map.values()[0]['Bat_avg']);
  svg123.selectAll("myCircle")
         .data(Object.keys(data123))
         .enter()
@@ -1021,8 +1026,8 @@ let svg123 = d3.select("#teams-div-3")
           if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "green"}
               else  { return currentColors['headingColor'] }})
           .attr("stroke", "none")
-          .attr("cx", function(d,i) { console.log(x_scale(data123[d]['Bat_avg'])+20); return x_scale(data123[d]['Bat_avg'])+20 })
-          .attr("cy", function(d,i) { console.log(x_scale(data123[d]['Bowl_avg'])-80); return y_scale(data123[d]['Bowl_avg'])-80 })
+          .attr("cx", function(d,i) {  return x_scale(data123[d]['Bat_avg'])+20 })
+          .attr("cy", function(d,i) {  return y_scale(data123[d]['Bowl_avg'])-80 })
           .attr("r", 5);
           
 
@@ -1045,7 +1050,7 @@ let svg123 = d3.select("#teams-div-3")
                 .attr("font-size","14px")
                 .text(function(d) {
           if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
-          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {console.log(d);return d;}
+          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return d;}
              });
  //console.log(svg);
   /*svg.selectAll("myCircle")
@@ -1088,14 +1093,14 @@ function putDiv2Data(teamData){
         .style("background-color","transparent");
 
   function div2optionchange(){
-    console.log("changed to "+options[div2dropdown.property("selectedIndex")]);
+    //console.log("changed to "+options[div2dropdown.property("selectedIndex")]);
     svg.selectAll("*").remove();
    // if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
     let selectedOption = options[div2dropdown.property("selectedIndex")];
 
-    console.log(teamData)
+    //console.log(teamData)
     let barData = teamData[selectedOption];
 
     let max = 0;
@@ -1105,6 +1110,8 @@ function putDiv2Data(teamData){
     }
 
     let x_domain = teams;
+    if(selectedTeam !='ALL')
+      x_domain.splice(x_domain.indexOf(selectedTeam),1);
     let y_domain = [0,max];
 
     let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);

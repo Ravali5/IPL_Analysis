@@ -232,9 +232,26 @@ def getTeamData():
 		teamData['wins'] = len(teamWins.index)
 		teamData['losses'] = len(teamLosses.index)
 		teamData['opponentData'] = {}
+		teambatting = ballbyball.query("Team_Batting_Id == "+str(team_id))
+		teambowling = ballbyball.query("Team_Bowling_Id == "+str(team_id))
+		fours = {}
+		sixes = {}
+		wickets = {}
+		extras = {}
 		for team in teamNames:
 			opponent_id = teams.loc[teams['Team_Short_Code']==team,'Team_Id'].iloc[0]
 			opponent_matches = teamMatches.query('Team_Name_Id == '+str(opponent_id)+' or Opponent_Team_Id == '+str(opponent_id))
+			opponent_team_batting = teambowling.query("Team_Batting_Id == "+str(opponent_id))
+			opponent_team_bowling = teambatting.query("Team_Bowling_Id == "+str(opponent_id))
+			teamfours = opponent_team_bowling.query("Batsman_Scored == '4'")
+			teamsixes = opponent_team_bowling.query("Batsman_Scored == '6'")
+			teamwickets = opponent_team_batting.query("Dissimal_Type != ' ' ")
+			teamextras = opponent_team_batting.query("Extra_Runs != ' ' ")
+			teamextras['Extra_Runs'] = teamextras['Extra_Runs'].apply(pd.to_numeric)
+			fours[team] = len(teamfours.index)
+			sixes[team] = len(teamsixes.index)
+			wickets[team] = len(teamwickets.index)
+			extras[team] = sum(teamextras['Extra_Runs'])
 			opponent_data = {}
 			opponent_data['totalMatches'] = len(opponent_matches.index)
 			wins_again_opponent = opponent_matches.query('Match_Winner_Id == '+str(team_id))
@@ -243,6 +260,10 @@ def getTeamData():
 			opponent_data['losses'] = len(losses_again_opponent.index)
 			teamData['opponentData'][team] = opponent_data
 		#print(teamData)
+		teamData['fours'] = fours
+		teamData['sixes'] = sixes
+		teamData['wickets'] = wickets
+		teamData['extras'] = extras
 	else:
 		teamData['cupWins'] = {}
 		teamWinYear={}
