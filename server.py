@@ -218,6 +218,7 @@ def test():
 def getTeamData():
 	selectedTeam = request.form.get('team')
 	teamData = {}
+	tossData={}
 	twmw=0
 	twml=0
 	tlmw=0
@@ -260,6 +261,22 @@ def getTeamData():
 			opponent_data['losses'] = len(losses_again_opponent.index)
 			teamData['opponentData'][team] = opponent_data
 		#print(teamData)
+		tossWin = matches.query("Toss_Winner_Id == "+str(team_id))
+		tossLose = matches.query('(Team_Name_Id == '+str(team_id)+' or Opponent_Team_Id == '+str(team_id) + ') and Toss_Winner_Id != '+str(team_id))
+		tossWinMatchWin = tossWin.query("Match_Winner_Id == "+str(team_id))
+		tossLoseMatchWin=tossLose.query("Match_Winner_Id == " + str(team_id))
+		teamTossWin ={}
+		teamTossWin['MatchWin'] = len(tossWinMatchWin.index)
+		teamTossWin['MatchLose'] = len(tossWin.index) - len(tossWinMatchWin.index)
+		teamTossLose = {}
+		teamTossLose['MatchWin'] = len(tossLoseMatchWin.index)
+		teamTossLose['MatchLose'] = len(tossLose.index) - len(tossLoseMatchWin.index)
+		teamToss ={}
+		teamToss['TossWin'] = teamTossWin
+		teamToss['TossLose'] = teamTossLose
+		tossData[selectedTeam]=teamToss	
+
+		teamData['tossData'] = tossData
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
 		teamData['wickets'] = wickets

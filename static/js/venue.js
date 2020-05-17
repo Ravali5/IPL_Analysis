@@ -132,8 +132,9 @@ d3.select("#venue-right-div")
                 putDiv2Data(data['WL'])
                 putDiv3Data(data['battingFriendly'])
           })
+          plotPieChart(selectedVenue)
         }
-      plotPieChart(selectedVenue)
+      
 
 
     };
@@ -145,7 +146,7 @@ d3.select("#venue-right-div")
       let svg = d3.select("#venue-div-1")
                   .append("svg")
                   .attr("width", 400)
-                  .attr("height", 300)
+                  .attr("height", 600)
                   .append("g")
                   .attr("transform", "translate(180,170)");
 
@@ -166,10 +167,26 @@ d3.select("#venue-right-div")
         .enter()
         .append('path')
         .attr('d', arc)
-        .style('fill', function(d,i){ if(i==0){ return "red"; }else{return "green";}})
+        .style('fill', function(d,i){ if(i==0){ return currentColors['headingColor']; }else{return currentColors['textInHeadingColor'];}})
         .attr("stroke", "white")
         .style("stroke-width", "2px")
+
+        svg.append('text')
+                    .attr("x",-150)
+                    .attr("y",-130)
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .text("Pie chart of toss decisions based on the stadium pitch");
+
+         svg.append("circle").attr("cx",-100).attr("cy",150).attr("r", 4).style("fill", currentColors['headingColor'])
+         svg.append("circle").attr("cx",-100).attr("cy",180).attr("r", 4).style("fill", currentColors['textInHeadingColor'])
+         svg.append("text").attr("x", -70).attr("y", 150).text("Percentage of choosing batting").style("font-size", "13px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", -70).attr("y", 180).text("Percentage of choosing fielding").style("font-size", "13px").attr("alignment-baseline","middle")
     }
+
+
 
     function putDiv2Data(vdata){
         
@@ -229,10 +246,29 @@ d3.select("#venue-right-div")
       // enter a second time = loop subgroup per subgroup to add all rectangles
             .data(function(d) { return d; })
             .enter().append("rect")
+            .on("mouseover",function(){
+                  //https://stackoverflow.com/questions/23703089/d3-js-change-color-and-size-on-line-graph-dot-on-mouseover
+                  //https://stackoverflow.com/questions/24973067/bar-chart-show-values-on-top
+                  svg.append("text")
+                    .attr("class","val")
+                    .attr("x",(d3.select(this).attr("x"))-(-27))
+                    .attr("y",d3.select(this).attr("y")-8)
+                    .text(d3.select(this).attr("yval"));
+                  })
+                  .on("mouseleave",function(){
+                    svg.select(".val").remove();
+                    svg.select(".numLable").remove();
+                    //svg.select(".xLable").remove();
+                    //svg.select(".yLable").remove();
+            })
            .attr("x",function(d,i){ return 10+x_scale(x_domain[i]);})
             .attr("y", function(d) { return y_scale(d[1]) -80 ; })
+            .transition()
+            .duration(500)
             .attr("height", function(d) { return y_scale(d[0]) - y_scale(d[1]); })
             .attr("width",25)
+            .attr("yval",function(d){return d[1]})
+            
 
 
        svg.append('text')
@@ -246,7 +282,7 @@ d3.select("#venue-right-div")
 
         if(selectedVenue){
           svg.append('text')
-                    .attr("x",-130)
+                    .attr("x",-180)
                     .attr("y",18)
                     .attr("transform", "rotate(-90)")
                     .attr("width",10)
@@ -401,7 +437,7 @@ d3.select("#venue-right-div")
     var thickness = 60
     // Utility 
 //     var colors = d3.scale.category10();
-    var colors = ["#5EBBF8", "#F5F5F5","red"]
+    var colors = [currentColors['headingColor'], currentColors['textInHeadingColor']]
     
     var pies = d3.pie()
       .value( d => d)
@@ -440,6 +476,7 @@ d3.select("#venue-right-div")
     };
 
     function displayVenuePlots(){
+
       $.post("/getVenueData", {'venue': selectedVenue}, function(data){
 
         venueData = data

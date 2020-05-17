@@ -845,7 +845,7 @@ function drawTeamWinPie(tdata){
         .enter()
         .append('path')
         .attr('d', arc)
-        .style('fill', function(d,i){console.log(i); if(i==0){ return textInHeadingColor; }else{return headingColor;}})
+        .style('fill', function(d,i){if(i==0){ return textInHeadingColor; }else{return headingColor;}})
         .attr("stroke", "white")
         .style("stroke-width", "2px")
         .on("mouseover", function(d,i) {
@@ -990,76 +990,127 @@ function putDiv4Data(teamData){
 function putDiv3Data(teamData){
 
 
-let svg123 = d3.select("#teams-div-3")
-              .append("svg")
-              .attr("width","100%")
-              .attr("height","100%")
-              .style("background-color","transparent");
+if(selectedTeam == 'ALL'){
+        let svg123 = d3.select("#teams-div-3")
+                      .append("svg")
+                      .attr("width","100%")
+                      .attr("height","100%")
+                      .style("background-color","transparent");
 
-  let x_scale = d3.scaleLinear().domain([0,60]).range([50,400]);
-  let y_scale = d3.scaleLinear().domain([0,50]).range([340,100]);
+          let x_scale = d3.scaleLinear().domain([0,60]).range([50,400]);
+          let y_scale = d3.scaleLinear().domain([0,50]).range([340,100]);
 
-  let xAxis = d3.axisBottom().scale(x_scale);
-  let yAxis = d3.axisLeft().scale(y_scale);
+          let xAxis = d3.axisBottom().scale(x_scale);
+          let yAxis = d3.axisLeft().scale(y_scale);
 
-  let x_axis = svg123.append('g')
-              .attr('transform','translate('+[0,260]+')')
-              .call(xAxis);
-  let y_axis = svg123.append('g')
-            .attr('transform','translate('+[50,-80]+')')
-            .call(yAxis);
-
-
-  data123 = teamData['Bat_Bowl']
+          let x_axis = svg123.append('g')
+                      .attr('transform','translate('+[0,260]+')')
+                      .call(xAxis);
+          let y_axis = svg123.append('g')
+                    .attr('transform','translate('+[50,-80]+')')
+                    .call(yAxis);
 
 
- // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
- // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
- var map=d3.map(data123);
- //console.log(map.values()[0]['Bat_avg']);
- svg123.selectAll("myCircle")
-        .data(Object.keys(data123))
-        .enter()
-        .append("circle")
-         .style("fill", function(d) {
-          if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "red"}
-          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "green"}
-              else  { return currentColors['headingColor'] }})
-          .attr("stroke", "none")
-          .attr("cx", function(d,i) {  return x_scale(data123[d]['Bat_avg'])+20 })
-          .attr("cy", function(d,i) {  return y_scale(data123[d]['Bowl_avg'])-80 })
-          .attr("r", 5);
+          data123 = teamData['Bat_Bowl']
+
+
+         // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
+         // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
+         var map=d3.map(data123);
+         //console.log(map.values()[0]['Bat_avg']);
+         svg123.selectAll("myCircle")
+                .data(Object.keys(data123))
+                .enter()
+                .append("circle")
+                 .style("fill", function(d) {
+                  if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "red"}
+                  if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "green"}
+                      else  { return currentColors['headingColor'] }})
+                  .attr("stroke", "none")
+                  .attr("cx", function(d,i) {  return x_scale(data123[d]['Bat_avg'])+20 })
+                  .attr("cy", function(d,i) {  return y_scale(data123[d]['Bowl_avg'])-80 })
+                  .attr("r", 5);
           
 
-      svg123.selectAll("myText").data(Object.keys(data123))
-        .enter().append('text')
-                .attr("x",function(d) {
-                      if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
-                        return 370;
-                      } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  60;}
-                      if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 330;}
-                })
-                .attr("y",function(d) {
-                      if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
-                        return 250;
-                      } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
-                      if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
-                })
-                .attr("width",10)
-                .attr("height",10)
-                .attr("font-size","14px")
-                .text(function(d) {
-          if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
-          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return d;}
-             });
- //console.log(svg);
-  /*svg.selectAll("myCircle")
-      .data(data)
-      .enter().append("circle")
-      .attr("r", 3.5)
-      .attr("cx", function(d,i) { console.log(d);return x_scale(map.values()[i]['Bat_avg']); })
-      .attr("cy", function(d) { return y_scale(map.values()[i]['Bowl_Avg']); })
-      .style("fill", function(d){console.log(d);return "red";})*/
+          svg123.selectAll("myText").data(Object.keys(data123))
+            .enter().append('text')
+                    .attr("x",function(d) {
+                          if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                            return 370;
+                          } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  60;}
+                          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 330;}
+                    })
+                    .attr("y",function(d) {
+                          if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                            return 250;
+                          } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
+                          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
+                    })
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","14px")
+                    .text(function(d) {
+              if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
+              if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {console.log(d);return d;}
+                 });
+
+    }
+    else{
+
+          //console.log("I am comming")
+          let svg = d3.select("#teams-div-3")
+                      .append("svg")
+                      .attr("width","100%")
+                      .attr("height","100%")
+                      .style("background-color","transparent");
+
+          let x_scale = d3.scaleBand().range([50,400]);
+          let x1_scale = d3.scaleBand().range([50,400]);
+          let y_scale = d3.scaleLinear().domain([0,45]).range([338,100]);
+
+          
+
+          data = teamData['tossData'][selectedTeam]
+          //console.log(teamData)
+          var tossDec = Object.keys(data);
+          var matchDec = Object.keys(d3.values(data)[0])
+
+          x_scale.domain(tossDec)
+          x1_scale.domain(matchDec).range([0, x_scale.bandwidth()-123])//.rangeRoundBands([0, x1_scale.rangeBand()]);
+
+            var color = d3.scaleOrdinal()
+                          .domain(matchDec)
+                          .range(['#e41a1c','#377eb8','#4daf4a','black'])
+
+          let xAxis = d3.axisBottom().scale(x_scale);
+          let yAxis = d3.axisLeft().scale(y_scale);
+
+          let x_axis = svg.append('g')
+                      .attr('transform','translate('+[0,260]+')')
+                      .call(xAxis);
+          let y_axis = svg.append('g')
+                    .attr('transform','translate('+[50,-80]+')')
+                    .call(yAxis);
+
+          
+       svg.append("g")
+          .selectAll("g")
+          // Enter in data = loop group per group
+          .data(Object.keys(data))
+          .enter()
+          .append("g")
+          .attr("transform", function(d) { return "translate(" + x_scale(d) + ",0)"; })
+          .selectAll("rect")
+          .data(function(d) {return matchDec.map(function(key) { return {key: key, value: data[d][key]}; }); })
+          .enter().append("rect")
+            .attr("x", function(d,i) { return x1_scale(d.key)+60; })
+            .attr("y", function(d) { return y_scale(d.value)-80; })
+            .attr("width", "25")
+            .attr("height", function(d) { return 340 - y_scale(d.value); })
+            .attr("fill", function(d) { return color(d.key); });
+
+
+    }
 }
 
 function putDiv2Data(teamData){
@@ -1095,7 +1146,7 @@ function putDiv2Data(teamData){
   function div2optionchange(){
     //console.log("changed to "+options[div2dropdown.property("selectedIndex")]);
     svg.selectAll("*").remove();
-   // if(selectedTeam == 'ALL'){
+   if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
     let selectedOption = options[div2dropdown.property("selectedIndex")];
@@ -1170,7 +1221,7 @@ function putDiv2Data(teamData){
         .on("mouseout",function(d){
           svg.selectAll('#val').remove();
         });
-  //}
+  }
 };
   div2optionchange();
 
