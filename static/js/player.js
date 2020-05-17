@@ -3,6 +3,12 @@ function playerAnalysisDisplay(){
 	let pcData = [];
 	let plines;
 	let playerSelectFlag = false;
+	let rawData = true;
+	let clusterColor ={
+		0 : 'yellow',
+		1 : 'green',
+		2 : 'black'
+	};
 	d3.select("#left-top").style("height","39%");
 	d3.select("#left-bottom").style("height","58%");
 	d3.select("#right")
@@ -135,6 +141,50 @@ function playerAnalysisDisplay(){
 		                .attr("height", "100%")
 		                .append("g")
 		                .attr("transform", "translate(0,0)");
+
+		svg.append("rect")
+			.attr("x",150).attr("y",25)
+			.style("width","10%").style("height","10%")
+			.attr("fill",currentColors['headingColor'])
+			.on("click",function(d){
+				rawData = true;
+				//console.log(rawData);
+				if(playerSelectFlag)
+					plines.style("stroke",currentColors['textInHeadingColor']);
+				else
+					plines.style("stroke",currentColors['headingColor']);
+			});
+		svg.append("text")
+			.attr("x",165).attr("y",50)
+			.style("fill",currentColors['textInHeadingColor'])
+			.text("Raw Data");
+
+		svg.append("rect")
+			.attr("x",300).attr("y",25)
+			.style("width","10%").style("height","10%")
+			.attr("fill",currentColors['headingColor'])
+			.on("click",function(d){
+				rawData = false;
+				for(pData in pcData){
+					//console.log(pcData[pData]);
+					let tempData = pcData[pData];
+					document.getElementById("line"+tempData['Players']).style.stroke = clusterColor[tempData['clusterNumber']];
+				}
+			});
+		svg.append("text")
+			.attr("x",310).attr("y",50)
+			.style("fill",currentColors['textInHeadingColor'])
+			.text("Cluster Data");
+
+		/*svg.append("rect")
+			.attr("x",150).attr("y",25)
+			.style("width","10%").style("height","10%")
+			.attr("fill",currentColors['headingColor']);
+		svg.append("text")
+			.attr("x",165).attr("y",50)
+			.style("fill",currentColors['textInHeadingColor'])
+			.text("Raw Data");*/
+
 		let dimensions = d3.keys(pcData[0]).filter(function(d) { return d; });
 		dimensions.splice(dimensions.indexOf("Players"),1);
 		dimensions.splice(dimensions.indexOf("skill"),1);
@@ -164,9 +214,9 @@ function playerAnalysisDisplay(){
 		    .append("text")
 		      .style("text-anchor", "middle")
 		      .attr("y", 90)
-		      .attr("transform", "rotate(-45)")
+		      //.attr("transform", "rotate(-45)")
 		      .text(function(d) {
-		      	return d; 
+		      	return ''; 
 		      })
 		      .style("fill", "black");
 
@@ -176,6 +226,7 @@ function playerAnalysisDisplay(){
 					    .attr("d",  path)
 					    .attr("id",function(d){ return "line"+d['Players'];})
 					    .attr("pName",function(d){ return d['Players'];})
+					    .attr("cid",function(d){ return d['clusterNumber'];})
 					    .style("fill", "none")
 					    .style("stroke", currentColors['headingColor'])
 					    .style("opacity","0.5")
@@ -188,12 +239,20 @@ function playerAnalysisDisplay(){
 					    		.text(d3.select(this).attr("pName"));
 					    	d3.select(this).style("stroke","red").style("stroke-width","4px").style("opacity","1");
 					    })
-					    .on("mouseout",function(){
+					    .on("mouseout",function(d){
 					    	d3.select("#pNameLabel").remove();
-					    	if(playerSelectFlag)
-					    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
-					    	else
-						    	d3.select(this).style("stroke",currentColors['headingColor']).style("stroke-width","1px").style("opacity","0.5");
+					    	if(rawData){
+						    	if(playerSelectFlag)
+						    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
+						    	else
+							    	d3.select(this).style("stroke",currentColors['headingColor']).style("stroke-width","1px").style("opacity","0.5");
+							}else{
+								//console.log(clusterColor[d['clusterNumber']]);
+								if(playerSelectFlag)
+									d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.05");
+								else
+									d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.5");
+							}
 					    })
 					    .on("click",function(d){
 					    	//console.log(d['Players']);
@@ -211,7 +270,15 @@ function playerAnalysisDisplay(){
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(" -- Select player -- ");
 		d3.select("#player-div-1").selectAll("*").remove();
 		if(plines != null){
-			plines.style("stroke",currentColors['headingColor']);
+			if(rawData)
+				plines.style("stroke",currentColors['headingColor']);
+			else{
+				for(pData in pcData){
+					//console.log(pcData[pData]);
+					let tempData = pcData[pData];
+					document.getElementById("line"+tempData['Players']).style.stroke = clusterColor[tempData['clusterNumber']];
+				}
+			}
 			plines.style("opacity","0.5");
 			plines.style("stroke-width","1px");
 		}
@@ -229,10 +296,21 @@ function playerAnalysisDisplay(){
 		//console.log(playersList.property('value'));
 		let selectedPlayer = playersList.property('value');
 		console.log(selectedPlayer);
-		plines.style("stroke",currentColors['textInHeadingColor']);
+		if(rawData)
+			plines.style("stroke",currentColors['textInHeadingColor']);
+		else{
+			for(pData in pcData){
+				//console.log(pcData[pData]);
+				let tempData = pcData[pData];
+				document.getElementById("line"+tempData['Players']).style.stroke = clusterColor[tempData['clusterNumber']];
+			}
+		}
 		plines.style("opacity","0.1");
 		let selectedElement = document.getElementById("line"+selectedPlayer);
-		selectedElement.style.stroke = currentColors['headingColor'];
+		if(rawData)
+			selectedElement.style.stroke = currentColors['headingColor'];
+		else
+			selectedElement.style.stroke = clusterColor[selectedElement.getAttribute('cid')];
 		selectedElement.style.opacity= 1;
 		selectedElement.style.strokeWidth = "3px";
 
