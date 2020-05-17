@@ -3,6 +3,7 @@ from flask import render_template
 import pandas as pd
 import json
 from sklearn.cluster import KMeans
+import math
 
 app = Flask(__name__)
 
@@ -245,6 +246,16 @@ def getTeamData():
 			teamTossData['tossWinMatchLose'] = len(tossWin.index) - len(tossWinMatchWin.index)
 			teamTossData['tossLoseMatchLose'] = len(tossLose.index) - len(tossLoseMatchWin.index)
 			tossData[team]=teamTossData
+		Bat_Bowl ={}
+		for player in players['Players'].tolist():
+			scatter_plot = {}
+			player_rec = players.loc[players['Players'] == player]
+			if(not math.isnan(player_rec['Bat_Average'].iloc[0]) and not math.isnan(player_rec['Bowl_Average'].iloc[0])):
+				scatter_plot['Bat_avg'] = float(player_rec['Bat_Average'].iloc[0])
+			#print(scatter_plot)
+				scatter_plot['Bowl_avg'] = player_rec['Bowl_Average'].iloc[0]
+				Bat_Bowl[player] = scatter_plot
+
 
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
@@ -253,6 +264,7 @@ def getTeamData():
 		teamData['auction'] = auctionData
 		teamData['teamWinYear'] = teamWinYear
 		teamData['tossData'] = tossData
+		teamData['Bat_Bowl'] =Bat_Bowl
 	return teamData
 
 if __name__ == "__main__":

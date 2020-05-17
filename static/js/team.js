@@ -985,6 +985,46 @@ function putDiv4Data(teamData){
 function putDiv3Data(teamData){
 
 
+let svg = d3.select("#teams-div-3")
+              .append("svg")
+              .attr("width","100%")
+              .attr("height","100%")
+              .style("background-color","transparent");
+
+  
+
+  let x_domain = [10,30,40,50];
+  let y_domain = [35,45];
+
+  let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+  let y_scale = d3.scaleLinear().domain(y_domain).range([340,100]);
+
+  let xAxis = d3.axisBottom().scale(x_scale);
+  let yAxis = d3.axisLeft().scale(y_scale);
+
+  let x_axis = svg.append('g')
+              .attr('transform','translate('+[0,260]+')')
+              .call(xAxis);
+  let y_axis = svg.append('g')
+            .attr('transform','translate('+[50,-80]+')')
+            .call(yAxis);
+
+
+  data = teamData['Bat_Bowl']
+
+
+ // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
+ // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
+ var map=d3.map(data)
+   console.log(map.values()[0]['Bat_avg'])
+
+      svg.selectAll("myCircle")
+          .data(data)
+          .enter().append("circle")
+          .attr("r", 3.5)
+          .attr("cx", function(d,i) { console.log(d);return x_scale(map.values()[i]['Bat_avg']); })
+          .attr("cy", function(d) { return y_scale(map.values()[i]['Bowl_Avg']); })
+          .style("fill", function(d){console.log(d);return "red";})
 }
 
 function putDiv2Data(teamData){
