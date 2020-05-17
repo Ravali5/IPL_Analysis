@@ -4,6 +4,10 @@ import pandas as pd
 import json
 from sklearn.cluster import KMeans
 import math
+from sklearn.preprocessing import StandardScaler
+from sklearn import preprocessing
+from sklearn.decomposition import PCA
+import numpy as np
 
 app = Flask(__name__)
 
@@ -48,16 +52,37 @@ clusterData['Bat_Highest_Score'] = clusterData['Bat_Highest_Score'].str.replace(
 clusterData['Bat_Balls_Faced'] = pd.to_numeric(clusterData['Bat_Balls_Faced'])
 clusterData['Bowl_Runs'] = pd.to_numeric(clusterData['Bowl_Runs'])
 clusterData['Bat_Highest_Score'] = pd.to_numeric(clusterData['Bat_Highest_Score'])
+clusterData.fillna(0,inplace=True)
+'''
+players['Bat_Balls_Faced'] = players['Bat_Balls_Faced'].str.replace(',','')
+players['Bowl_Runs'] = players['Bowl_Runs'].str.replace(',','')
+players['Bat_Highest_Score'] = players['Bat_Highest_Score'].str.replace(',','')
+players['Bat_Highest_Score'] = players['Bat_Highest_Score'].str.replace('*','')
+players['Bat_Balls_Faced'] = pd.to_numeric(players['Bat_Balls_Faced'])
+players['Bowl_Runs'] = pd.to_numeric(players['Bowl_Runs'])
+players['Bat_Highest_Score'] = pd.to_numeric(players['Bat_Highest_Score'])'''
+
+scaled_data = StandardScaler().fit_transform(clusterData)
+pca = PCA(n_components=10)
+pca.fit(scaled_data)
+pca_data = pca.transform(scaled_data)
+percentVar = np.round(pca.explained_variance_ratio_*100,decimals=2)
+xlabels = ['PC'+str(x) for x in range(1,len(percentVar)+1)]
+cum = [percentVar[0]]
+for i in range(1,len(percentVar)):
+	cum.append(percentVar[i]+cum[i-1])
+pcadata = {}
+pcadata['xaxis_domain'] =[x for x in xlabels]
+pcadata['percentVar'] = [ x for x in percentVar]
+pcadata['cum'] = cum
 
 kmeans = KMeans(n_clusters=3)
-clusterData.fillna(0,inplace=True)
 kmeans.fit(clusterData)
 players['clusterNumber'] = kmeans.labels_
 print(players[['Players','clusterNumber']])
 #print(players.columns)
 playersjson = players.to_dict(orient='records')
 playersjson = json.dumps(playersjson)
-
 
 teamNames = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP']
 
@@ -75,6 +100,7 @@ def getPlayerData():
 		playerData['alltime_mostdotball'] = {'val':mostdotball.iloc[0]['Dot Balls'],'name':mostdotball.iloc[0]['Players']};
 		playerData['json'] = playersjson[1:len(playersjson)-1]
 		playerData['json'] = playerData['json']+','
+		playerData['pca'] = pcadata
 	return playerData
 
 @app.route("/getPieData",methods = ['POST', 'GET'])

@@ -134,6 +134,93 @@ function playerAnalysisDisplay(){
 	    	.style("font-size","1em")
 	    	.html(imgName+"<br/>"+imgVal);
 	};
+	function plotPCA(){
+		let pcadata = playerData['pca'];
+		console.log(pcadata);
+		let domain = pcadata['xaxis_domain'];
+
+		let svg = d3.select("#left-bottom")
+              .append("svg")
+              .attr("width","100%")
+              .attr("height","100%")
+              .style("background-color","transparent");
+
+		//https://github.com/d3/d3-scale#band-scales
+		let xSca = d3.scaleBand().domain(domain).range([50,350]).paddingOuter(0.2);
+		let xAx = d3.axisBottom().scale(xSca);
+		let ySca = d3.scaleLinear().domain([0,100]).range([390,150]);
+		let yAx = d3.axisLeft().scale(ySca);
+
+		let x_axis = svg.append('g')
+              .attr('transform','translate('+[0,310]+')')
+              .call(xAx);
+  		let y_axis = svg.append('g')
+            .attr('transform','translate('+[50,-80]+')')
+            .call(yAx);
+
+		//https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0
+		//https://www.d3-graph-gallery.com/graph/line_basic.html
+	    svg.append("path")
+	      .datum(pcadata['cum'])
+	      .attr("fill", "none")
+	      .attr("stroke", "steelblue")
+	      .attr("stroke-width", 1.5)
+	      .attr("d", d3.line()
+	        .x(function(d,i) { return xSca('PC'+(i+1))+10 })
+	        .y(function(d) { return ySca(d)-80 })
+	      );
+
+	    svg.selectAll(".bar")
+			.data(pcadata['percentVar'])
+			.enter()
+			.append("rect")
+			.on("mouseover",function(){
+			//https://stackoverflow.com/questions/23703089/d3-js-change-color-and-size-on-line-graph-dot-on-mouseover
+			d3.select(this).style("fill","#0066cc");
+			//https://stackoverflow.com/questions/24973067/bar-chart-show-values-on-top
+			svg.append("text")
+				.attr("class","val")
+				.attr("x",(d3.select(this).attr("x"))-(-10))
+				.attr("y",d3.select(this).attr("y")-5)
+				.text(d3.select(this).attr("yval"));
+			})
+			.on("mouseleave",function(){
+				d3.select(this).style("fill","#3399ff");
+				svg.select(".val").remove();
+				svg.select(".numLable").remove();
+				//svg.select(".xLable").remove();
+				//svg.select(".yLable").remove();
+			})
+			.style("fill","#3399ff")
+			.attr("x",function(d,i){ return xSca('PC'+(i+1))+5;})
+			.attr("width",20)
+			.attr("y",function(d){ return ySca(0)-80;})
+			.attr("height",0)
+			.transition()
+			.duration(500)
+			.attr("y",function(d){ return ySca(d)-80;})
+			.attr("height",function(d){ return 390-ySca(d);})
+			.attr("yval",function(d){return d});
+
+	    svg.append("text")
+			.attr("class","xLable")
+			.attr("x",350)
+			.attr("y",330)
+			.text("PC");
+
+		svg.append("text")
+			.attr("class","yLable")
+			.attr("x",-175)
+			.attr("y",15)
+			.attr("transform","rotate(-90)")
+			.text("Percent Variance");
+
+		svg.append("text")
+			.attr("class","svgtitle")
+			.attr("x",80)
+			.attr("y",35)
+			.text("Scree Plot to find Intrinsic Dimentionality");
+	};
 	function plotPC(){
 		let svg = d3.select("#player-div-2")
 						.append("svg")
@@ -295,7 +382,14 @@ function playerAnalysisDisplay(){
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(playersList.property('value'));
 		//console.log(playersList.property('value'));
 		let selectedPlayer = playersList.property('value');
+		let selectedPlayerData = {};
+		for(pData in pcData){
+			//console.log(pData);
+			if(pcData[pData]['Players'] == selectedPlayer)
+				selectedPlayerData = pcData[pData];
+		}
 		console.log(selectedPlayer);
+		console.log(selectedPlayerData);
 		if(rawData)
 			plines.style("stroke",currentColors['textInHeadingColor']);
 		else{
@@ -340,6 +434,13 @@ function playerAnalysisDisplay(){
 			        .style("margin-right","2.5%")
 			        .style("margin-top","1%")
 			        .style("float","left");
+
+			d3.select('#player-div-1')
+					.append('img')
+					.attr("width","15%")
+					.attr("height","140")
+					.attr("src","/static/images/"+selectedPlayerData['skill']+".png")
+					.style("float","left");
 		};
 		
 	};
@@ -374,6 +475,7 @@ function playerAnalysisDisplay(){
 			playersListOptions.enter().append("option").attr("id",function(d){ return "option"+d;}).text(function(d){return d;});
 			playerClear();
 			plotPC();
+			plotPCA();
 		});
 	};
 
