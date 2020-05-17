@@ -272,16 +272,17 @@ def getTeamData():
 			teamTossData['tossWinMatchLose'] = len(tossWin.index) - len(tossWinMatchWin.index)
 			teamTossData['tossLoseMatchLose'] = len(tossLose.index) - len(tossLoseMatchWin.index)
 			tossData[team]=teamTossData
+		
 		Bat_Bowl ={}
-		for player in players['Players'].tolist():
+		players_r = players.fillna(0)
+		print(players_r.isnull().values.any())
+		#print(players_r)
+		for player in players_r['Players'].tolist():
 			scatter_plot = {}
-			player_rec = players.loc[players['Players'] == player]
-			if(not math.isnan(player_rec['Bat_Average'].iloc[0]) and not math.isnan(player_rec['Bowl_Average'].iloc[0])):
-				scatter_plot['Bat_avg'] = float(player_rec['Bat_Average'].iloc[0])
-			#print(scatter_plot)
-				scatter_plot['Bowl_avg'] = player_rec['Bowl_Average'].iloc[0]
-				Bat_Bowl[player] = scatter_plot
-
+			player_rec = players_r.loc[players_r['Players'] == player]
+			scatter_plot['Bat_avg'] = float(player_rec['Bat_Average'].iloc[0])
+			scatter_plot['Bowl_avg'] = player_rec['Bowl_Average'].iloc[0]
+			Bat_Bowl[player] = scatter_plot
 
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes

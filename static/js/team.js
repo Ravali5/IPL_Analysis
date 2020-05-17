@@ -991,8 +991,8 @@ let svg123 = d3.select("#teams-div-3")
               .attr("height","100%")
               .style("background-color","transparent");
 
-  let x_scale = d3.scaleLinear().domain([0,100]).range([50,400]);
-  let y_scale = d3.scaleLinear().domain([0,100]).range([340,100]);
+  let x_scale = d3.scaleLinear().domain([0,60]).range([50,400]);
+  let y_scale = d3.scaleLinear().domain([0,50]).range([340,100]);
 
   let xAxis = d3.axisBottom().scale(x_scale);
   let yAxis = d3.axisLeft().scale(y_scale);
