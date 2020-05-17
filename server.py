@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask import render_template
 import pandas as pd
 import json
+from sklearn.cluster import KMeans
 
 app = Flask(__name__)
 
@@ -36,6 +37,23 @@ highscore= pd.read_csv("./data/highest-scores.csv")
 #print(mostruns.iloc[0]['Runs'])
 
 players = pd.concat([bat,bowl,batbowl])
+clusterData = pd.DataFrame(players)
+clusterData.drop('skill', axis=1, inplace=True)
+clusterData.drop('Players', axis=1, inplace=True)
+clusterData['Bat_Balls_Faced'] = clusterData['Bat_Balls_Faced'].str.replace(',','')
+clusterData['Bowl_Runs'] = clusterData['Bowl_Runs'].str.replace(',','')
+clusterData['Bat_Highest_Score'] = clusterData['Bat_Highest_Score'].str.replace(',','')
+clusterData['Bat_Highest_Score'] = clusterData['Bat_Highest_Score'].str.replace('*','')
+clusterData['Bat_Balls_Faced'] = pd.to_numeric(clusterData['Bat_Balls_Faced'])
+clusterData['Bowl_Runs'] = pd.to_numeric(clusterData['Bowl_Runs'])
+clusterData['Bat_Highest_Score'] = pd.to_numeric(clusterData['Bat_Highest_Score'])
+
+kmeans = KMeans(n_clusters=3)
+clusterData.fillna(0,inplace=True)
+kmeans.fit(clusterData)
+players['clusterNumber'] = kmeans.labels_
+print(players[['Players','clusterNumber']])
+#print(players.columns)
 playersjson = players.to_dict(orient='records')
 playersjson = json.dumps(playersjson)
 
