@@ -79,8 +79,26 @@ pcadata['cum'] = cum
 kmeans = KMeans(n_clusters=3)
 kmeans.fit(clusterData)
 players['clusterNumber'] = kmeans.labels_
-print(players[['Players','clusterNumber']])
+#print(players[['Players','clusterNumber']])
 #print(players.columns)
+file = open("./data/fullnames.txt","r")
+fullnames = file.read()
+file.close()
+playercsv = pd.read_csv("./data/Player.csv")
+fullnames = fullnames.split("\n")
+playerDetails = {}
+for name in fullnames:
+	tok = name.split("-")
+	#print(tok)
+	pdet = playercsv.loc[playercsv['Player_Name']==tok[1]]
+	pdict = {}
+	if len(pdet.index) > 0 :
+		pdict['nationality'] = str(pdet.iloc[0]['Country'])
+		pdict['dominantHand']= str(pdet.iloc[0]['Batting_Hand'])
+		pdict['bowlingSkill']= str(pdet.iloc[0]['Bowling_Skill'])
+		pdict['dob']		 = str(pdet.iloc[0]['DOB'])
+	playerDetails[tok[0]] = pdict
+
 playersjson = players.to_dict(orient='records')
 playersjson = json.dumps(playersjson)
 
@@ -101,6 +119,7 @@ def getPlayerData():
 		playerData['json'] = playersjson[1:len(playersjson)-1]
 		playerData['json'] = playerData['json']+','
 		playerData['pca'] = pcadata
+		playerData['playerDetails'] = playerDetails
 	return playerData
 
 @app.route("/getPieData",methods = ['POST', 'GET'])

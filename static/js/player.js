@@ -441,6 +441,36 @@ function playerAnalysisDisplay(){
 					.attr("height","140")
 					.attr("src","/static/images/"+selectedPlayerData['skill']+".png")
 					.style("float","left");
+
+			let svg = d3.select("#player-div-1")
+							.append("svg")
+							.style("width","64%")
+							.style("height","100%")
+							.style("background-color","transparent")
+							.style("float","left");
+
+			svg.append("text").attr("x",50).attr("y",50).text("Dominant Hand");
+			svg.append("text").attr("x",50).attr("y",125).text("Bowling Skill");
+			svg.append("text").attr("x",250).attr("y",50).text("Batting Avg");
+			svg.append("text").attr("x",250).attr("y",125).text("Bowling Avg");
+			svg.append("text").attr("x",450).attr("y",50).text("Nationality");
+			svg.append("text").attr("x",450).attr("y",125).text("Date of Birth");
+
+			selectedPlayerDetails = playerData['playerDetails'][selectedPlayer];
+			if(selectedPlayerDetails == null){
+				//console.log("tre");
+				selectedPlayerDetails={}
+				selectedPlayerDetails['dominantHand'] = 'Data Not Available';
+				selectedPlayerDetails['bowlingSkill'] = 'Data Not Available';
+				selectedPlayerDetails['nationality']  = 'Data Not Available';
+				selectedPlayerDetails['dob']		  = 'Data Not Available';
+			}
+			svg.append("text").attr("x",50).attr("y",75).text(selectedPlayerDetails['dominantHand']);
+			svg.append("text").attr("x",50).attr("y",150).text(selectedPlayerDetails['bowlingSkill']);
+			svg.append("text").attr("x",250).attr("y",75).text(selectedPlayerData['Bat_Average']);
+			svg.append("text").attr("x",250).attr("y",150).text(selectedPlayerData['Bowl_Average']);
+			svg.append("text").attr("x",450).attr("y",75).text(selectedPlayerDetails['nationality']);
+			svg.append("text").attr("x",450).attr("y",150).text(selectedPlayerDetails['dob']);
 		};
 		
 	};
