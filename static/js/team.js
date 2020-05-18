@@ -1228,6 +1228,15 @@ console.log(onclickselect)
               .call(yAxis);
 
     svg.append('text')
+                .attr("x",130)
+                .attr("y",20)
+                .attr("width",30)
+                .attr("height",30)
+                .attr("font-size","15px")
+                .attr("font-weight" ,"bold")
+                .text("Numbers of "+selectedOption+" by each team");
+
+    svg.append('text')
                 .attr("x",220)
                 .attr("y",285)
                 .attr("width",10)
@@ -1411,6 +1420,24 @@ function putDiv1Data(teamData){
           return 340-y_scale(0);
          } 
         });*/
+
+        svg.append('text')
+                .attr("x",60)
+                .attr("y",285)
+                .attr("width",30)
+                .attr("height",30)
+                .attr("font-size","15px")
+                .attr("font-weight" ,"bold")
+                .text("Numbers of times each team won IPL Trophy");
+
+         svg.append('text')
+                .attr("x",60)
+                .attr("y",285)
+                .attr("transform", "rotate(-90)")
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Teams");
 
 };
 
