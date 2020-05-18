@@ -132,7 +132,9 @@ d3.select("#venue-right-div")
 
     function venueClear(){
       d3.select("#venue-details").selectAll("*").remove();
-
+      d3.select("#venue-div-1").style("display","none");
+      d3.select("#venue-div-2").style("width","100%");
+      d3.select("#venue-div-3").style("width","100%");
       let imgName = "/static/images/cricketstadium.png";
 
       d3.select('#venue-details')
@@ -161,7 +163,10 @@ d3.select("#venue-right-div")
       d3.select("#venue-details").selectAll("*").remove();
       selectedVenue = venueNames[left_top_dropdown.property("selectedIndex")]
       if(selectedVenue){
-          var state = vnames[selectedVenue]
+          d3.select("#venue-div-1").style("display","block");
+          d3.select("#venue-div-2").style("width","60%");
+          d3.select("#venue-div-3").style("width","60%");
+          var state = vnames[selectedVenue];
           d3.select("#india").selectAll("path").style("fill",function(d){if(d["id"]!=state) {return currentColors['bodyBackgroundColor'];}else{return currentColors['headingColor'];}})
 
           //console.log(d3.select("#india"))
@@ -208,12 +213,12 @@ d3.select("#venue-right-div")
                 vdet.append("text").attr("x",30).attr("y",70).text("City:");
                 vdet.append("text").attr("x",200).attr("y",70).text("Capacity:");
                 vdet.append("text").attr("x",350).attr("y",70).text("Pavilions:");
-                vdet.append("text").attr("x",530).attr("y",70).text("Home Ground of:");
+                vdet.append("text").attr("x",30).attr("y",125).text("Home Ground of:");
 
-                vdet.append("text").attr("x",30).attr("y",100).text(data['city']);
-                vdet.append("text").attr("x",200).attr("y",100).text(data['capacity']);
-                vdet.append("text").attr("x",350).attr("y",100).text(data['pavilions']);
-                vdet.append("text").attr("x",530).attr("y",100).text(data['TeamName']);
+                vdet.append("text").attr("x",30).attr("y",90).text(data['city']);
+                vdet.append("text").attr("x",200).attr("y",90).text(data['capacity']);
+                vdet.append("text").attr("x",350).attr("y",90).text(data['pavilions']);
+                vdet.append("text").attr("x",170).attr("y",125).text(data['TeamName']);
 
 
           })
@@ -236,8 +241,11 @@ d3.select("#venue-right-div")
                         .style("background-color","transparent")
                         .style("float","left");
 
-           vdet1.append("text").attr("x",50).attr("y",50).attr("font-size","24px").attr("font-weight","bold").attr("font-style","italic").text("Analysis of IPL Matches based on the Stadium ");
-           vdet1.append("text").attr("x",50).attr("font-size","16px").attr("y",100).text("This page shows various statistics of how aspects of stadium can effect the match");
+        vdet1.append("text").attr("x",50).attr("y",50).attr("font-size","24px").attr("font-weight","bold").attr("font-style","italic").text("Analysis of IPL Matches based on the Stadium ");
+        vdet1.append("text").attr("x",50).attr("font-size","16px").attr("y",100).text("This page shows various statistics of how aspects of stadium can effect the match");
+        d3.select("#venue-div-1").style("display","none");
+        d3.select("#venue-div-2").style("width","100%");
+        d3.select("#venue-div-3").style("width","100%");
       }
     };
 
@@ -406,7 +414,7 @@ d3.select("#venue-right-div")
                   .attr('transform','translate('+[50,-80]+')')
                   .call(yAxis);
 
-console.log(vdata['TeamName']);
+        //console.log(vdata['TeamName']);
         svg.append("g")
             .selectAll("g")
             // Enter in the stack data = loop key per key = group per group
@@ -422,8 +430,9 @@ console.log(vdata['TeamName']);
                   //https://stackoverflow.com/questions/24973067/bar-chart-show-values-on-top
                   svg.append("text")
                     .attr("class","val")
-                    .attr("x",(d3.select(this).attr("x"))-(-10))
-                    .attr("y",d3.select(this).attr("y")-8)
+                    .attr("x",(d3.select(this).attr("x"))-(-5))
+                    .attr("y",d3.select(this).attr("y")-(-17))
+                    .attr("fill",currentColors['textInHeadingColor'])
                     .text(d3.select(this).attr("yval"));
                   })
                   .on("mouseleave",function(){
@@ -650,7 +659,6 @@ console.log(vdata['TeamName']);
     
     var translation = (x, y) => `translate(${x}, ${y})`
     
-    // Feel free to change or delete any of the code you see in this editor!
     var svg = d3.select("#venue-div-3").append("svg")
       .attr("width", width)
       .attr("height", height)
@@ -676,58 +684,68 @@ console.log(vdata['TeamName']);
 
 
       if(selectedVenue){
-      svg.append('text')
-                    .attr("x",-120)
-                    .attr("y",-150)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","16px")
-                    .attr("font-weight","bold")
-                    .text("Average runs scored in "+selectedVenue);
-
-      svg.append('text')
-                    .attr("x",-80)
-                    .attr("y",20)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","14px")
-                    .attr("font-weight","bold")
-                    .text(125);
+        svg.append('text')
+                      .attr("x",-120)
+                      .attr("y",-150)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","16px")
+                      .attr("font-weight","bold")
+                      .text("Average runs scored in "+selectedVenue);
 
         svg.append('text')
-                    .attr("x",60)
-                    .attr("y",20)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","14px")
-                    .attr("font-weight","bold")
-                    .text(165);
+                      .attr("x",-80)
+                      .attr("y",20)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","14px")
+                      .attr("font-weight","bold")
+                      .text(125);
 
-        svg.append('text')
-                    .attr("x",100)
-                    .attr("y",-80)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","14px")
-                    .text("A stadium pitch having an average >150 can be ");
+          svg.append('text')
+                      .attr("x",60)
+                      .attr("y",20)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","14px")
+                      .attr("font-weight","bold")
+                      .text(165);
 
-        svg.append('text')
-                    .attr("x",100)
-                    .attr("y",-60)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","14px")
-                    .text("considered as a good batting pitch and with average <140");
+          svg.append('text')
+                      .attr("x",100)
+                      .attr("y",-120)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","14px")
+                      .text("A stadium pitch having an average >150 can be ");
 
-         svg.append('text')
-                    .attr("x",100)
-                    .attr("y",-40)
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","14px")
-                    .text("it can be considered as a good bowling pitch");
+          svg.append('text')
+                      .attr("x",100)
+                      .attr("y",-100)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","14px")
+                      .text("considered as a good batting pitch and with average <140");
 
-    }
+          svg.append('text')
+                      .attr("x",100)
+                      .attr("y",-80)
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","14px")
+                      .text("it can be considered as a good bowling pitch");
+          let friendlyDes = ((parseInt(text)-125)*100.0)/40.0 ;
+          if(friendlyDes <= 37.5){
+            svg.append("text").attr("x",200).attr("y",-20).attr("font-size","1.5em").text("Bowling Pitch!");
+            svg.append("svg:image").attr("x",150).attr("y",-50).style("width",50).style("height",50).attr("xlink:href","/static/images/bowl.png");
+          }else if(friendlyDes > 37.5 && friendlyDes < 62.5){
+            svg.append("text").attr("x",200).attr("y",-20).attr("font-size","1.5em").text("Neutral Pitch!");
+            svg.append("svg:image").attr("x",150).attr("y",-50).style("width",50).style("height",50).attr("xlink:href","/static/images/batbowl.png");
+          }else if(friendlyDes >= 62.5){
+            svg.append("text").attr("x",200).attr("y",-20).attr("font-size","1.5em").text("Batting Pitch!");
+            svg.append("svg:image").attr("x",150).attr("y",-50).style("width",50).style("height",50).attr("xlink:href","/static/images/bat.png");
+          }
+      }
     };
 
     function putDiv3Data_line(vdata){
