@@ -1019,7 +1019,8 @@ function putDiv4Data(teamData){
   //let lineData = teamData['auction']['CSK'];
   for(var team in teams){
     //console.log(teams[team]);
-    //plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
+    //console.log(teamData['auction'][teams[team]]);
+    plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
   }
   
 };
