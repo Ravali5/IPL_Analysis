@@ -1210,8 +1210,18 @@ console.log(onclickselect)
     }
 
     let x_domain = teams;
-    if(selectedTeam !='ALL')
+    if(selectedTeam !='ALL'){
       x_domain.splice(x_domain.indexOf(selectedTeam),1);
+      svg.append('text')
+                .attr("x",90)
+                .attr("y",20)
+                .attr("width",30)
+                .attr("height",30)
+                .attr("font-size","15px")
+                .attr("font-weight" ,"bold")
+                .text("Numbers of "+selectedOption+" by "+selectedTeam+" against other team");
+    }
+
     let y_domain = [0,max];
 
     let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
@@ -1227,6 +1237,7 @@ console.log(onclickselect)
               .attr('transform','translate('+[50,-80]+')')
               .call(yAxis);
 
+    if(selectedTeam == "ALL"){
     svg.append('text')
                 .attr("x",130)
                 .attr("y",20)
@@ -1235,6 +1246,7 @@ console.log(onclickselect)
                 .attr("font-size","15px")
                 .attr("font-weight" ,"bold")
                 .text("Numbers of "+selectedOption+" by each team");
+    }
 
     svg.append('text')
                 .attr("x",220)
@@ -1323,6 +1335,24 @@ function putDiv1Data(teamData){
     x_domain.splice(index,1);
     y_domain = [0,10];
     y_vals = teamData['opponentData'];
+
+    svg.append('text')
+                .attr("x",50)
+                .attr("y",285)
+                .attr("width",30)
+                .attr("height",30)
+                .attr("font-size","15px")
+                .attr("font-weight" ,"bold")
+                .text("Numbers of matches "+selectedTeam+" won against other teams");
+
+         svg.append('text')
+                .attr("x",-100)
+                .attr("y",15)
+                .attr("transform", "rotate(-90)")
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Teams");
   }
   //console.log(y_vals);
   //var x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
@@ -1421,23 +1451,25 @@ function putDiv1Data(teamData){
          } 
         });*/
 
-        svg.append('text')
-                .attr("x",60)
-                .attr("y",285)
-                .attr("width",30)
-                .attr("height",30)
-                .attr("font-size","15px")
-                .attr("font-weight" ,"bold")
-                .text("Numbers of times each team won IPL Trophy");
+        if(selectedTeam == "ALL"){
+                svg.append('text')
+                        .attr("x",60)
+                        .attr("y",285)
+                        .attr("width",30)
+                        .attr("height",30)
+                        .attr("font-size","15px")
+                        .attr("font-weight" ,"bold")
+                        .text("Numbers of times each team won IPL Trophy");
 
-         svg.append('text')
-                .attr("x",60)
-                .attr("y",285)
-                .attr("transform", "rotate(-90)")
-                .attr("width",10)
-                .attr("height",10)
-                .attr("font-size","14px")
-                .text("Teams");
+                 svg.append('text')
+                        .attr("x",-100)
+                        .attr("y",15)
+                        .attr("transform", "rotate(-90)")
+                        .attr("width",10)
+                        .attr("height",10)
+                        .attr("font-size","14px")
+                        .text("Teams");
+          }
 
 };
 
