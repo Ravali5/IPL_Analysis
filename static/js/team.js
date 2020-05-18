@@ -7,7 +7,7 @@ textInHeadingColor = currentColors['textInHeadingColor'];
 btnMouseoverBGColor = currentColors['btnMouseoverBGColor'];
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
-
+var onclickselect;
 //Generate Map function
 function generateMap(){
     var proj = d3.geo.mercator();
@@ -81,6 +81,7 @@ function generateMap(){
                           div.style("opacity", 0); 
                       })
                       .on("click",function(d){
+                        onclickselect = d["supportTeam"]
                         var k = d["supportTeam"]
                         india.selectAll("path").style("stroke-width","1px")
                           india.selectAll("path").style("stroke","#A9A9A9")
@@ -1187,6 +1188,11 @@ function putDiv2Data(teamData){
    //if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
+console.log(onclickselect)
+    if(onclickselect){
+      teams=[onclickselect]
+    }
+
     let selectedOption = options[div2dropdown.property("selectedIndex")];
 
     //console.log(teamData)
@@ -1245,7 +1251,7 @@ function putDiv2Data(teamData){
         .attr("height",function(d){ return 340-y_scale(barData[d]); })
         .on("mouseover", function(d) {
           //console.log(d);
-          svg
+    svg
           .append("text")
           .attr("id","val")
           .style("text-anchor", "start")
