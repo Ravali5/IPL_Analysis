@@ -1037,7 +1037,7 @@ if(selectedTeam == 'ALL'){
                       .style("background-color","transparent");
 
           let x_scale = d3.scaleLinear().domain([0,60]).range([50,400]);
-          let y_scale = d3.scaleLinear().domain([0,50]).range([340,100]);
+          let y_scale = d3.scaleLinear().domain([-1,50]).range([340,100]);
 
           let xAxis = d3.axisBottom().scale(x_scale);
           let yAxis = d3.axisLeft().scale(y_scale);
