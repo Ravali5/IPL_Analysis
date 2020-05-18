@@ -199,7 +199,11 @@ def getVenueData():
 		tmpVenues = venues.query("Venue_Name == '" +str(venue)+"'")
 		venueNames[venue] = tmpVenues['State'].iloc[0]
 
-
+	if selectedVenue:
+		venueDetails = venues.loc[venues['Venue_Name']==selectedVenue]
+		venueData['capacity'] = venueDetails.iloc[0]['capacity']
+		venueData['pavilions']= venueDetails.iloc[0]['pavilions']
+		venueData['city']= venueDetails.iloc[0]['City_Name']
 	venueData['homeWins'] = homeWins
 	venueData['tossDec'] = tossDec
 	venueData['venueNames'] = venueNames
@@ -332,7 +336,7 @@ def getTeamData():
 		
 		Bat_Bowl ={}
 		players_r = players.fillna(0)
-		print(players_r.isnull().values.any())
+		#print(players_r.isnull().values.any())
 		#print(players_r)
 		for player in players_r['Players'].tolist():
 			scatter_plot = {}
