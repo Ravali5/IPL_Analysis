@@ -4,10 +4,12 @@ function playerAnalysisDisplay(){
 	let plines;
 	let playerSelectFlag = false;
 	let rawData = true;
+	let leftBottomSvg = null;
+	let hoverLineColor = "red";
 	let clusterColor ={
-		0 : 'yellow',
-		1 : 'green',
-		2 : 'black'
+		0 : '#cc6699',//maroon
+		1 : '#00b33c',//green
+		2 : 'black'//black
 	};
 	d3.select("#left-top").style("height","39%");
 	d3.select("#left-bottom").style("height","58%");
@@ -220,6 +222,10 @@ function playerAnalysisDisplay(){
 			.attr("x",80)
 			.attr("y",35)
 			.text("Scree Plot to find Intrinsic Dimentionality");
+
+		svg.append("text").attr("x",30).attr("y",370).text("Top Attributes computed from loading matrix are");
+		svg.append("text").attr("x",30).attr("y",390).text("Batting Average, Batting Strike Rate, Runs Scored");
+		svg.append("text").attr("x",30).attr("y",410).text("Bowling Average, Bowling Economy, Wickets Taken");
 	};
 	function plotPC(){
 		let svg = d3.select("#player-div-2")
@@ -235,6 +241,7 @@ function playerAnalysisDisplay(){
 			.attr("fill",currentColors['headingColor'])
 			.on("click",function(d){
 				rawData = true;
+				d3.selectAll("#clusterColorLabel1").remove();
 				//console.log(rawData);
 				if(playerSelectFlag)
 					plines.style("stroke",currentColors['textInHeadingColor']);
@@ -252,6 +259,9 @@ function playerAnalysisDisplay(){
 			.attr("fill",currentColors['headingColor'])
 			.on("click",function(d){
 				rawData = false;
+				svg.append("rect").attr("id","clusterColorLabel1").attr("x",150).attr("y",420).attr("fill",clusterColor[0]).style("width","15px").style("height","15px");
+				svg.append("rect").attr("id","clusterColorLabel1").attr("x",350).attr("y",420).attr("fill",clusterColor[1]).style("width","15px").style("height","15px");
+				svg.append("rect").attr("id","clusterColorLabel1").attr("x",550).attr("y",420).attr("fill",clusterColor[2]).style("width","15px").style("height","15px");
 				for(pData in pcData){
 					//console.log(pcData[pData]);
 					let tempData = pcData[pData];
@@ -297,7 +307,19 @@ function playerAnalysisDisplay(){
 		    .data(dimensions).enter()
 		    .append("g")
 		    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+		    .attr("stroke-width","2px")
 		    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+		    .on("mouseover",function(d){
+		    	svg.append("text")
+		    		.attr("id","xAxisLabel")
+		    		.attr("transform", "rotate(-90)")
+		    		.attr("x",-275)
+		    		.attr("y",40)
+		    		.text(d);
+		    })
+		    .on("mouseout",function(d){
+		    	d3.select("#xAxisLabel").remove();
+		    })
 		    .append("text")
 		      .style("text-anchor", "middle")
 		      .attr("y", 90)
@@ -319,15 +341,32 @@ function playerAnalysisDisplay(){
 					    .style("opacity","0.5")
 					    .on("mouseover",function(){
 					    	//console.log(d3.select(this).attr("pName"));
+					    	let hoveredPlayerName = d3.select(this).attr("pName");
+					    	let hoveredPlayerData = {};
+							for(pData in pcData){
+								//console.log(pData);
+								if(pcData[pData]['Players'] == hoveredPlayerName)
+									hoveredPlayerData = pcData[pData];
+							}
 					    	svg.append("text")
 					    		.attr("id","pNameLabel")
 					    		.attr("x",700)
 					    		.attr("y",50)
-					    		.text(d3.select(this).attr("pName"));
+					    		.text(hoveredPlayerName);
 					    	d3.select(this).style("stroke","red").style("stroke-width","4px").style("opacity","1");
+
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",30).attr("y",70).style("fill",hoverLineColor).style("font-size","1.5em").text(hoveredPlayerName);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",125).style("fill",hoverLineColor).text(hoveredPlayerData['Bat_Average']);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",185).style("fill",hoverLineColor).text(hoveredPlayerData['Bat_Strike_Rate']);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",245).style("fill",hoverLineColor).text(hoveredPlayerData['Bat_Runs']);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",305).style("fill",hoverLineColor).text(hoveredPlayerData['Bowl_Average']);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",365).style("fill",hoverLineColor).text(hoveredPlayerData['Bowl_Economy']);
+							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",425).style("fill",hoverLineColor).text(hoveredPlayerData['Bowl_Wickets']);
+
 					    })
 					    .on("mouseout",function(d){
 					    	d3.select("#pNameLabel").remove();
+					    	d3.selectAll("#hoverLinePlayerLabel").remove();
 					    	if(rawData){
 						    	if(playerSelectFlag)
 						    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
@@ -348,10 +387,14 @@ function playerAnalysisDisplay(){
 					    	//playerChange();
 					    });
 
-		svg.on("wheel",function(){console.log('scrolls')});
+		svg.on("wheel",function(){		});
 
 	};
+	
 	function playerClear(){
+		leftBottomSvg = null;
+		d3.select("#left-bottom").selectAll("*").remove();
+		plotPCA();
 		playersList.selectedIndex = -1;
 		playerSelectFlag = false;
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(" -- Select player -- ");
@@ -376,10 +419,32 @@ function playerAnalysisDisplay(){
 		appendImage('Best Economy',playerData['alltime_bowleconomy']['name'],playerData['alltime_bowleconomy']['val']);
 		appendImage('Most Dot Balls',playerData['alltime_mostdotball']['name'],playerData['alltime_mostdotball']['val']);
 	};
+	function putLeftBottomDivData(selectedPlayerData){
+		leftBottomSvg = d3.select("#left-bottom")
+							.append("svg")
+							.style("width","90%")
+							.style("height","100%");
+
+		leftBottomSvg.append("text").attr("x",30).attr("y",40).style("fill",currentColors['headingColor']).style("font-size","1.5em").text(selectedPlayerData['Players']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",100).style("fill",currentColors['headingColor']).text("Batting Average");
+		leftBottomSvg.append("text").attr("x",30).attr("y",125).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bat_Average']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",160).style("fill",currentColors['headingColor']).text("Batting Strike Rate");
+		leftBottomSvg.append("text").attr("x",30).attr("y",185).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bat_Strike_Rate']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",220).style("fill",currentColors['headingColor']).text("Runs Scored");
+		leftBottomSvg.append("text").attr("x",30).attr("y",245).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bat_Runs']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",280).style("fill",currentColors['headingColor']).text("Bowling Average");
+		leftBottomSvg.append("text").attr("x",30).attr("y",305).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bowl_Average']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",340).style("fill",currentColors['headingColor']).text("Bowling Economy");
+		leftBottomSvg.append("text").attr("x",30).attr("y",365).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bowl_Economy']);
+		leftBottomSvg.append("text").attr("x",30).attr("y",400).style("fill",currentColors['headingColor']).text("Wickets Taken");
+		leftBottomSvg.append("text").attr("x",30).attr("y",425).style("fill",currentColors['headingColor']).text(selectedPlayerData['Bowl_Wickets']);
+
+	};
 	function playerChange(){
 		playerSelectFlag = true;
 		d3.select("#player-div-1").selectAll("*").remove();
 		d3.select("#left-top-div-span").style("font-size","1.5em").text(playersList.property('value'));
+		d3.select("#left-bottom").selectAll("*").remove();
 		//console.log(playersList.property('value'));
 		let selectedPlayer = playersList.property('value');
 		let selectedPlayerData = {};
@@ -417,10 +482,12 @@ function playerAnalysisDisplay(){
 		    {
 		    	imgName = "/static/images/players/nopic.png";
 		    	putPlayerDiv1();
+		    	putLeftBottomDivData(selectedPlayerData);
 		    },
 		    success: function()
 		    {
 		        putPlayerDiv1();
+		        putLeftBottomDivData(selectedPlayerData);
 		    }
 		});
 
