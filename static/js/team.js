@@ -23,7 +23,7 @@ function generateMap(){
 
     d3.json("/static/json/states.json", function (json) {
 
-    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#DCDCDC", "#EA1A85"];
+    var colors = [ "#2152CD", "#F76E0A","#BC1527", "#FEE953", "#19459F","#46007A", "#D7D7D7", "#EA1A85"];
     var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
 
       var div = d3.select("body").append("div") 
@@ -216,7 +216,7 @@ var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
         .append('path')
         .attr('d', arc)
         .attr("id",function(d,i){"pie"+teams[i]})
-        .style('fill', function(d,i){ if (i<=7){ return data_pie['color'][i]; }})
+        .style('fill', function(d,i){ if(teams[i]=="KXIP"){return "#D7D7D7";}if (i<=7){ return data_pie['color'][i]; }})
         .attr("stroke", "black")
         .style("stroke-width", "0px")
         .on("mouseover", function(d,i) {
@@ -960,7 +960,7 @@ function putDiv4Data(teamData){
               .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
-  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#D7D7D7'};
   let years = [2013,2014,2015,2016,2017,2018,2019];
 
   let x_domain = years;
@@ -1119,7 +1119,7 @@ if(selectedTeam == 'ALL'){
 
             var color = d3.scaleOrdinal()
                           .domain(matchDec)
-                          .range(['#e41a1c','#377eb8','#4daf4a','black'])
+                          .range([currentColors['textInHeadingColor'],currentColors['headingColor']])
 
           let xAxis = d3.axisBottom().scale(x_scale);
           let yAxis = d3.axisLeft().scale(y_scale);
@@ -1297,7 +1297,7 @@ function putDiv1Data(teamData){
         .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
-  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+  let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#D7D7D7'};
 
   let x_domain = teams;
   let y_domain = [0,5];

@@ -207,6 +207,13 @@ def getVenueData():
 		venueData['capacity'] = venueDetails.iloc[0]['capacity']
 		venueData['pavilions']= venueDetails.iloc[0]['pavilions']
 		venueData['city']= venueDetails.iloc[0]['City_Name']
+		team = venueDetails.iloc[0]['HomeGround_Team_Id']
+		if(str(team) == "Not Home Ground"):
+			venueData['TeamName'] = "Not Home Ground"
+		else:
+			team_name = teams.loc[teams['Team_Id']==int(team),'Team_Short_Code'].iloc[0]
+			venueData['TeamName'] = team_name
+
 	venueData['homeWins'] = homeWins
 	venueData['tossDec'] = tossDec
 	venueData['venueNames'] = venueNames

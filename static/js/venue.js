@@ -68,6 +68,7 @@ d3.select("#venue-right-div")
   	.style("color",currentColors['headingColor']);
 
     var selectedVenue;
+    var venueData;
 
   function populateDropDown(vnames){
 
@@ -103,7 +104,7 @@ d3.select("#venue-right-div")
                           d3.select("#venue-div-3").selectAll("*").remove();
                           console.log(venueData['homeWins'])
                           selectedVenue = null
-                          putDiv2Data(venueData['homeWins'])
+                          putDiv2Data(venueData)
                           putDiv3Data_line(venueData['NMatches'])
                           d3.select("#india").selectAll("path").style("fill",function(d){ return currentColors['bodyBackgroundColor'];})
                           venueClear();
@@ -160,7 +161,7 @@ d3.select("#venue-right-div")
           var state = vnames[selectedVenue]
           d3.select("#india").selectAll("path").style("fill",function(d){if(d["id"]!=state) {return currentColors['bodyBackgroundColor'];}else{return currentColors['headingColor'];}})
 
-          console.log(d3.select("#india"))
+          //console.log(d3.select("#india"))
           //d3.select("#playerselect").text(selectedVenue)
           d3.select("#india").selectAll("path").append('text')
                           .attr("x",100)
@@ -174,7 +175,7 @@ d3.select("#venue-right-div")
           d3.select("#venue-div-2").selectAll("*").remove();
           d3.select("#venue-div-3").selectAll("*").remove();
           $.post("/getVenueData", {'venue': selectedVenue}, function(data){
-                putDiv2Data(data['WL'])
+                putDiv2Data(data)
                 putDiv3Data(data['battingFriendly'])
                 let imgName = "/static/images/venue/"+selectedVenue+".jpg";
 
@@ -200,13 +201,17 @@ d3.select("#venue-right-div")
                       .attr("x",30)
                       .attr("y",40);
 
+                console.log(data)
                 vdet.append("text").attr("x",30).attr("y",70).text("City:");
                 vdet.append("text").attr("x",200).attr("y",70).text("Capacity:");
                 vdet.append("text").attr("x",350).attr("y",70).text("Pavilions:");
+                vdet.append("text").attr("x",530).attr("y",70).text("Home Ground of:");
 
                 vdet.append("text").attr("x",30).attr("y",100).text(data['city']);
                 vdet.append("text").attr("x",200).attr("y",100).text(data['capacity']);
                 vdet.append("text").attr("x",350).attr("y",100).text(data['pavilions']);
+                vdet.append("text").attr("x",530).attr("y",100).text(data['TeamName']);
+
 
           })
           plotPieChart(selectedVenue);
@@ -248,7 +253,7 @@ d3.select("#venue-right-div")
     var data_ready = pie(d3.entries(venueData['tossDec'][selectedVenue]))
 
     var le = d3.values(venueData['tossDec'][selectedVenue])
-    console.log(le)
+    //console.log(le)
     var sum = le.reduce(function(a, b){
         return a + b;
     }, 0);
@@ -322,7 +327,7 @@ d3.select("#venue-right-div")
                           .attr("d",arc)
                           div.style("opacity", 0); 
         });
-        console.log(j)
+        //console.log(j)
         
 
       svg.append('text')
@@ -357,7 +362,10 @@ d3.select("#venue-right-div")
         let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
 
         HGData = vdata
-         var map=d3.map(vdata)
+        if(selectedVenue)
+          var map=d3.map(vdata['WL'])
+        else
+         var map=d3.map(vdata['homeWins'])
         let x_domain = map.keys();
         //let y_domain = [0,80];
 
@@ -392,6 +400,7 @@ d3.select("#venue-right-div")
                   .attr('transform','translate('+[50,-80]+')')
                   .call(yAxis);
 
+console.log(vdata['TeamName']);
         svg.append("g")
             .selectAll("g")
             // Enter in the stack data = loop key per key = group per group
@@ -421,7 +430,8 @@ d3.select("#venue-right-div")
             .attr("y", function(d) { return y_scale(d[1]) -80 ; })
             .transition()
             .duration(500)
-            .attr("height", function(d) { return y_scale(d[0]) - y_scale(d[1]); })
+            .attr("height", function(d,i) { return y_scale(d[0]) - y_scale(d[1])  })
+            .attr("border","3px")
             .attr("width",25)
             .attr("yval",function(d){return d[1]})
             
@@ -837,7 +847,7 @@ d3.select("#venue-right-div")
         console.log(venueData)
         populateDropDown(venueData['venueNames'])
         putDiv3Data_line(venueData['NMatches'])
-        putDiv2Data(venueData['homeWins'])
+        putDiv2Data(venueData)
         
 
       });
