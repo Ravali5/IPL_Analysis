@@ -382,8 +382,14 @@ d3.select("#venue-right-div")
          var map=d3.map(vdata['homeWins'])
         let x_domain = map.keys();
         //let y_domain = [0,80];
+        let x_scale;
+        if(selectedVenue){
+          x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+        }
+        else{
+          x_scale = d3.scaleBand().domain(x_domain).range([50,600]);
+        }
 
-        let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
         let y_scale = d3.scaleLinear().range([280,100]);
 
 
@@ -441,7 +447,7 @@ d3.select("#venue-right-div")
                     //svg.select(".xLable").remove();
                     //svg.select(".yLable").remove();
             })
-           .attr("x",function(d,i){ return 10+x_scale(x_domain[i]);})
+           .attr("x",function(d,i){ if(selectedVenue){return 10+x_scale(x_domain[i]);}else{ return 23+x_scale(x_domain[i]);}})
             .attr("y", function(d) { return y_scale(d[1]) -80 ; })
             .transition()
             .duration(500)
@@ -496,11 +502,11 @@ d3.select("#venue-right-div")
         }
         else{
         svg.append('text')
-                    .attr("x",70)
+                    .attr("x",220)
                     .attr("y",15)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","12px")
+                    .attr("font-size","14px")
                     .attr("font-weight","bold")
                     .text("Wins of each team in their HomeGround and other stadiums");
                   }
@@ -512,15 +518,15 @@ d3.select("#venue-right-div")
                
         }
         else{
-               svg.append("circle").attr("cx",403).attr("cy",50).attr("r", 4).style("fill", currentColors['headingColor'])
-               svg.append("circle").attr("cx",403).attr("cy",80).attr("r", 4).style("fill", "#404040")
-               svg.append("text").attr("x", 412).attr("y", 50).text("No. of Wins in Home Ground").style("font-size", "13px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 412).attr("y", 80).text("No. of Wins Not in Home Ground").style("font-size", "13px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 405).attr("y", 120).text("Plot shows how many matches each team").style("font-size", "11px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 405).attr("y", 135).text("won when they playin their home ground").style("font-size", "11px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 405).attr("y", 150).text("The bars here show more amount of blue ").style("font-size", "11px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 405).attr("y", 165).text("portion which signifies that teams").style("font-size", "11px").attr("alignment-baseline","middle")
-               svg.append("text").attr("x", 405).attr("y", 180).text("win more when they play in home ground").style("font-size", "11px").attr("alignment-baseline","middle")
+               svg.append("circle").attr("cx",663).attr("cy",50).attr("r", 4).style("fill", currentColors['headingColor'])
+               svg.append("circle").attr("cx",663).attr("cy",80).attr("r", 4).style("fill", "#404040")
+               svg.append("text").attr("x", 672).attr("y", 50).text("No. of Wins in Home Ground").style("font-size", "14px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 672).attr("y", 80).text("No. of Wins Not in Home Ground").style("font-size", "14px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 665).attr("y", 120).text("Plot shows how many matches each team").style("font-size", "12px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 665).attr("y", 140).text("won when they playin their home ground").style("font-size", "12px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 665).attr("y", 160).text("The bars here show more amount of blue ").style("font-size", "12px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 665).attr("y", 180).text("portion which signifies that teams win").style("font-size", "12px").attr("alignment-baseline","middle")
+               svg.append("text").attr("x", 665).attr("y", 200).text("more when they play in home ground").style("font-size", "12px").attr("alignment-baseline","middle")
        }
 
                                         
@@ -763,7 +769,7 @@ d3.select("#venue-right-div")
             let x_domain = map.keys();
             //let y_domain = [0,80];
 
-            let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+            let x_scale = d3.scaleBand().domain(x_domain).range([50,600]);
             let y_scale = d3.scaleLinear().range([280,100]);
             // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
 
@@ -777,11 +783,11 @@ d3.select("#venue-right-div")
              //           .attr('transform','translate('+[0,200]+')')
               //          .call(xAxis);
             let y_axis = svg.append('g')
-                      .attr('transform','translate('+[50,-80]+')')
+                      .attr('transform','translate('+[80,-80]+')')
                       .call(yAxis);
 
             var line = d3.line()
-                                    .x(function(d) { return x_scale(d)+10; })
+                                    .x(function(d) { return x_scale(d)+37; })
                                     .y(function(d) { return y_scale(vdata[d])-85; });
             // 9. Append the path, bind the data, and call the line generator 
             svg.append("path")
@@ -795,7 +801,7 @@ d3.select("#venue-right-div")
                 .data(Object.keys(vdata))
                 .enter().append("circle") // Uses the enter().append() method
                 .attr("class", "dot") // Assign a class for styling
-                .attr("cx", function(d, i) { return x_scale(d)+10 })
+                .attr("cx", function(d, i) { return x_scale(d)+37 })
                 .attr("cy", function(d) { return y_scale(vdata[d])-85 })
                 .attr("r", 5)
                 .attr("fill",function(d){if(vdata[d]> 50){return "#990000"}})
@@ -806,9 +812,9 @@ d3.select("#venue-right-div")
                       .attr("id","labelline") 
                       .style("font-size","14px")
                       .style("font-weight","bold")
-                      .text(d + "("+vdata[d]+")")
-                      .attr("x",240)
-                      .attr("y",37);
+                      .text(d + "("+vdata[d]+" Matches)")
+                      .attr("x",590)
+                      .attr("y",26);
                 })
                 .on("mouseout",function(d){
                   d3.select("#labelline").remove();
@@ -816,7 +822,7 @@ d3.select("#venue-right-div")
 
 
              svg.append('text')
-                    .attr("x",100)
+                    .attr("x",200)
                     .attr("y",220)
                     .attr("width",10)
                     .attr("height",10)
@@ -835,28 +841,28 @@ d3.select("#venue-right-div")
                     .text("Number of Matches");
 
               svg.append('text')
-                    .attr("x",410)
+                    .attr("x",660)
                     .attr("y",100)
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","13px")
                     .text("Stadiums with dark red dots");
               svg.append('text')
-                    .attr("x",410)
+                    .attr("x",660)
                     .attr("y",120)
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","13px")
                     .text("have highest number of matches");
               svg.append('text')
-                    .attr("x",405)
+                    .attr("x",660)
                     .attr("y",140)
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","13px")
                     .text(" played. This may include qualifiers,");
               svg.append('text')
-                    .attr("x",410)
+                    .attr("x",660)
                     .attr("y",160)
                     .attr("width",10)
                     .attr("height",10)
