@@ -589,7 +589,7 @@ function playerAnalysisDisplay(){
 			playersListOptions.enter().append("option").attr("id",function(d){ return "option"+d;}).text(function(d){return d;});
 			playerClear();
 			plotPC();
-			plotPCA();
+			//plotPCA();
 		});
 	};
 
