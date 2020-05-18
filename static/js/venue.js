@@ -77,7 +77,7 @@ d3.select("#venue-right-div")
                     .attr("id","playerselect")
                     .style("font-size","16px")
                     .style("font-weight","bold")
-                    .text(" -- Select a player from dropdown -- ")
+                    .text(" -- Select a stadium from dropdown -- ")
                     .style("margin-left","8%")
                     .style("margin-top","15%")
 
@@ -150,6 +150,9 @@ d3.select("#venue-right-div")
                     .style("height","100%")
                     .style("background-color","transparent")
                     .style("float","left");
+
+           vdet.append("text").attr("x",50).attr("y",50).attr("font-size","24px").attr("font-weight","bold").attr("font-style","italic").text("Analysis of IPL Matches based on the Stadium ");
+           vdet.append("text").attr("x",50).attr("font-size","16px").attr("y",100).text("This page shows various statistics of how aspects of stadium can effect the match");
     };  
 
     function venueChanged(){
@@ -232,6 +235,9 @@ d3.select("#venue-right-div")
                         .style("height","100%")
                         .style("background-color","transparent")
                         .style("float","left");
+
+           vdet1.append("text").attr("x",50).attr("y",50).attr("font-size","24px").attr("font-weight","bold").attr("font-style","italic").text("Analysis of IPL Matches based on the Stadium ");
+           vdet1.append("text").attr("x",50).attr("font-size","16px").attr("y",100).text("This page shows various statistics of how aspects of stadium can effect the match");
       }
     };
 
@@ -303,16 +309,16 @@ d3.select("#venue-right-div")
                             d3.select("#text1").remove();
                             d3.select("#text2").remove();
                             d3.select("#text3").remove();
-                           svg.append("text").attr("id","text1").attr("x", -120).attr("y", 240).text("More percentage of blue shows that the team that").style("font-size", "13px").attr("alignment-baseline","middle")
-                            svg.append("text").attr("id","text2").attr("x", -120).attr("y", 260).text("wins the toss always chooses to bat on this stadium").style("font-size", "13px").attr("alignment-baseline","middle")
+                           svg.append("text").attr("id","text1").attr("x", -120).attr("y", 240).text("More percentage of blue shows that the team that").style("font-size", "14px").attr("alignment-baseline","middle")
+                            svg.append("text").attr("id","text2").attr("x", -120).attr("y", 260).text("wins the toss always chooses to bat on this stadium").style("font-size", "14px").attr("alignment-baseline","middle")
                            // svg.append("text").attr("id","text3").attr("x", -120).attr("y", 280).text("this may be because the pitch is more batting friendly").style("font-size", "13px").attr("alignment-baseline","middle")
                    }
                   if(j==1) {
                             d3.select("#text1").remove();
                             d3.select("#text2").remove();
                             d3.select("#text3").remove();
-                          svg.append("text").attr("id","text1").attr("x", -120).attr("y", 240).text("More percentage of black shows that the team that").style("font-size", "13px").attr("alignment-baseline","middle")
-                          svg.append("text").attr("id","text2").attr("x", -120).attr("y", 260).text("wins the toss always chooses to field on this stadium").style("font-size", "13px").attr("alignment-baseline","middle")
+                          svg.append("text").attr("id","text1").attr("x", -120).attr("y", 240).text("More percentage of black shows that the team that").style("font-size", "14px").attr("alignment-baseline","middle")
+                          svg.append("text").attr("id","text2").attr("x", -120).attr("y", 260).text("wins the toss always chooses to field on this stadium").style("font-size", "14px").attr("alignment-baseline","middle")
                            //svg.append("text").attr("id","text3").attr("x", -120).attr("y", 280).text("this may be because the pitch is more bowling friendly").style("font-size", "13px").attr("alignment-baseline","middle")
                     }
                          div .style("opacity", .9);
@@ -331,18 +337,18 @@ d3.select("#venue-right-div")
         
 
       svg.append('text')
-                  .attr("x",-150)
+                  .attr("x",-170)
                   .attr("y",-130)
                   .attr("width",10)
                   .attr("height",10)
-                  .attr("font-size","14px")
+                  .attr("font-size","15px")
                   .attr("font-weight","bold")
                   .text("Pie chart of toss decisions based on the stadium pitch");
 
        svg.append("circle").attr("cx",-100).attr("cy",150).attr("r", 4).style("fill", currentColors['headingColor'])
        svg.append("circle").attr("cx",-100).attr("cy",180).attr("r", 4).style("fill", "#404040")
-       svg.append("text").attr("x", -70).attr("y", 150).text("Percentage of choosing batting").style("font-size", "13px").attr("alignment-baseline","middle")
-       svg.append("text").attr("x", -70).attr("y", 180).text("Percentage of choosing fielding").style("font-size", "13px").attr("alignment-baseline","middle")
+       svg.append("text").attr("x", -70).attr("y", 150).text("Percentage of choosing batting").style("font-size", "14px").attr("alignment-baseline","middle")
+       svg.append("text").attr("x", -70).attr("y", 180).text("Percentage of choosing fielding").style("font-size", "14px").attr("alignment-baseline","middle")
        //svg.append("text").attr("x", -120).attr("y", 240).text("More percentage of blue shows that team that").style("font-size", "13px").attr("alignment-baseline","middle")
        //svg.append("text").attr("x", -120).attr("y", 260).text("wins the toss always chooses to bat on this stadium").style("font-size", "13px").attr("alignment-baseline","middle")
        //console.log(percent)
@@ -675,7 +681,7 @@ console.log(vdata['TeamName']);
                     .attr("y",-150)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","14px")
+                    .attr("font-size","16px")
                     .attr("font-weight","bold")
                     .text("Average runs scored in "+selectedVenue);
 
@@ -703,7 +709,6 @@ console.log(vdata['TeamName']);
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","14px")
-                    .attr("font-weight","bold")
                     .text("A stadium pitch having an average >150 can be ");
 
         svg.append('text')
@@ -712,7 +717,6 @@ console.log(vdata['TeamName']);
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","14px")
-                    .attr("font-weight","bold")
                     .text("considered as a good batting pitch and with average <140");
 
          svg.append('text')
@@ -721,7 +725,6 @@ console.log(vdata['TeamName']);
                     .attr("width",10)
                     .attr("height",10)
                     .attr("font-size","14px")
-                    .attr("font-weight","bold")
                     .text("it can be considered as a good bowling pitch");
 
     }
@@ -799,41 +802,47 @@ console.log(vdata['TeamName']);
                     .attr("y",220)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","14px")
+                    .attr("font-size","16px")
                     .attr("font-weight","bold")
                     .text("Number of matches played in each stadium");
+
+              svg.append('text')
+                    .attr("x",-180)
+                    .attr("y",18)
+                    .attr("transform", "rotate(-90)")
+                    .attr("width",10)
+                    .attr("height",10)
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .text("Number of Matches");
 
               svg.append('text')
                     .attr("x",410)
                     .attr("y",100)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","12px")
-                    .attr("font-weight","bold")
+                    .attr("font-size","13px")
                     .text("Stadiums with dark red dots");
               svg.append('text')
                     .attr("x",410)
                     .attr("y",120)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","12px")
-                    .attr("font-weight","bold")
+                    .attr("font-size","13px")
                     .text("have highest number of matches");
               svg.append('text')
-                    .attr("x",410)
+                    .attr("x",405)
                     .attr("y",140)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","12px")
-                    .attr("font-weight","bold")
-                    .text(" played. This may include qualifiers, semi finals,finals etc");
+                    .attr("font-size","13px")
+                    .text(" played. This may include qualifiers,");
               svg.append('text')
                     .attr("x",410)
                     .attr("y",160)
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","12px")
-                    .attr("font-weight","bold")
+                    .attr("font-size","13px")
                     .text("semi finals, finals etc");
 
             svg.append("text").attr("x", 240).attr("y", 10).text("Please Hover on the dot to see the stadium details").style("font-size", "13px").attr("alignment-baseline","middle")

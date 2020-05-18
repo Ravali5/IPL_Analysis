@@ -137,7 +137,9 @@ function generateMap(){
                 .attr("y",0)
                 .attr("width",30)
                 .attr("height",30)
-                .text("Pie chart -Dilip fill the text");
+                .attr("font-size","18px")
+                .attr("font-weight","bold")
+                .text("India Fandom Map showing State Wide supporting team");
 
     });
 
@@ -283,7 +285,9 @@ var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
                 .attr("y",140)
                 .attr("width",30)
                 .attr("height",30)
-                .text("Pie chart -Dilip fill the text");
+                .attr("font-size","16px")
+                .attr("font-weight","bold")
+                .text("Pie chart for audience likes to each team");
 
    });
 };
