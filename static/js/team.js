@@ -43,7 +43,7 @@ function generateMap(){
 
       var units=india.selectAll("path")
                       .data(json.features)
-                      .enter().append("path")               
+                      .enter().append("path")  
                       .attr("d", path)
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
@@ -63,6 +63,7 @@ function generateMap(){
                                   div.html(d["id"]+ "<br/>") 
                                   .style("left", (d3.event.pageX) + "px")   
                                   .style("top", (d3.event.pageY - 28) + "px");
+                                  //d3.select("#")
                             }
                             else if(selectedTeam == d["supportTeam"]){
                                 div.style("opacity", .9);
@@ -78,6 +79,38 @@ function generateMap(){
                               .style("opacity","1")
                           }
                           div.style("opacity", 0); 
+                      })
+                      .on("click",function(d){
+                        var k = d["supportTeam"]
+                        india.selectAll("path").style("stroke-width","1px")
+                          india.selectAll("path").style("stroke","#A9A9A9")
+                        for(var i=0;i<8;i++){
+                          console.log(d["supportTeam"])
+                          
+                         // console.log(team +"hi")
+                         d3.select(this)
+                              .style("stroke","black") 
+                         d3.select(this)
+                              .style("stroke-width","3px") 
+                         /* if(teams[i] == k){
+                            console.log("hi")
+                            d3.select(this)
+                                    .style("opacity",function(d){if(d["supportTeam"]==teams[i]){return 1;}})
+                          }*/
+                          if(teams[i] != k){
+                            //console.log(team)                                                  
+                              d3.select("#teams-div-1").select("#svg1").select("#rect"+teams[i]).style("fill","grey").style("opacity","0")
+                              d3.select("#teams-div-1").select("#svg1").select("#text"+teams[i]).remove()
+                              india.style("stroke-width","1px")
+                              india.style("stroke","#A9A9A9")
+                              d3.select("#teams-div-1").select("#svg1").select("#rect"+d["supportTeam"]).style("fill",d["color"]).style("opacity","1")
+                              d3.select("#teams-div-2").select("#svg4").select("#rect1"+teams[i]).style("fill","grey").style("opacity","0")
+                              d3.select("#teams-div-2").select("#svg4").select("#rect1"+d["supportTeam"]).style("fill",d["color"]).style("opacity","1")
+                              //console.log("hi")
+                          }
+                        }
+                        //d3.select("#teams-div-1").select("#svg1").select("#rect"+d["supportTeam"]).style("fill",function(d){console.log(d);return "red"})//.selectAll(".bar").style("fill","red")
+                        //console.log(d)
                       });
 
 
@@ -131,6 +164,7 @@ function drawPie(){
 
     var svg = d3.select("#left-bottom")
       .append("svg")
+      .attr("id","svg2")
       .attr("width", 400)
       .attr("height", 300)
       .append("g")
@@ -172,6 +206,7 @@ function drawPie(){
                     .style("border-radius","30px")
                     .style("border-color","#0052cc")
 
+var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
 
       svg
         .selectAll('whatever')
@@ -179,6 +214,7 @@ function drawPie(){
         .enter()
         .append('path')
         .attr('d', arc)
+        .attr("id",function(d,i){"pie"+teams[i]})
         .style('fill', function(d,i){ if (i<=7){ return data_pie['color'][i]; }})
         .attr("stroke", "black")
         .style("stroke-width", "0px")
@@ -993,6 +1029,7 @@ function putDiv3Data(teamData){
 if(selectedTeam == 'ALL'){
         let svg123 = d3.select("#teams-div-3")
                       .append("svg")
+                      .attr("id","svg3")
                       .attr("width","100%")
                       .attr("height","100%")
                       .style("background-color","transparent");
@@ -1139,6 +1176,7 @@ function putDiv2Data(teamData){
 
   let svg = d3.select("#teams-div-2")
         .append("svg")
+        .attr("id","svg4")
         .attr("width","100%")
         .attr("height","90%")
         .style("background-color","transparent");
@@ -1199,6 +1237,7 @@ function putDiv2Data(teamData){
         .data(teams)
         .enter()
         .append("rect")
+        .attr("id",function(d,i){return "rect1"+teams[i]})
         .style("fill",function(d){ return teamColors[d]})
         .attr("x",function(d){ return x_scale(d)+10;})
         .attr("width",25)
@@ -1245,6 +1284,7 @@ function putDiv1Data(teamData){
 
   let svg = d3.select("#teams-div-1")
         .append("svg")
+        .attr("id","svg1")
         .attr("width","70%")
         .attr("height","90%")
         .style("background-color","transparent");
@@ -1280,10 +1320,12 @@ function putDiv1Data(teamData){
   let y_axis = svg.append('g')
             .attr('transform','translate('+[50,-80]+')')
             .call(yAxis);
+  
   svg.selectAll(".bar")
         .data(teams)
         .enter()
         .append("rect")
+        .attr("id",function(d,i){ return "rect"+d})
         .style("fill",function(d){ return teamColors[d];})
         //.attr("x",function(d){ return x_scale(d)+10;})
         .attr("x",52)
@@ -1319,6 +1361,7 @@ function putDiv1Data(teamData){
         .data(teams)
         .enter()
         .append("text")
+        .attr("id",function(d,i){ return "text"+d})
         .style("text-anchor", "start")
         .attr("class","label")
         .attr("x",function(d){

@@ -236,7 +236,7 @@ d3.select("#venue-right-div")
       .enter()
       .append('path')
       .attr('d', arc)
-      .style('fill', function(d,i){ if(i==0){ return currentColors['headingColor']; }else{return currentColors['textInHeadingColor'];}})
+      .style('fill', function(d,i){ if(i==0){ return currentColors['headingColor']; }else{return "#404040";}})
       .attr("stroke", "white")
       .style("stroke-width", "2px")
 
@@ -250,7 +250,7 @@ d3.select("#venue-right-div")
                   .text("Pie chart of toss decisions based on the stadium pitch");
 
        svg.append("circle").attr("cx",-100).attr("cy",150).attr("r", 4).style("fill", currentColors['headingColor'])
-       svg.append("circle").attr("cx",-100).attr("cy",180).attr("r", 4).style("fill", currentColors['textInHeadingColor'])
+       svg.append("circle").attr("cx",-100).attr("cy",180).attr("r", 4).style("fill", "#404040")
        svg.append("text").attr("x", -70).attr("y", 150).text("Percentage of choosing batting").style("font-size", "13px").attr("alignment-baseline","middle")
        svg.append("text").attr("x", -70).attr("y", 180).text("Percentage of choosing fielding").style("font-size", "13px").attr("alignment-baseline","middle")
   };
@@ -308,7 +308,7 @@ d3.select("#venue-right-div")
             // Enter in the stack data = loop key per key = group per group
             .data(stackedData)
             .enter().append("g")
-            .attr("fill", function(d,i) { if(i == 0) {return currentColors['headingColor'];} if(i==1){return currentColors['textInHeadingColor'];}; })
+            .attr("fill", function(d,i) { if(i == 0) {return currentColors['headingColor'];} if(i==1){return "#404040";}; })
             .selectAll("rect")
       // enter a second time = loop subgroup per subgroup to add all rectangles
             .data(function(d) { return d; })
@@ -318,7 +318,7 @@ d3.select("#venue-right-div")
                   //https://stackoverflow.com/questions/24973067/bar-chart-show-values-on-top
                   svg.append("text")
                     .attr("class","val")
-                    .attr("x",(d3.select(this).attr("x"))-(-27))
+                    .attr("x",(d3.select(this).attr("x"))-(-10))
                     .attr("y",d3.select(this).attr("y")-8)
                     .text(d3.select(this).attr("yval"));
                   })
@@ -392,9 +392,15 @@ d3.select("#venue-right-div")
                   }
 
          svg.append("circle").attr("cx",405).attr("cy",50).attr("r", 4).style("fill", currentColors['headingColor'])
-         svg.append("circle").attr("cx",405).attr("cy",80).attr("r", 4).style("fill", currentColors['textInHeadingColor'])
+         svg.append("circle").attr("cx",405).attr("cy",80).attr("r", 4).style("fill", "#404040")
          svg.append("text").attr("x", 415).attr("y", 50).text("No. of Wins in HomeGround").style("font-size", "13px").attr("alignment-baseline","middle")
          svg.append("text").attr("x", 415).attr("y", 80).text("No. of Wins Not in HomeGround").style("font-size", "13px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 405).attr("y", 120).text("Plot shows how many matches each team").style("font-size", "11px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 405).attr("y", 135).text("won when they playin their home ground").style("font-size", "11px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 405).attr("y", 150).text("The bars here show more amount of blue ").style("font-size", "11px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 405).attr("y", 165).text("portion which signifies that teams").style("font-size", "11px").attr("alignment-baseline","middle")
+         svg.append("text").attr("x", 405).attr("y", 180).text("win more when they play in home ground").style("font-size", "11px").attr("alignment-baseline","middle")
+
                                         
     };
 
@@ -494,7 +500,7 @@ d3.select("#venue-right-div")
       //avg['battingFriendly']/250
     var value = avg['battingFriendly']
     var text = value
-    var data = [value-82.5,250-value]
+    var data = [value-125,165-value]
     
     // Settings
     var width = 300
@@ -504,7 +510,7 @@ d3.select("#venue-right-div")
     var thickness = 60
     // Utility 
 //     var colors = d3.scale.category10();
-    var colors = [currentColors['headingColor'], currentColors['textInHeadingColor']]
+    var colors = [currentColors['headingColor'], "#404040"]
     
     var pies = d3.pie()
       .value( d => d)
@@ -539,8 +545,77 @@ d3.select("#venue-right-div")
       .attr("dy", "-3rem")
       .attr("class", "label")
       .attr("text-anchor", "middle")
+      .attr("fill","white")
 
     };
+
+    function putDiv1Data(vdata){
+             let svg = d3.select("#venue-div-3")
+            .append("svg")
+            .attr("width","100%")
+            .attr("height","95%")
+            .style("background-color","transparent");
+
+            let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
+            let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#DCDCDC'};
+
+            HGData = vdata
+             var map=d3.map(vdata)
+            let x_domain = map.keys();
+            //let y_domain = [0,80];
+
+            let x_scale = d3.scaleBand().domain(x_domain).range([50,400]);
+            let y_scale = d3.scaleLinear().range([280,100]);
+            // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+
+           // print(stackedData)
+             y_scale.domain([0,60]);
+
+             let xAxis = d3.axisBottom().scale(x_scale);
+            let yAxis = d3.axisLeft().scale(y_scale);
+
+            //let x_axis = svg.append('g')
+             //           .attr('transform','translate('+[0,200]+')')
+              //          .call(xAxis);
+            let y_axis = svg.append('g')
+                      .attr('transform','translate('+[50,-80]+')')
+                      .call(yAxis);
+
+            var line = d3.line()
+                                    .x(function(d) { return x_scale(d)+10; })
+                                    .y(function(d) { return y_scale(vdata[d])-85; });
+            // 9. Append the path, bind the data, and call the line generator 
+            svg.append("path")
+                .datum(Object.keys(vdata)) // 10. Binds data to the line 
+                .attr("class", "line") // Assign a class for styling 
+                .attr("d", line)
+                .style("stroke",currentColors['headingColor']); // 11. Calls the line generator 
+
+            // 12. Appends a circle for each datapoint 
+            svg.selectAll(".dot")
+                .data(Object.keys(vdata))
+                .enter().append("circle") // Uses the enter().append() method
+                .attr("class", "dot") // Assign a class for styling
+                .attr("cx", function(d, i) { return x_scale(d)+10 })
+                .attr("cy", function(d) { return y_scale(vdata[d])-85 })
+                .attr("r", 5)
+                .attr("fill",function(d){if(vdata[d]> 50){return "#990000"}})
+                .on("mouseover",function(d){
+                
+               
+                     svg.append("text")  
+                      .attr("id","labelline") 
+                      .style("font-size","14px")
+                      .style("font-weight","bold")
+                      .text(d)
+                      .attr("x",x_scale(d)+10)
+                      .attr("y",y_scale(vdata[d])-90);
+                })
+                .on("mouseout",function(d){
+                  d3.select("#labelline").remove();
+                })
+
+    }
 
     function displayVenuePlots(){
 
@@ -549,6 +624,7 @@ d3.select("#venue-right-div")
         venueData = data
         console.log(venueData)
         populateDropDown(venueData['venueNames'])
+        putDiv1Data(venueData['NMatches'])
         putDiv2Data(venueData['homeWins'])
         
 

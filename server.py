@@ -195,8 +195,11 @@ def getVenueData():
 
 	venuesList = venues['Venue_Name'].tolist()
 	venueNames={}
+	NVenueMatches = {}
 	for venue in venuesList:
 		tmpVenues = venues.query("Venue_Name == '" +str(venue)+"'")
+		nMatches = matches.query("Venue_Name == '" +str(venue)+"' and Host_Country == 'India'")
+		NVenueMatches[venue] = len(nMatches.index)
 		venueNames[venue] = tmpVenues['State'].iloc[0]
 
 	if selectedVenue:
@@ -208,6 +211,7 @@ def getVenueData():
 	venueData['tossDec'] = tossDec
 	venueData['venueNames'] = venueNames
 	venueData['WL'] = WL
+	venueData['NMatches'] = NVenueMatches
 	return venueData
 
 @app.route("/")
