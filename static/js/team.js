@@ -48,11 +48,11 @@ function generateMap(){
                       .style("fill",function(d){ return d["color"];})
                       .style("stroke","#A9A9A9")
                       .style("stroke-width","0.6px")
-                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.4;}}else{return 1;}})	               
+                      .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.2;}}else{return 1;}})	               
                       .on("mouseover", function(d) {
                         console.log(selectedTeam)
                         d3.select(this)
-                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.4;}}else{return 1;}}) 
+                          .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.2;}}else{return 1;}}) 
                         /*Tooltip
                             .html("The exact value of<br>this cell is: " + d.value)
                           div.transition()    
@@ -1373,7 +1373,7 @@ function teamChange(){
   generateMap();
   //if(teamAnalysisBtn != 'teams-menubar-btn-all'){
     $.post("/getTeamData", {'team': selectedTeam}, function(data){
-        //console.log(data);
+        console.log(data);
         teamData = data;
         if(selectedTeam=='ALL'){
           drawPie();

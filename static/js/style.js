@@ -7,67 +7,67 @@ var btnMouseoverBGColor = "#4d94ff";
 
 const bgColorsTeam ={
 	"MI"  :{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#094089',
+		'textInHeadingColor':'#FFFFFF',
+		'bodyBackgroundColor':'#e6efff',
+		'boxShadowColor':'#3377ff',
+		'btnMouseoverBGColor':'#ccddff'
 	},
 	"SRH" :{
-		'headingColor':'#ff6600',
+		'headingColor':'#F57A2A',
 		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffd1b3',
+		'bodyBackgroundColor':'#fff5e6',
 		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'btnMouseoverBGColor':'#ffd9b3'
 	},
 	"RCB" :{
-		'headingColor':'#ff3300',
-		'textInHeadingColor':'#e68a00',
-		'bodyBackgroundColor':'#ffc2b3',
+		'headingColor':'#AF1320',
+		'textInHeadingColor':'#DBAA3C',
+		'bodyBackgroundColor':'#ffe6e6',
 		'boxShadowColor':'#ff8566',
-		'btnMouseoverBGColor':'#ff9980'
+		'btnMouseoverBGColor':'#ff8566'
 	},
 	"CSK" :{
-		'headingColor':'#ff6600',
+		'headingColor':'#e6ac00',
 		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'bodyBackgroundColor':'#ffffe6',
+		'boxShadowColor':'#ffcc33',
+		'btnMouseoverBGColor':'#ffffcc'
 	},
 	"DC"  :{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#16479E',
+		'textInHeadingColor':'#FFFFF6',
+		'bodyBackgroundColor':'#e6f2ff',
+		'boxShadowColor':'#4d88ff',
+		'btnMouseoverBGColor':'#ccddff'
 	},
 	"KKR" :{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#502D87',
+		'textInHeadingColor':'#FFFFFF',
+		'bodyBackgroundColor':'#ebe8ff',
+		'boxShadowColor':'#cc99ff',
+		'btnMouseoverBGColor':'#cc99ff'
 	},
 	"KXIP":{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#C60E1A',
+		'textInHeadingColor':'#FFFFFF',
+		'bodyBackgroundColor':'#f2f2f2',
+		'boxShadowColor':'#ff6666',
+		'btnMouseoverBGColor':'#ff6666'
 	},
 	"RR"  :{
-		'headingColor':'#ff6600',
-		'textInHeadingColor':'#000000',
-		'bodyBackgroundColor':'#ffa366',
-		'boxShadowColor':'#ff8533',
-		'btnMouseoverBGColor':'#ff944d'
+		'headingColor':'#E91985',
+		'textInHeadingColor':'#FFFFF6',
+		'bodyBackgroundColor':'#fbe8ff',
+		'boxShadowColor':'#ff4dd2',
+		'btnMouseoverBGColor':'#ffccff'
 	},
 	"ALL" :{
 		'headingColor':'#0052cc',
-		'textInHeadingColor':'#e67300',
-		'bodyBackgroundColor':'#b3d1ff',
+		'textInHeadingColor':'#FFFFF6',
+		'bodyBackgroundColor':'#FFFFF6',
 		'boxShadowColor':'#3385ff',
-		'btnMouseoverBGColor':'#4d94ff'
+		'btnMouseoverBGColor':'#3385ff'
 	}
 };
 
