@@ -236,8 +236,8 @@ function playerAnalysisDisplay(){
 		                .attr("transform", "translate(0,0)");
 
 		svg.append("rect")
-			.attr("x",150).attr("y",25)
-			.style("width","10%").style("height","10%")
+			.attr("x",80).attr("y",410)
+			.style("width","10%").style("height","7%")
 			.attr("fill",currentColors['headingColor'])
 			.on("click",function(d){
 				rawData = true;
@@ -249,19 +249,19 @@ function playerAnalysisDisplay(){
 					plines.style("stroke",currentColors['headingColor']);
 			});
 		svg.append("text")
-			.attr("x",165).attr("y",50)
+			.attr("x",100).attr("y",430)
 			.style("fill",currentColors['textInHeadingColor'])
 			.text("Raw Data");
 
 		svg.append("rect")
-			.attr("x",300).attr("y",25)
-			.style("width","10%").style("height","10%")
+			.attr("x",207).attr("y",410)
+			.style("width","10%").style("height","7%")
 			.attr("fill",currentColors['headingColor'])
 			.on("click",function(d){
 				rawData = false;
-				svg.append("rect").attr("id","clusterColorLabel1").attr("x",150).attr("y",420).attr("fill",clusterColor[0]).style("width","15px").style("height","15px");
-				svg.append("rect").attr("id","clusterColorLabel1").attr("x",350).attr("y",420).attr("fill",clusterColor[1]).style("width","15px").style("height","15px");
-				svg.append("rect").attr("id","clusterColorLabel1").attr("x",550).attr("y",420).attr("fill",clusterColor[2]).style("width","15px").style("height","15px");
+				//svg.append("rect").attr("id","clusterColorLabel1").attr("x",350).attr("y",420).attr("fill",clusterColor[0]).style("width","15px").style("height","15px");
+				//svg.append("rect").attr("id","clusterColorLabel1").attr("x",550).attr("y",420).attr("fill",clusterColor[1]).style("width","15px").style("height","15px");
+				//svg.append("rect").attr("id","clusterColorLabel1").attr("x",750).attr("y",420).attr("fill",clusterColor[2]).style("width","15px").style("height","15px");
 				for(pData in pcData){
 					//console.log(pcData[pData]);
 					let tempData = pcData[pData];
@@ -269,7 +269,7 @@ function playerAnalysisDisplay(){
 				}
 			});
 		svg.append("text")
-			.attr("x",310).attr("y",50)
+			.attr("x",220).attr("y",430)
 			.style("fill",currentColors['textInHeadingColor'])
 			.text("Cluster Data");
 
@@ -282,7 +282,7 @@ function playerAnalysisDisplay(){
 			.style("fill",currentColors['textInHeadingColor'])
 			.text("Raw Data");*/
 
-		let dimensions = d3.keys(pcData[0]).filter(function(d) { return d; });
+		let dimensions = d3.keys(pcData[0]).filter(function(d) { return d != "clusterNumber"; });
 		dimensions.splice(dimensions.indexOf("Players"),1);
 		dimensions.splice(dimensions.indexOf("skill"),1);
 		dimensions.splice(dimensions.indexOf("Bat_Position"),1);
@@ -310,22 +310,27 @@ function playerAnalysisDisplay(){
 		    .attr("stroke-width","2px")
 		    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
 		    .on("mouseover",function(d){
-		    	svg.append("text")
+		    	/*svg.append("text")
 		    		.attr("id","xAxisLabel")
 		    		.attr("transform", "rotate(-90)")
 		    		.attr("x",-275)
 		    		.attr("y",40)
-		    		.text(d);
+		    		.text(d);*/
 		    })
 		    .on("mouseout",function(d){
 		    	d3.select("#xAxisLabel").remove();
 		    })
 		    .append("text")
-		      .style("text-anchor", "middle")
+		      .style("text-anchor", "end")
 		      .attr("y", 90)
-		      //.attr("transform", "rotate(-45)")
+		      .attr("transform", "rotate(-45)")
+		      .attr("dy",'-4.5em')
 		      .text(function(d) {
-		      	return ''; 
+		      	if(d=='Bowl_Five_Wickets_in_an_Over')
+		      		return 'Five Wickets in over';
+		      	if(d=='Bowl_Four_Wickets_in_an_Over')
+		      		return 'Four Wickets in over';
+		      	return d; 
 		      })
 		      .style("fill", "black");
 
@@ -348,12 +353,20 @@ function playerAnalysisDisplay(){
 								if(pcData[pData]['Players'] == hoveredPlayerName)
 									hoveredPlayerData = pcData[pData];
 							}
-					    	svg.append("text")
+					    	/*svg.append("text")
 					    		.attr("id","pNameLabel")
 					    		.attr("x",700)
 					    		.attr("y",50)
+					    		.text(hoveredPlayerName);*/
+					    	svg.append("text")
+					    		.attr("id","pNameLabel")
+					    		.attr("transform", "rotate(-90)")
+					    		.attr("x",-275)
+					    		.attr("y",40)
 					    		.text(hoveredPlayerName);
-					    	d3.select(this).style("stroke","red").style("stroke-width","4px").style("opacity","1");
+					    	if(d3.select(this).attr("pName") != playersList.property("value")){
+					    		d3.select(this).style("stroke","red").style("stroke-width","4px").style("opacity","1");
+					    	}
 
 							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",30).attr("y",70).style("fill",hoverLineColor).style("font-size","1.5em").text(hoveredPlayerName);
 							leftBottomSvg.append("text").attr("id","hoverLinePlayerLabel").attr("x",100).attr("y",125).style("fill",hoverLineColor).text(hoveredPlayerData['Bat_Average']);
@@ -367,17 +380,19 @@ function playerAnalysisDisplay(){
 					    .on("mouseout",function(d){
 					    	d3.select("#pNameLabel").remove();
 					    	d3.selectAll("#hoverLinePlayerLabel").remove();
-					    	if(rawData){
-						    	if(playerSelectFlag)
-						    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
-						    	else
-							    	d3.select(this).style("stroke",currentColors['headingColor']).style("stroke-width","1px").style("opacity","0.5");
-							}else{
-								//console.log(clusterColor[d['clusterNumber']]);
-								if(playerSelectFlag)
-									d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.05");
-								else
-									d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.5");
+					    	if(d3.select(this).attr("pName") != playersList.property("value")){
+						    	if(rawData){
+							    	if(playerSelectFlag)
+							    		d3.select(this).style("stroke",currentColors['textInHeadingColor']).style("stroke-width","1px").style("opacity","0.05");
+							    	else
+								    	d3.select(this).style("stroke",currentColors['headingColor']).style("stroke-width","1px").style("opacity","0.5");
+								}else{
+									//console.log(clusterColor[d['clusterNumber']]);
+									if(playerSelectFlag)
+										d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.05");
+									else
+										d3.select(this).style("stroke",clusterColor[d['clusterNumber']]).style("stroke-width","1px").style("opacity","0.5");
+								}
 							}
 					    })
 					    .on("click",function(d){
@@ -386,6 +401,8 @@ function playerAnalysisDisplay(){
 					    	//playersList.value = d['Players'];
 					    	//playerChange();
 					    });
+
+		svg.append("text").attr("x",350).attr("y",430).attr("font-size","1.5em").text("Parallel Coordinates Showing 22 dimensions of all players");
 
 		svg.on("wheel",function(){		});
 
