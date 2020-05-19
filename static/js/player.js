@@ -243,9 +243,10 @@ function playerAnalysisDisplay(){
 				rawData = true;
 				d3.selectAll("#clusterColorLabel1").remove();
 				//console.log(rawData);
-				if(playerSelectFlag)
-					plines.style("stroke",currentColors['textInHeadingColor']);
-				else
+				if(playerSelectFlag){
+					//plines.style("stroke",currentColors['textInHeadingColor']);
+					plines.style("stroke","grey");
+				}else
 					plines.style("stroke",currentColors['headingColor']);
 			});
 		svg.append("text")
@@ -472,9 +473,10 @@ function playerAnalysisDisplay(){
 		}
 		console.log(selectedPlayer);
 		console.log(selectedPlayerData);
-		if(rawData)
-			plines.style("stroke",currentColors['textInHeadingColor']);
-		else{
+		if(rawData){
+			//plines.style("stroke",currentColors['textInHeadingColor']);
+			plines.style("stroke","grey");
+		}else{
 			for(pData in pcData){
 				//console.log(pcData[pData]);
 				let tempData = pcData[pData];
