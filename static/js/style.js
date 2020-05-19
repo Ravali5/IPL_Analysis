@@ -82,7 +82,8 @@ const bgColorsTeam ={
 
 d3.select("#menubar-search-btn")
 	.style("font-size","1.5em")
-	.style("color",headingColor);
+	.style("color",headingColor)
+	.style("display","none");
 
 d3.select("#menubar-search-txt")
 	.style("width","25%")
@@ -96,7 +97,8 @@ d3.select("#menubar-search-txt")
 	.style("font-size","1.25em")
 	.on("focus",function(){
 		d3.select(this).style("outline","none")
-	});
+	})
+	.style("display","none");
 
 d3.selectAll(".menubar-btn-adjust")
 	.style("width","100%")

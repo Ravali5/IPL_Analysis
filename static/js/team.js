@@ -91,7 +91,7 @@ function generateMap(){
                           india.selectAll("path").style("stroke-width","1px")
                             india.selectAll("path").style("stroke","#A9A9A9")
                           for(var i=0;i<8;i++){
-                            console.log(d["supportTeam"])
+                            //console.log(d["supportTeam"])
                             
                            // console.log(team +"hi")
                            d3.select(this)
@@ -103,8 +103,22 @@ function generateMap(){
                               d3.select(this)
                                       .style("opacity",function(d){if(d["supportTeam"]==teams[i]){return 1;}})
                             }*/
+                            for(t in teams){
+                              d3.select("#pie"+teams[t]).style("display","block");
+                              d3.select("#pieImg"+teams[t]).style("opacity","1");
+                            }
+                            for(t in teams){
+                              if(teams[t] != onclickselect){
+                                d3.select("#pie"+teams[t]).style("display","none");
+                                d3.select("#pieImg"+teams[t]).style("opacity","0");
+                              }
+                            }
                             d3.select("#teams-div-2").selectAll("*").remove();
+                            d3.select("#teams-div-3").selectAll("*").remove();
+                            d3.select("#teams-div-4").selectAll("*").remove();
                             putDiv2Data(teamDataGlobal);
+                            putDiv3Data(teamDataGlobal);
+                            putDiv4Data(teamDataGlobal);
                             if(teams[i] != k){
                               //console.log(team)                                                  
                                 d3.select("#teams-div-1").select("#svg1").select("#rect"+teams[i]).style("opacity","0");
@@ -126,10 +140,18 @@ function generateMap(){
       function clearMapBrush(){
         india.selectAll("path").style("stroke-width","1px");
         india.selectAll("path").style("stroke","#A9A9A9");
+        for(t in teams){
+          d3.select("#pie"+teams[t]).style("display","block");
+          d3.select("#pieImg"+teams[t]).style("opacity","1");
+        }
         d3.select("#teams-div-2").selectAll("*").remove();
+        d3.select("#teams-div-3").selectAll("*").remove();
+        d3.select("#teams-div-4").selectAll("*").remove();
         onclickselect = null;
         putDiv1Data(teamDataGlobal);
         putDiv2Data(teamDataGlobal);
+        putDiv3Data(teamDataGlobal);
+        putDiv4Data(teamDataGlobal);
         //d3.select("#teams-div-1").select("#svg1").selectAll("rect").style("opacity","1");
       };
 
@@ -241,14 +263,16 @@ var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr("id",function(d,i){"pie"+teams[i]})
+        .attr("id",function(d,i){
+          return "pie"+teams[i];
+        })
         .style('fill', function(d,i){ if(teams[i]=="KXIP"){return "#D7D7D7";}if (i<=7){ return data_pie['color'][i]; }})
         .attr("stroke", "black")
         .style("stroke-width", "0px")
         .on("mouseover", function(d,i) {
                         d3.select(this)
                            .attr("stroke","white")          
-			               .attr("stroke-width","10px")
+			                     .attr("stroke-width","10px")
                            //.transition()
                            //.duration(50)
                            .attr("d", en_arc);
@@ -281,6 +305,7 @@ var teams = [ "MI", "SRH","RCB", "CSK", "DC","KKR", "KXIP", "RR"];
         })
         .attr("x","-40")
         .attr("y","-40")
+        .attr("id",function(d){ return "pieImg"+teams[d['data']['key']];})
         .attr('width', 25)
         .attr('height', 25)
         .attr("xlink:href", function(d,i){ return "/static/images/"+data_pie['Team'][i]+".png"});
@@ -990,6 +1015,8 @@ function putDiv4Data(teamData){
               .style("background-color","transparent");
 
   let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
+  if(onclickselect)
+    teams = [onclickselect];
   let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#D7D7D7'};
   let years = [2013,2014,2015,2016,2017,2018,2019];
 
@@ -1082,7 +1109,9 @@ if(selectedTeam == 'ALL'){
 
           data123 = teamData['Bat_Bowl']
           playerTeam = teamData['playerTeam']
-
+          //console.log(data123);
+          //console.log(playerTeam);
+          //console.log(onclickselect);
          // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
          // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
          var map=d3.map(data123);
@@ -1097,36 +1126,49 @@ if(selectedTeam == 'ALL'){
                       else  { return teamColors[playerTeam[d]]; }})*/
                   .style("fill",function(d){return teamColors[playerTeam[d]];})
                   .attr("stroke", function(d) {
-                  if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "black"}
-                  if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "black"}})
+                    if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "black"}
+                    if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "black"}
+                  })
                   .style("stroke-width", "2px")
                   .attr("cx", function(d,i) {  return x_scale(data123[d]['Bat_avg'])+20 })
                   .attr("cy", function(d,i) {  return y_scale(data123[d]['Bowl_avg'])-80 })
-                  .attr("r", 5);
+                  .attr("r", function(d){
+                    if(onclickselect){
+                      if(playerTeam[d]==onclickselect)
+                        return 5;
+                      else
+                        return 0;
+                    }else{
+                      return 5;
+                    }
+                  });
           
+          if(onclickselect==null){
+            svg123.selectAll("myText").data(Object.keys(data123))
+              .enter().append('text')
+                      .attr("x",function(d) {
+                            if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                              return 370;
+                            } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  60;}
+                            if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 330;}
+                      })
+                      .attr("y",function(d) {
+                            if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
+                              return 250;
+                            } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
+                            if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
+                      })
+                      .style("fill",currentColors['headingColor'])
+                      .attr("width",10)
+                      .attr("height",10)
+                      .attr("font-size","16px")
+                      .attr("id","scatterPlotPlayerLabels")
+                      .text(function(d) {
+                          if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
+                          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return d;}
+                      });
 
-          svg123.selectAll("myText").data(Object.keys(data123))
-            .enter().append('text')
-                    .attr("x",function(d) {
-                          if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
-                            return 370;
-                          } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  60;}
-                          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 330;}
-                    })
-                    .attr("y",function(d) {
-                          if ((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)){
-                            return 250;
-                          } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
-                          if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
-                    })
-                    .style("fill",currentColors['headingColor'])
-                    .attr("width",10)
-                    .attr("height",10)
-                    .attr("font-size","16px")
-                    .text(function(d) {
-              if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
-              if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {console.log(d);return d;}
-                 });
+            }
 
             svg123.append('text')
                 .attr("x",380)
