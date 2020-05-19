@@ -9,6 +9,7 @@ btnMouseoverBGColor = currentColors['btnMouseoverBGColor'];
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
 let onclickselect = null;
+let teamDataAuction = null;
 //Generate Map function
 function generateMap(){
     var proj = d3.geo.mercator();
@@ -1074,12 +1075,16 @@ function putDiv4Data(teamData){
         .attr("r", 3);
   };
   //let lineData = teamData['auction']['CSK'];
-  for(var team in teams){
-    //console.log(teams[team]);
-    //console.log(teamData['auction'][teams[team]]);
-    plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
+  console.log(selectedTeam);
+  if(selectedTeam=='ALL'){
+    for(var team in teams){
+      //console.log(teams[team]);
+      //console.log(teamData['auction'][teams[team]]);
+      plotLineDiv4(teamData['auction'][teams[team]],teams[team]);
+    }
+  }else{
+    plotLineDiv4(teamDataAuction['auction'][selectedTeam],selectedTeam);
   }
-  
 };
 
 function putDiv3Data(teamData){
@@ -1676,6 +1681,8 @@ function teamChange(){
         console.log(data);
         teamData = data;
         teamDataGlobal = data;
+        if(teamDataAuction==null)
+          teamDataAuction = data;
         if(selectedTeam=='ALL'){
           drawPie();
         }else{
