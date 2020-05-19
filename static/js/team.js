@@ -1,4 +1,5 @@
 function teamAnalysisDisplay(){
+let teamDataGlobal ={};
 d3.select("#left-top").style("height","58%");
 d3.select("#left-bottom").style("height","38%");
 currentColors = bgColorsTeam["ALL"];
@@ -7,12 +8,13 @@ textInHeadingColor = currentColors['textInHeadingColor'];
 btnMouseoverBGColor = currentColors['btnMouseoverBGColor'];
 var teamAnalysisBtn = "teams-menubar-btn-all";
 var selectedTeam = "ALL";
-var onclickselect;
+let onclickselect = null;
 //Generate Map function
 function generateMap(){
     var proj = d3.geo.mercator();
     var path = d3.geo.path().projection(proj);
 		
+    let mapClear = true;
 		//console.log(d3.select("#left-top").attr("width"))
     var map = d3.select("#left-top").append("svg:svg")
         .attr("viewBox","30 -30 540 700")
@@ -50,7 +52,7 @@ function generateMap(){
                       .style("stroke-width","0.6px")
                       .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 1;}else{return 0.2;}}else{return 1;}})	               
                       .on("mouseover", function(d) {
-                        console.log(selectedTeam)
+                        //console.log(selectedTeam)
                         d3.select(this)
                           .style("opacity",function(d){if(d["supportTeam"]!=selectedTeam){if(selectedTeam == "ALL"){return 0.6;}else{return 0.2;}}else{return 1;}}) 
                         /*Tooltip
@@ -81,39 +83,61 @@ function generateMap(){
                           div.style("opacity", 0); 
                       })
                       .on("click",function(d){
-                        onclickselect = d["supportTeam"]
-                        var k = d["supportTeam"]
-                        india.selectAll("path").style("stroke-width","1px")
-                          india.selectAll("path").style("stroke","#A9A9A9")
-                        for(var i=0;i<8;i++){
-                          console.log(d["supportTeam"])
-                          
-                         // console.log(team +"hi")
-                         d3.select(this)
-                              .style("stroke","black") 
-                         d3.select(this)
-                              .style("stroke-width","3px") 
-                         /* if(teams[i] == k){
-                            console.log("hi")
-                            d3.select(this)
-                                    .style("opacity",function(d){if(d["supportTeam"]==teams[i]){return 1;}})
-                          }*/
-                          if(teams[i] != k){
-                            //console.log(team)                                                  
-                              d3.select("#teams-div-1").select("#svg1").select("#rect"+teams[i]).style("fill","grey").style("opacity","0")
-                              d3.select("#teams-div-1").select("#svg1").select("#text"+teams[i]).remove()
-                              india.style("stroke-width","1px")
-                              india.style("stroke","#A9A9A9")
-                              d3.select("#teams-div-1").select("#svg1").select("#rect"+d["supportTeam"]).style("fill",d["color"]).style("opacity","1")
-                              d3.select("#teams-div-2").select("#svg4").select("#rect1"+teams[i]).style("fill","grey").style("opacity","0")
-                              d3.select("#teams-div-2").select("#svg4").select("#rect1"+d["supportTeam"]).style("fill",d["color"]).style("opacity","1")
-                              //console.log("hi")
+                        //console.log(selectedTeam);
+                        if(selectedTeam == 'ALL'){
+                          mapClear = false;
+                          onclickselect = d["supportTeam"]
+                          let k = d["supportTeam"]
+                          india.selectAll("path").style("stroke-width","1px")
+                            india.selectAll("path").style("stroke","#A9A9A9")
+                          for(var i=0;i<8;i++){
+                            console.log(d["supportTeam"])
+                            
+                           // console.log(team +"hi")
+                           d3.select(this)
+                                .style("stroke","black") 
+                           d3.select(this)
+                                .style("stroke-width","3px") 
+                           /* if(teams[i] == k){
+                              console.log("hi")
+                              d3.select(this)
+                                      .style("opacity",function(d){if(d["supportTeam"]==teams[i]){return 1;}})
+                            }*/
+                            d3.select("#teams-div-2").selectAll("*").remove();
+                            putDiv2Data(teamDataGlobal);
+                            if(teams[i] != k){
+                              //console.log(team)                                                  
+                                d3.select("#teams-div-1").select("#svg1").select("#rect"+teams[i]).style("opacity","0");
+                                d3.select("#teams-div-1").select("#svg1").select("#text"+teams[i]).style("opacity","0");
+                                india.style("stroke-width","1px");
+                                india.style("stroke","#A9A9A9");
+                                d3.select("#teams-div-1").select("#svg1").select("#rect"+d["supportTeam"]).style("opacity","1");
+                                d3.select("#teams-div-1").select("#svg1").select("#text"+d["supportTeam"]).style("opacity","1");
+                                //d3.select("#teams-div-2").select("#svg4").select("#rect1"+teams[i]).style("fill","grey").style("opacity","0");
+                                //d3.select("#teams-div-2").select("#svg4").select("#rect1"+d["supportTeam"]).style("fill",d["color"]).style("opacity","1");
+                                //console.log("hi")
+                            }
                           }
                         }
                         //d3.select("#teams-div-1").select("#svg1").select("#rect"+d["supportTeam"]).style("fill",function(d){console.log(d);return "red"})//.selectAll(".bar").style("fill","red")
                         //console.log(d)
                       });
 
+      function clearMapBrush(){
+        india.selectAll("path").style("stroke-width","1px");
+        india.selectAll("path").style("stroke","#A9A9A9");
+        d3.select("#teams-div-2").selectAll("*").remove();
+        onclickselect = null;
+        putDiv1Data(teamDataGlobal);
+        putDiv2Data(teamDataGlobal);
+        //d3.select("#teams-div-1").select("#svg1").selectAll("rect").style("opacity","1");
+      };
+
+      map.on("click",function(){
+        if(mapClear)
+          clearMapBrush();
+        mapClear = true;
+      });
 
       for(var j = 1;j <= 8;j++){
             india.append('rect')
@@ -1193,7 +1217,7 @@ function putDiv2Data(teamData){
    //if(selectedTeam == 'ALL'){
     let teams = ['SRH','DC','RR','KKR','MI','CSK','RCB','KXIP'];
 
-console.log(onclickselect)
+  //console.log(onclickselect)
     if(onclickselect){
       teams=[onclickselect]
     }
@@ -1488,6 +1512,7 @@ function teamChange(){
     $.post("/getTeamData", {'team': selectedTeam}, function(data){
         console.log(data);
         teamData = data;
+        teamDataGlobal = data;
         if(selectedTeam=='ALL'){
           drawPie();
         }else{
