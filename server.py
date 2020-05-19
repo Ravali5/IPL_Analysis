@@ -39,6 +39,7 @@ batbowl['skill'] = 'batbowl'
 mostruns = pd.read_csv("./data/most-runs.csv")
 mostwick = pd.read_csv("./data/most-wickets.csv")
 highscore= pd.read_csv("./data/highest-scores.csv")
+players_Team= pd.read_csv("./data/playersTeam.csv")
 #print(mostruns.iloc[0]['Runs'])
 
 players = pd.concat([bat,bowl,batbowl])
@@ -345,8 +346,9 @@ def getTeamData():
 			teamTossData['tossLoseMatchLose'] = len(tossLose.index) - len(tossLoseMatchWin.index)
 			tossData[team]=teamTossData
 		
-		Bat_Bowl ={}
+		Bat_Bowl = {}
 		players_r = players.fillna(0)
+		playerTeam = {}
 		#print(players_r.isnull().values.any())
 		#print(players_r)
 		for player in players_r['Players'].tolist():
@@ -355,6 +357,9 @@ def getTeamData():
 			scatter_plot['Bat_avg'] = float(player_rec['Bat_Average'].iloc[0])
 			scatter_plot['Bowl_avg'] = player_rec['Bowl_Average'].iloc[0]
 			Bat_Bowl[player] = scatter_plot
+			team_name_player = players_Team.loc[players_Team['playerName']==str(player),'team'].iloc[0]
+			playerTeam[player] = team_name_player
+
 
 		teamData['fours'] = fours
 		teamData['sixes'] = sixes
@@ -364,6 +369,8 @@ def getTeamData():
 		teamData['teamWinYear'] = teamWinYear
 		teamData['tossData'] = tossData
 		teamData['Bat_Bowl'] =Bat_Bowl
+		teamData['playerTeam'] =playerTeam
+
 	return teamData
 
 if __name__ == "__main__":

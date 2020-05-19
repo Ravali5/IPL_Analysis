@@ -900,7 +900,7 @@ function drawTeamWinPie(tdata){
                     .style("padding", 4)       
                     .style("font", 12)    
                     .style("background", btnMouseoverBGColor) 
-                    .style("color",textInHeadingColor)
+                    .style("color","black")
                     .style("border-style","solid")
                     .style("border-radius","30px")
                     .style("border-color",headingColor)
@@ -911,7 +911,7 @@ function drawTeamWinPie(tdata){
         .append('path')
         .attr('d', arc)
         .style('fill', function(d,i){if(i==0){ return textInHeadingColor; }else{return headingColor;}})
-        .attr("stroke", "white")
+        .attr("stroke", currentColors['headingColor'])
         .style("stroke-width", "2px")
         .on("mouseover", function(d,i) {
                         d3.select(this)
@@ -939,7 +939,7 @@ function drawTeamWinPie(tdata){
                 .style("color",textInHeadingColor)
                 .attr("font-size","14px")
                 .attr("font-weight" ,"bold")
-                .text(selectedTeam+" WIN AND LOSE PERCENTAGE");
+                .text(selectedTeam+" MATCHES WIN AND LOSE PERCENTAGE");
 
   svg.append('rect')
                 .attr("x",130)
@@ -952,6 +952,8 @@ function drawTeamWinPie(tdata){
                 .attr("y",10)
                 .attr("width",10)
                 .attr("height",10)
+                .attr("stroke", currentColors['headingColor'])
+                .style("stroke-width", "2px")
                 .style("fill",textInHeadingColor);
 
   svg.append('text')
@@ -1055,7 +1057,7 @@ function putDiv4Data(teamData){
 
 function putDiv3Data(teamData){
 
-
+let teamColors = {'SRH':'#F76E0A','DC':'#19459F','RR':'#EA1A85','KKR':'#46007A','MI':'#2152CD','CSK':'#FEE953','RCB':'#BC1527','KXIP':'#D7D7D7'};
 if(selectedTeam == 'ALL'){
         let svg123 = d3.select("#teams-div-3")
                       .append("svg")
@@ -1079,7 +1081,7 @@ if(selectedTeam == 'ALL'){
 
 
           data123 = teamData['Bat_Bowl']
-
+          playerTeam = teamData['playerTeam']
 
          // x.domain(d3.extent(data, function(d) { return d.Bat_avg; })).nice();
          // y.domain(d3.extent(data, function(d) { return d.Bowl_avg; })).nice();
@@ -1089,11 +1091,15 @@ if(selectedTeam == 'ALL'){
                 .data(Object.keys(data123))
                 .enter()
                 .append("circle")
-                 .style("fill", function(d) {
+                 /*.style("fill", function(d) {
                   if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "red"}
                   if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "green"}
-                      else  { return currentColors['headingColor'] }})
-                  .attr("stroke", "none")
+                      else  { return teamColors[playerTeam[d]]; }})*/
+                  .style("fill",function(d){return teamColors[playerTeam[d]];})
+                  .attr("stroke", function(d) {
+                  if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return "black"}
+                  if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return "black"}})
+                  .style("stroke-width", "2px")
                   .attr("cx", function(d,i) {  return x_scale(data123[d]['Bat_avg'])+20 })
                   .attr("cy", function(d,i) {  return y_scale(data123[d]['Bowl_avg'])-80 })
                   .attr("r", 5);
@@ -1113,13 +1119,40 @@ if(selectedTeam == 'ALL'){
                           } if((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)){return  30;}
                           if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {return 70;}
                     })
+                    .style("fill",currentColors['headingColor'])
                     .attr("width",10)
                     .attr("height",10)
-                    .attr("font-size","14px")
+                    .attr("font-size","16px")
                     .text(function(d) {
               if (((data123[d]['Bat_avg'] >  52) && (data123[d]['Bowl_avg'] == 0)) || ((data123[d]['Bat_avg'] ==  0) && (data123[d]['Bowl_avg'] > 44)) ){return d;}
               if(data123[d]['Bat_avg'] >  40 && data123[d]['Bowl_avg'] > 40) {console.log(d);return d;}
                  });
+
+            svg123.append('text')
+                .attr("x",380)
+                .attr("y",290)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Batting Average")
+
+           svg123.append('text')
+                .attr("x",-110)
+                .attr("y",20)
+                .attr("transform", "rotate(-90)")
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","14px")
+                .text("Bowling Average");
+
+            svg123.append('text')
+                .attr("x",165)
+                .attr("y",20)
+                .attr("width",10)
+                .attr("height",10)
+                .attr("font-size","16px")
+                .attr("font-weight","bold")
+                .text("Batting Average and Bowling average of all players")
 
     }
     else{
@@ -1131,8 +1164,8 @@ if(selectedTeam == 'ALL'){
                       .attr("height","100%")
                       .style("background-color","transparent");
 
-          let x_scale = d3.scaleBand().range([50,400]);
-          let x1_scale = d3.scaleBand().range([50,400]);
+          let x_scale = d3.scaleBand().range([50,300]);
+          let x1_scale = d3.scaleBand().range([50,300]);
           let y_scale = d3.scaleLinear().domain([0,45]).range([338,100]);
 
           
@@ -1142,8 +1175,10 @@ if(selectedTeam == 'ALL'){
           var tossDec = Object.keys(data);
           var matchDec = Object.keys(d3.values(data)[0])
 
+          total_matches =data['TossWin']['MatchWin']+data['TossWin']['MatchLose']+data['TossLose']['MatchWin']+data['TossLose']['MatchLose']
+
           x_scale.domain(tossDec)
-          x1_scale.domain(matchDec).range([0, x_scale.bandwidth()-123])//.rangeRoundBands([0, x1_scale.rangeBand()]);
+          x1_scale.domain(matchDec).range([0, x_scale.bandwidth()-70])//.rangeRoundBands([0, x1_scale.rangeBand()]);
 
             var color = d3.scaleOrdinal()
                           .domain(matchDec)
@@ -1170,13 +1205,99 @@ if(selectedTeam == 'ALL'){
           .selectAll("rect")
           .data(function(d) {return matchDec.map(function(key) { return {key: key, value: data[d][key]}; }); })
           .enter().append("rect")
-            .attr("x", function(d,i) { return x1_scale(d.key)+60; })
+            .attr("x", function(d,i) { return x1_scale(d.key)+40; })
             .attr("y", function(d) { return y_scale(d.value)-80; })
             .attr("width", "25")
+            .attr("stroke", currentColors['headingColor'])
+            .style("stroke-width", "2px")
             .attr("height", function(d) { return 340 - y_scale(d.value); })
-            .attr("fill", function(d) { return color(d.key); });
+            .attr("fill", function(d) { return color(d.key); })
+            /*.on("mouseover", function(d,i) {
+          //console.log(d);
+              svg
+                    .append("text")
+                    .attr("transform","translate(" + x_scale(d) + ",0)")
+                    .attr("id","val")
+                    .style("fill","black")
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .attr("x",x1_scale(d.key)+115)
+                    .attr("y",y_scale(d.value)-90)
+                    .text(d.value)
+            })
+                  .on("mouseout",function(d){
+                    svg.selectAll('#val').remove();
+            });*/
 
 
+
+          svg.append("text")
+                    .style("fill","black")
+                    .attr("font-size","14px")
+                    .attr("font-weight","bold")
+                    .attr("x","100")
+                    .attr("y","25")
+                    .text("Number of Matches Won/Lose by "+selectedTeam+" based on Toss Win/Lose")
+
+          svg.selectAll(".label")
+              .data(Object.keys(data))
+              .enter()
+              .append("text")
+              .style("text-anchor", "start")
+              .attr("class","label")
+              .attr("x",320)
+              .attr("y",function(d,i){return 180+i*20})
+              .attr("font-size","12px")
+              .text(function(d){return "Total Match Wins When "+" "+d+"  : "+((data[d]['MatchWin']/total_matches)*100).toFixed(1) +" %"});
+
+          svg.selectAll(".l2")
+              .data(Object.keys(data))
+              .enter()
+              .append("text")
+              .style("text-anchor", "start")
+              .attr("font-size","12px")
+              .attr("x",320)
+              .attr("y",function(d,i){return 220+i*20})
+              .text(function(d){return "Total Match losses When "+" "+d+"  : "+((data[d]['MatchLose']/total_matches)*100).toFixed(1)+" %"});
+
+            svg.append('rect')
+                .attr("x",370)
+                .attr("y",70)
+                .attr("width",10)
+                .attr("height",10)
+                .style("fill",headingColor);
+            svg.append('rect')
+                          .attr("x",370)
+                          .attr("y",90)
+                          .attr("width",10)
+                          .attr("height",10)
+                          .attr("stroke", currentColors['headingColor'])
+                          .style("stroke-width", "2px")
+                          .style("fill",textInHeadingColor);
+
+            svg.append('text')
+                          .attr("x",410)
+                          .attr("y",80)
+                          .attr("width",10)
+                          .attr("height",10)
+                          .attr("font-size","14px")
+                          .text("Matches Won ");
+            svg.append('text')
+                          .attr("x",410)
+                          .attr("y",100)
+                          .attr("width",10)
+                          .attr("height",10)
+                          .attr("font-size","14px")
+                          .text("Matches Lost ");
+
+            svg.append('text')
+                          .attr("x",-200)
+                          .attr("y",16)
+                          .attr("transform", "rotate(-90)")
+                          .attr("width",10)
+                          .attr("height",10)
+                          .attr("font-size","14px")
+                          .text("Number of Matches");
     }
 }
 
